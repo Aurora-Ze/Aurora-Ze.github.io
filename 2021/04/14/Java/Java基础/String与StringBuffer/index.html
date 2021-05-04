@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>String、StringBuffer | Aurora</title><meta name="author" content="whz"><meta name="copyright" content="whz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="String最近在做算法题时用到了StringBuffer的一些方法 所以特地来了解一下String类与StringBuffer类的一些原理及操作 不可变性在学Java之初，我们就已经知道String是不可变的  什么是不可变呢？ 例如对一个String类型的对象进行修改时，每次得到的都是新的String对象 而原来的String对象是是一直不变的  但它究竟是怎么实现的呢 我们先来看下Strin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="String、StringBuffer">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/04/14/Java/Java%E5%9F%BA%E7%A1%80/String%E4%B8%8EStringBuffer/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="String最近在做算法题时用到了StringBuffer的一些方法 所以特地来了解一下String类与StringBuffer类的一些原理及操作 不可变性在学Java之初，我们就已经知道String是不可变的  什么是不可变呢？ 例如对一个String类型的对象进行修改时，每次得到的都是新的String对象 而原来的String对象是是一直不变的  但它究竟是怎么实现的呢 我们先来看下Strin">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2021-04-14T02:32:39.493Z">
+<meta property="article:modified_time" content="2021-04-28T08:42:49.037Z">
+<meta property="article:author" content="whz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://aurora-ze.github.io.git/2021/04/14/Java/Java%E5%9F%BA%E7%A1%80/String%E4%B8%8EStringBuffer/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-28 16:42:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/mycss.css"><link rel="stylesheet" href="/css/iconfont.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="http://gitee.com/aurora1004/pictures/raw/master/20210430220123.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">89</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">17</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Aurora</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">String、StringBuffer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-04-14T02:32:39.493Z" title="Created 2021-04-14 10:32:39">2021-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-04-28T08:42:49.037Z" title="Updated 2021-04-28 16:42:49">2021-04-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="String、StringBuffer"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="String"><a href="#String" class="headerlink" title="String"></a>String</h1><p>最近在做算法题时用到了StringBuffer的一些方法</p>
+<p>所以特地来了解一下String类与StringBuffer类的一些原理及操作</p>
+<h2 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h2><p>在学Java之初，我们就已经知道String是不可变的</p>
+<blockquote>
+<p>什么是不可变呢？</p>
+<p>例如对一个String类型的对象进行修改时，每次得到的都是新的String对象</p>
+<p>而原来的String对象是是一直不变的</p>
+</blockquote>
+<p>但它究竟是怎么实现的呢</p>
+<p>我们先来看下String的源码，可以看到</p>
+<ul>
+<li><strong>final关键字修饰了类和字符数组</strong><ul>
+<li>禁止继承，避免子类继承后，修改内容</li>
+</ul>
+</li>
+<li><strong>字符数组还是private的</strong><ul>
+<li>一定程度上防止外界访问到字符数组</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">String</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">java</span>.<span class="hljs-title">io</span>.<span class="hljs-title">Serializable</span>, <span class="hljs-title">Comparable</span>&lt;<span class="hljs-title">String</span>&gt;, <span class="hljs-title">CharSequence</span> </span>&#123;<br>    <span class="hljs-comment">/** The value is used for character storage. */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">char</span> value[];<br></code></pre></td></tr></table></figure>
+
+<p>但是只靠这样，就能保证String的不可变性吗</p>
+<h2 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h2><p><strong>首先，我们可以知道一点，用final关键字修饰的变量，一旦被创建就无法再修改</strong></p>
+<p>所以下面将<code>tmp</code>的引用赋值给<code>arr</code>，会提示错误</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span>[] arr = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[]&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;;<br><span class="hljs-keyword">int</span>[] tmp = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[]&#123;<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>&#125;;<br>arr = tmp;<br></code></pre></td></tr></table></figure>
+
+<p>但是arr数组在内存中其实是分为两部分的，即<strong>引用</strong>和<strong>数组本体</strong></p>
+<p><strong>引用放在Stack中，而数组本体在Heap中</strong></p>
+<p>如果我们直接去修改堆中的数组，是否会造成改变呢</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span>[] arr = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[]&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;;<br>arr[<span class="hljs-number">0</span>] = <span class="hljs-number">10</span>;<br><span class="hljs-comment">// 输出 10，2，3</span><br><span class="hljs-comment">// 可以final数组改变了</span><br></code></pre></td></tr></table></figure>
+
+<p>由此我们知道用<code>final</code>关键字修饰，还是无法避免数组内容的修改</p>
+<h2 id="replace-源码分析"><a href="#replace-源码分析" class="headerlink" title="replace()源码分析"></a>replace()源码分析</h2><p>那么该怎样避免这种情况呢，我们很容易就能想到，当然是依赖于具体方法的实现。</p>
+<p>就以<code>replace(oldChar, newChar)</code>为例，我们先来分析下大致逻辑</p>
+<ul>
+<li>在$oldChar != newChar$时</li>
+<li>然后在原数组中找到第一个oldChar</li>
+<li>如果存在oldChar<ul>
+<li>创建新数组</li>
+<li>oldChar之前的字符直接复制到新数组</li>
+<li>oldChar及以后的字符，边复制边判断</li>
+<li>如果等于oldChar，就替换成newChar</li>
+</ul>
+</li>
+<li>如果$oldChar==newChar$或者原数组中没有oldChar，就直接返回原数组</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">replace</span><span class="hljs-params">(<span class="hljs-keyword">char</span> oldChar, <span class="hljs-keyword">char</span> newChar)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (oldChar != newChar) &#123;<br>        <span class="hljs-keyword">int</span> len = value.length;<br>        <span class="hljs-keyword">int</span> i = -<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">char</span>[] val = value; <span class="hljs-comment">/* avoid getfield opcode */</span><br><br>        <span class="hljs-keyword">while</span> (++i &lt; len) &#123;<br>            <span class="hljs-keyword">if</span> (val[i] == oldChar) &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (i &lt; len) &#123;<br>            <span class="hljs-keyword">char</span> buf[] = <span class="hljs-keyword">new</span> <span class="hljs-keyword">char</span>[len];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                buf[j] = val[j];<br>            &#125;<br>            <span class="hljs-keyword">while</span> (i &lt; len) &#123;<br>                <span class="hljs-keyword">char</span> c = val[i];<br>                buf[i] = (c == oldChar) ? newChar : c;<br>                i++;<br>            &#125;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> String(buf, <span class="hljs-keyword">true</span>);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>看完逻辑之后，我们发现当存在oldChar时，他会创建一个新的数组，替换oldChar并返回</p>
+<p>也许在这之前，我们会好奇它为什么要创建新的数组</p>
+<p><strong>但今天我们很容易就联想到，它的这个操作正是为了防止原数组被修改，从而保证了String的不可变性</strong></p>
+<h2 id="不可变的作用"><a href="#不可变的作用" class="headerlink" title="不可变的作用"></a>不可变的作用</h2><p>从上面我们大概可以推断出，String类的设计者在类的方法中尽力避免原数组的修改，来保证其不可变性</p>
+<p>那不可变究竟有什么用呢？</p>
+<ul>
+<li>最重要的一点，就是安全<ul>
+<li>String不可变，可以避免将String对象作为传参时，被用户不小心修改的情况</li>
+<li>在并发场景下，因为String的不可写（写了之后变成新对象，没有意义），所以是线程安全的</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>String的各种方法都避免对原数组进行修改，这才是String不可变性的主要实现方式</p>
+<p>String类用final关键字修饰</p>
+<ul>
+<li>防止子类继承，去破坏它的不可变性</li>
+<li>String类本身已经很完美了，无需其他类继承它</li>
+</ul>
+<h1 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h1><p>当需要修改字符串内容时，我们一般采用<code>StringBuffer</code>类</p>
+<p>既然如此，就来看下StringBuffer的实现吧</p>
+<h2 id="StringBuffer结构"><a href="#StringBuffer结构" class="headerlink" title="StringBuffer结构"></a>StringBuffer结构</h2><p><strong>类结构如下</strong></p>
+<p><img src= "/img/loading.gif" data-lazy-src="/images/sb_1.PNG"></p>
+<p>可以看到，StringBuffer类中有一个字符数组<code>toStringCache</code>，注释表明</p>
+<blockquote>
+<p>该数组存放的是由最近一次toString()方法返回的值</p>
+<p>并且当StringBuffer发生变化时，它会被清空</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringBuffer</span></span><br><span class="hljs-class">   <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractStringBuilder</span></span><br><span class="hljs-class">   <span class="hljs-keyword">implements</span> <span class="hljs-title">java</span>.<span class="hljs-title">io</span>.<span class="hljs-title">Serializable</span>, <span class="hljs-title">CharSequence</span> </span>&#123; <br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * A cache of the last value returned by toString. Cleared</span><br><span class="hljs-comment">     * whenever the StringBuffer is modified.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">char</span>[] toStringCache;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="append-String"><a href="#append-String" class="headerlink" title="append(String)"></a>append(String)</h2><p><strong>再来看看常用的append方法</strong></p>
+<p><strong>正如上面所说，在StringBuffer添加字符串时，会把toStringCache清空。</strong>清空的原因在看到toString()时再讲</p>
+<p>而且它调用了父类的append方法进行添加字符串</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> StringBuffer <span class="hljs-title">append</span><span class="hljs-params">(String str)</span> </span>&#123;<br>    toStringCache = <span class="hljs-keyword">null</span>;<br>    <span class="hljs-keyword">super</span>.append(str);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面是<code>AbstractStringBuilder</code>这个抽象类提供的append方法</p>
+<p>主要逻辑如下：</p>
+<ul>
+<li>判断传入的String是否为空<ul>
+<li>为空，调用<code>appendNull()</code></li>
+<li>非空，确保数组容量</li>
+<li>再把字符串添加到字符数组中</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-function"><span class="hljs-keyword">public</span> AbstractStringBuilder <span class="hljs-title">append</span><span class="hljs-params">(String str)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (str == <span class="hljs-keyword">null</span>)<br>        <span class="hljs-keyword">return</span> appendNull();<br>    <span class="hljs-keyword">int</span> len = str.length();<br>    ensureCapacityInternal(count + len);<br>    str.getChars(<span class="hljs-number">0</span>, len, value, count);<br>    count += len;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br></code></pre></td></tr></table></figure>
+
+<p>上面主要用到了三个方法<code>appendNull()</code>、<code>ensureCapacityInternal()</code>和<code>getChars()</code></p>
+<p>下面依次分析</p>
+<h2 id="ensureCapacityInternal-int"><a href="#ensureCapacityInternal-int" class="headerlink" title="ensureCapacityInternal(int)"></a>ensureCapacityInternal(int)</h2><p>为什么要先分析这个方法呢，因为appendNull()里面也用到了。。</p>
+<p>如果我们之前看过<code>ArrayList</code>相关的源码，对这类方法应该不陌生了吧</p>
+<ul>
+<li>方法形参为<strong>minimumCapacity</strong><ul>
+<li>从上面append中，可以发现实参是$count+len$</li>
+<li>即插入<code>str</code>后的数组长度，暂时把它叫做<strong>最小容量</strong>吧</li>
+</ul>
+</li>
+<li>方法内部就是把最小容量与数组当前的长度进行比较<ul>
+<li>如果$minimumCapacity &gt; value.length$</li>
+<li>则要进行扩容，调用Arrays.copyOf()，这个方法可太熟了，就不再赘述</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ensureCapacityInternal</span><span class="hljs-params">(<span class="hljs-keyword">int</span> minimumCapacity)</span> </span>&#123;<br>    <span class="hljs-comment">// overflow-conscious code</span><br>    <span class="hljs-keyword">if</span> (minimumCapacity - value.length &gt; <span class="hljs-number">0</span>) &#123;<br>        value = Arrays.copyOf(value,<br>                newCapacity(minimumCapacity));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不会以为到这儿就结束了吧，我们还有一点没讲，就是扩容的大小选择</p>
+<p>那就来看看**newCapacity(int)**方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 回顾下参数：</span><br><span class="hljs-comment">// minCapacity: 插入元素后的数组长度，即最小容量</span><br><span class="hljs-comment">// newCapacity: 原数组长度 * 2 + 2，即新容量</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">newCapacity</span><span class="hljs-params">(<span class="hljs-keyword">int</span> minCapacity)</span> </span>&#123;<br>   	<span class="hljs-comment">// 如果新容量小于最小容量，就把新容量设置成最小容量</span><br>    <span class="hljs-keyword">int</span> newCapacity = (value.length &lt;&lt; <span class="hljs-number">1</span>) + <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">if</span> (newCapacity - minCapacity &lt; <span class="hljs-number">0</span>) &#123;<br>        newCapacity = minCapacity;<br>    &#125;<br>    <span class="hljs-comment">// 经过上述判断后的新容量</span><br>    <span class="hljs-comment">// 如果小于0（整型溢出） 或 大于最大数组容量（定义的Integer.MAX_VALUE - 8）</span><br>    <span class="hljs-comment">// 就让新容量为最大数组容量</span><br>    <span class="hljs-comment">// 否则就不变，直接返回</span><br>    <span class="hljs-keyword">return</span> (newCapacity &lt;= <span class="hljs-number">0</span> || MAX_ARRAY_SIZE - newCapacity &lt; <span class="hljs-number">0</span>)<br>        ? hugeCapacity(minCapacity)<br>        : newCapacity;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hugeCapacity</span><span class="hljs-params">(<span class="hljs-keyword">int</span> minCapacity)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (Integer.MAX_VALUE - minCapacity &lt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// overflow</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> OutOfMemoryError();<br>    &#125;<br>    <span class="hljs-keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE)<br>        ? minCapacity : MAX_ARRAY_SIZE;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="appendNull"><a href="#appendNull" class="headerlink" title="appendNull()"></a>appendNull()</h2><p>如果append(String)传入null，就会进入这个方法</p>
+<p>方法内只做了两件事</p>
+<ol>
+<li>判断要不要扩容</li>
+<li>在数组中添加“null”字符串</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-function"><span class="hljs-keyword">private</span> AbstractStringBuilder <span class="hljs-title">appendNull</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> c = count;<br>    ensureCapacityInternal(c + <span class="hljs-number">4</span>);<br>    <span class="hljs-keyword">final</span> <span class="hljs-keyword">char</span>[] value = <span class="hljs-keyword">this</span>.value;<br>    value[c++] = <span class="hljs-string">&#x27;n&#x27;</span>;<br>    value[c++] = <span class="hljs-string">&#x27;u&#x27;</span>;<br>    value[c++] = <span class="hljs-string">&#x27;l&#x27;</span>;<br>    value[c++] = <span class="hljs-string">&#x27;l&#x27;</span>;<br>    count = c;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="getChars"><a href="#getChars" class="headerlink" title="getChars()"></a>getChars()</h2><p>该方法是由<strong>String类</strong>提供的</p>
+<p>忽略那些判断，主要是调用<strong>System.arraycopy()把调用方法的String对象的部分字符拷贝到目的数组中</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getChars</span><span class="hljs-params">(<span class="hljs-keyword">int</span> srcBegin, <span class="hljs-keyword">int</span> srcEnd, <span class="hljs-keyword">char</span> dst[], <span class="hljs-keyword">int</span> dstBegin)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (srcBegin &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> StringIndexOutOfBoundsException(srcBegin);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (srcEnd &gt; value.length) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> StringIndexOutOfBoundsException(srcEnd);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (srcBegin &gt; srcEnd) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> StringIndexOutOfBoundsException(srcEnd - srcBegin);<br>    &#125;<br>    System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString()"></a>toString()</h2><p>分析完StringBuffer的append()后，我们再来看下它如何返回得到字符串</p>
+<p>主要是把<code>Arrays.copyOfRange</code>返回的字符数组，赋值给toStringCache</p>
+<p>然后再通过String类构造器创建一个String对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (toStringCache == <span class="hljs-keyword">null</span>) &#123;<br>        toStringCache = Arrays.copyOfRange(value, <span class="hljs-number">0</span>, count);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> String(toStringCache, <span class="hljs-keyword">true</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>copyOfRange()</strong></p>
+<p>我们发现内部是创建了新数组来存放元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span>[] copyOfRange(<span class="hljs-keyword">char</span>[] original, <span class="hljs-keyword">int</span> from, <span class="hljs-keyword">int</span> to) &#123;<br>    <span class="hljs-keyword">int</span> newLength = to - from;<br>    <span class="hljs-keyword">if</span> (newLength &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(from + <span class="hljs-string">&quot; &gt; &quot;</span> + to);<br>    <span class="hljs-keyword">char</span>[] copy = <span class="hljs-keyword">new</span> <span class="hljs-keyword">char</span>[newLength];<br>    System.arraycopy(original, from, copy, <span class="hljs-number">0</span>,<br>                     Math.min(original.length - from, newLength));<br>    <span class="hljs-keyword">return</span> copy;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后我们解释下append方法中为什么要把toStringCache设置为null</p>
+<blockquote>
+<p>1.当StringBuffer对象发生变化时，通过调用toString会得到一个新的toStringCache，保证了旧的一个不会再发生变化</p>
+<p>2.当StringBuffer对象没有发生变化时，多次调用toString不会产生重复的字符串</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">whz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://aurora-ze.github.io.git/2021/04/14/Java/Java%E5%9F%BA%E7%A1%80/String%E4%B8%8EStringBuffer/">https://aurora-ze.github.io.git/2021/04/14/Java/Java%E5%9F%BA%E7%A1%80/String%E4%B8%8EStringBuffer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/04/14/SpringBoot/3_%E5%BC%80%E5%8F%91%E5%B0%8F%E6%8A%80%E5%B7%A7/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">入门——开发小技巧</div></div></a></div><div class="next-post pull-right"><a href="/2021/04/13/leetcode/7_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">三数之和</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#String"><span class="toc-text">String</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%80%A7"><span class="toc-text">不可变性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#final%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-text">final关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replace-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-text">replace()源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">不可变的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#StringBuffer"><span class="toc-text">StringBuffer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#StringBuffer%E7%BB%93%E6%9E%84"><span class="toc-text">StringBuffer结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#append-String"><span class="toc-text">append(String)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ensureCapacityInternal-int"><span class="toc-text">ensureCapacityInternal(int)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#appendNull"><span class="toc-text">appendNull()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getChars"><span class="toc-text">getChars()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#toString-NaN"><span class="toc-text">toString()</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 By whz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="Increase font size"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="Decrease font size"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>事务并发解决方案 | Aurora</title><meta name="author" content="whz"><meta name="copyright" content="whz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、事务关于事务的介绍，请看另一篇博客。 解决并发事务访问，主要有两种方式：  LBCC（Lock Based Concurrent Control）   MVCC（Multi-Version Concurrent Control）  相关问题 脏读，读到其他事务修改后未提交的数据 不可重复读，多次读数据，得到的不一致 幻读，多次读的结果不同（多了数据或少了数据）  事务隔离级别   级别\问题（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务并发解决方案">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/05/01/MySQL/%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、事务关于事务的介绍，请看另一篇博客。 解决并发事务访问，主要有两种方式：  LBCC（Lock Based Concurrent Control）   MVCC（Multi-Version Concurrent Control）  相关问题 脏读，读到其他事务修改后未提交的数据 不可重复读，多次读数据，得到的不一致 幻读，多次读的结果不同（多了数据或少了数据）  事务隔离级别   级别\问题（">
+<meta property="og:locale">
+<meta property="og:image" content="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg">
+<meta property="article:published_time" content="2021-05-01T13:19:57.600Z">
+<meta property="article:modified_time" content="2021-05-02T15:42:01.155Z">
+<meta property="article:author" content="whz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://aurora-ze.github.io.git/2021/05/01/MySQL/%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-02 23:42:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/mycss.css"><link rel="stylesheet" href="/css/iconfont.css"><link rel="stylesheet" href="/self/code3.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">104</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">18</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Aurora</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">事务并发解决方案</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-05-01T13:19:57.600Z" title="Created 2021-05-01 21:19:57">2021-05-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-05-02T15:42:01.155Z" title="Updated 2021-05-02 23:42:01">2021-05-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MySQL/">MySQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="事务并发解决方案"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="一、事务"><a href="#一、事务" class="headerlink" title="一、事务"></a>一、事务</h1><p>关于事务的介绍，请看另一篇博客。</p>
+<p><strong>解决并发事务访问，主要有两种方式：</strong></p>
+<ul>
+<li><strong>LBCC</strong>（Lock Based Concurrent Control）</li>
+</ul>
+<ul>
+<li><strong>MVCC</strong>（Multi-Version Concurrent Control）</li>
+</ul>
+<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><ul>
+<li>脏读，读到其他事务修改后未提交的数据</li>
+<li>不可重复读，多次读数据，得到的不一致</li>
+<li>幻读，多次读的结果不同（多了数据或少了数据）</li>
+</ul>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
+<thead>
+<tr>
+<th align="center">级别\问题（是否存在）</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">读未提交</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">读已提交</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">可重复读</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">是（MVCC时有）</td>
+</tr>
+<tr>
+<td align="center">串行化</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<h1 id="二、LBCC"><a href="#二、LBCC" class="headerlink" title="二、LBCC"></a>二、LBCC</h1><h2 id="2-1锁的类型"><a href="#2-1锁的类型" class="headerlink" title="2.1锁的类型"></a>2.1锁的类型</h2><p>官网链接：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html">MySQL :: MySQL 8.0 Reference Manual :: 15.7.1 InnoDB Locking</a></p>
+<p>查阅MySQL官网，得知InnoDB存储引擎提到了以下几种锁方案</p>
+<ol>
+<li><p>共享锁与排他锁 （行级别）</p>
+</li>
+<li><p>意向锁 （表级别）</p>
+</li>
+<li><p>记录锁</p>
+</li>
+<li><p>间隙锁</p>
+</li>
+<li><p>Next-Key 锁</p>
+</li>
+</ol>
+<p>还有另外三种不做详细介绍，就简单说明一下概念</p>
+<ol>
+<li>插入意向锁</li>
+<li>自增锁</li>
+<li>预测锁</li>
+</ol>
+<p>下面我们将依次介绍上述5种锁的概念</p>
+<h2 id="2-2共享锁与排他锁"><a href="#2-2共享锁与排他锁" class="headerlink" title="2.2共享锁与排他锁"></a>2.2共享锁与排他锁</h2><p>共享锁和排他锁是InnoDB实现的行级别的锁。</p>
+<p><code>共享锁</code>又叫读锁，用来读取数据。多个共享锁可以同时存在。</p>
+<p><code>排他锁</code>又叫写锁，用来更新或删除数据（插入呢？），不能与其他锁并存</p>
+<p>举个简单的例子</p>
+<p>如果事务<code>T1</code>在读表中的记录<code>r</code>，那它就对记录<code>r</code>加了读锁</p>
+<p>这时候事务<code>T2</code>想要对记录<code>r</code>进行一些操作</p>
+<ul>
+<li>如果是读操作，<code>T2</code>可以直接对记录<code>r</code>加读锁</li>
+<li>如果是写操作，<code>T2</code>必须等待<code>T1</code>释放锁之后，才能对记录<code>r</code>加写锁</li>
+</ul>
+<h2 id="2-3意向锁"><a href="#2-3意向锁" class="headerlink" title="2.3意向锁"></a>2.3意向锁</h2><h3 id="2-3-1为什么要有意向锁呢？"><a href="#2-3-1为什么要有意向锁呢？" class="headerlink" title="2.3.1为什么要有意向锁呢？"></a>2.3.1为什么要有意向锁呢？</h3><p>针对一个场景：</p>
+<p>如果要对一张表加<strong>表锁</strong>，就要先确保表中的<strong>任意一行数据</strong>都没有<strong>被锁定</strong></p>
+<p>那么就需要进行全表扫描来判断，效率十分低下</p>
+<p><strong>而上述问题的本质，就是锁过于单一，只有读锁、写锁这些行级别锁的话，粒度较少，不具备灵活性。</strong></p>
+<p>所以提出了意向锁的思想 。</p>
+<h3 id="2-3-2意向锁"><a href="#2-3-2意向锁" class="headerlink" title="2.3.2意向锁"></a>2.3.2意向锁</h3><blockquote>
+<p>意向读锁：表明一个事务<strong>想要</strong>对某行数据设置读锁。</p>
+<p>意向写锁：表明一个事务<strong>想要</strong>对某行数据设置写锁。</p>
+</blockquote>
+<p>光说这个概念可能不太好理解，我们结合官网上的描述，来分析下它的主要目的、协议吧。</p>
+<h3 id="2-3-3官方解释"><a href="#2-3-3官方解释" class="headerlink" title="2.3.3官方解释"></a>2.3.3官方解释</h3><p><strong>关于意向锁的解释</strong></p>
+<blockquote>
+<p><code>InnoDB</code> supports <em>multiple granularity locking</em> which permits coexistence of row locks and table locks.</p>
+<p><code>InnoDB</code>支持多粒度的锁来保证行锁和表锁的共存。</p>
+<p>Intention locks are <code>table-level</code> locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. </p>
+<p>意向锁是表级别的锁，它代表一个事务之后想要获取的是什么类型（读锁或写锁）的锁。</p>
+<p>PS：实现了多粒度的锁。</p>
+</blockquote>
+<p><strong>意向锁的主要目的</strong></p>
+<blockquote>
+<p>Intention locks do not block anything except full table requests (for example, <code>LOCK TABLES ... WRITE</code>). The main purpose of intention locks is to show that someone is locking a row, or going to lock a row in the table.</p>
+<p>意向锁不会阻塞除<code>全表扫描</code>外的任何请求，它的主要目的就是表明其他事务正在锁，或者说将要锁某些记录。</p>
+<p>PS：结合上面的例子，有了意向锁之后，就不用靠全表扫描来判断当前事务是否可以加表锁</p>
+</blockquote>
+<p><strong>意向锁的协议</strong></p>
+<blockquote>
+<p>Before a transaction can acquire a shared lock on a row in a table, it must first acquire an <code>IS</code> lock or stronger on the table.</p>
+<p>一个事务获取某行的读锁之前，必须先获取表的意向读锁。</p>
+<p>Before a transaction can acquire an exclusive lock on a row in a table, it must first acquire an <code>IX</code> lock on the table.</p>
+<p>一个事务获取某行的写锁之前，必须先获取表的意向写锁。</p>
+</blockquote>
+<h3 id="2-3-4锁的具体使用"><a href="#2-3-4锁的具体使用" class="headerlink" title="2.3.4锁的具体使用"></a>2.3.4锁的具体使用</h3><p>首先，我们要了解意向锁和读写锁的共存关系（是否兼容）</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">IS</th>
+<th align="center">IX</th>
+<th align="center">S</th>
+<th align="center">X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>IS</strong></td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>IX</strong></td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>S</strong></td>
+<td align="center">是</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>X</strong></td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<p><strong>分析：</strong></p>
+<p>意向锁之间：仅仅代表一个加锁的意向，所以意向锁之间不冲突</p>
+<p>读写锁之间：读锁与读锁不冲突，写锁与其他锁（这里只讨论读写锁）都冲突</p>
+<p>混合：要注意有读锁的情况下，意向写锁会冲突，即不能有写的念头。</p>
+<p><strong>用法：</strong></p>
+<p>从官网摘录一段select的语句结构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span><br>	...<br>	[FOR &#123;UPDATE | SHARE&#125;<br>        [<span class="hljs-keyword">OF</span> tbl_name [, tbl_name] ...]<br>        [NOWAIT <span class="hljs-operator">|</span> <span class="hljs-keyword">SKIP</span> LOCKED]<br>      <span class="hljs-operator">|</span> LOCK <span class="hljs-keyword">IN</span> SHARE MODE]<br></code></pre></td></tr></table></figure>
+
+<p><strong>使用意向读锁：</strong></p>
+<p><code>select ... for share</code>或<code>select ... lock in share mode</code></p>
+<p>两种方式来获取IS锁和对应记录的S锁，基本上是等价的</p>
+<p>区别的话</p>
+<ol>
+<li><p>看上面select语句的格式，可以发现<code>for share</code>可以添加一些参数，参数在后面介绍</p>
+</li>
+<li><p><code>lock in share mode</code>提供向后兼容性。</p>
+</li>
+</ol>
+<p><strong>使用意向写锁：</strong></p>
+<p><code>select ... for update</code>语句会先尝试获取IX锁，然后再获取目标记录的写锁</p>
+<p>如果获取不到，则会阻塞等待。（如果超时了就报错）</p>
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>nowait：不等待锁释放，立刻执行，获取不到锁就报错</li>
+<li>skip locked：也是立刻执行，但忽略那些被加锁的数据，只操作不加锁的数据。</li>
+</ul>
+<p>这两个参数在基于语句复制的情况下，是不安全的（官网上提到，但我不懂…猜测一下，可能是在有主从数据库的时候，会不安全吧）</p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html">如果想看更详细的，请转至官网处</a></p>
+<hr>
+<p>下面开始是一些具体锁的介绍，先贴一张图大致表示一下</p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png" alt="lock_concret"></p>
+<h2 id="2-4记录锁（锁定记录）"><a href="#2-4记录锁（锁定记录）" class="headerlink" title="2.4记录锁（锁定记录）"></a>2.4记录锁（锁定记录）</h2><p>在进行等值查询时，锁住<strong>匹配</strong>到的记录。确切地说，应该是锁住记录的主键（或隐式主键）</p>
+<p>例如<code>select * from table1 where id = 4 for update</code>就是锁住了<code>id = 4</code>的记录</p>
+<h2 id="2-5间隙锁（锁定范围）"><a href="#2-5间隙锁（锁定范围）" class="headerlink" title="2.5间隙锁（锁定范围）"></a>2.5间隙锁（锁定范围）</h2><p>在查询时，锁定<strong>区间范围</strong></p>
+<p>①<code>select * from table1 where id = 6 for update</code></p>
+<p>②<code>select * from table1 where id &gt; 20 for update</code></p>
+<p>假设表的记录为<strong>1，4，7，10</strong></p>
+<p>那么语句①锁住区间（4，7）；语句②锁住区间（10，+∞）</p>
+<p><strong>间隙锁之间并不冲突</strong></p>
+<h2 id="2-6临界锁（锁定范围，左开右闭）"><a href="#2-6临界锁（锁定范围，左开右闭）" class="headerlink" title="2.6临界锁（锁定范围，左开右闭）"></a>2.6临界锁（锁定范围，左开右闭）</h2><p>条件：进行范围查询时，包含<strong>区间</strong>和<strong>具体记录</strong></p>
+<p><code>select * from table where id &gt; 5 and id &lt; 9 for update</code></p>
+<p>那么锁定的范围为(4，7] 和 (7，10]，即(4，10]</p>
+<p>我们可以发现，<strong>临界锁 = 间隙锁 + 记录锁</strong></p>
+<p><em><strong>而间隙锁锁住区间，不让其他事务进行插入，目的就在于避免幻读问题的出现</strong></em></p>
+<hr>
+<p>讲完这些锁之后，我们谈谈在<strong>不同隔离级别</strong>下<strong>锁</strong>的<strong>实现</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RU</td>
+<td align="center">不加锁</td>
+</tr>
+<tr>
+<td align="center">Serializable</td>
+<td align="center">所有select语句隐式地转化成共享锁，会与update、delete互斥</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">普通select语句</th>
+<th align="center">加锁的select和更新语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RC</td>
+<td align="center">MVCC</td>
+<td align="center">记录锁</td>
+</tr>
+<tr>
+<td align="center">RR</td>
+<td align="center">MVCC</td>
+<td align="center">记录锁、间隙锁、临界锁</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>①普通查询时，为什么RR可以解决不可重复读，而RC不可以</p>
+<p>两者都采用MVCC，而因为RR的快照读read-view使用的是同一个，而RC是每次查询生成一次新的read-view</p>
+</blockquote>
+<h1 id="三、MVCC"><a href="#三、MVCC" class="headerlink" title="三、MVCC"></a>三、MVCC</h1><h2 id="3-1定义"><a href="#3-1定义" class="headerlink" title="3.1定义"></a>3.1定义</h2><p>用于实现数据库的并发访问的一种方法，全称为多版本并发控制。</p>
+<h2 id="3-2前置概念"><a href="#3-2前置概念" class="headerlink" title="3.2前置概念"></a>3.2前置概念</h2><p>在学习MVCC前，需要先知道两个概念</p>
+<ul>
+<li><strong>当前读</strong></li>
+</ul>
+<p>读取记录的最新版本，读取时还要加锁，保证其他并发事务不能修改当前记录，如共享锁、排他锁都是当前读</p>
+<ul>
+<li><strong>快照读</strong></li>
+</ul>
+<p>不加锁的、非阻塞的读。快照读的实现是基于多版本并发控制的，避免加锁操作，降低开销</p>
+<p>读到的数据不一定是最新数据，可能是历史版本</p>
+<h2 id="3-3思想"><a href="#3-3思想" class="headerlink" title="3.3思想"></a>3.3思想</h2><blockquote>
+<p> 维持一个数据的多个版本，使得读写操作没有冲突</p>
+</blockquote>
+<h2 id="3-4实现"><a href="#3-4实现" class="headerlink" title="3.4实现"></a>3.4实现</h2><p>隐式字段 + undo回滚日志 + 快照</p>
+<ul>
+<li><strong>隐式字段</strong></li>
+</ul>
+<blockquote>
+<p>每行记录除了有用户定义的字段外，还有隐式字段，如事务id、回滚指针、自增ID</p>
+</blockquote>
+<p>依次解释：</p>
+<p>事务id是指<strong>修改过</strong>当前记录的<strong>最近</strong>的一次事务id</p>
+<p>回滚指针，指向的是回滚日志中的关于<strong>这条记录</strong>的<strong>上一个版本</strong></p>
+<p>自增ID，当表没有设定主键时，会采用自增ID来作为主键，构建主键索引</p>
+<ul>
+<li><strong>undo回滚日志</strong></li>
+</ul>
+<p>记录每次修改的操作，可从前往后遍历来进行数据回滚</p>
+<p>在进行<strong>修改（更新、插入、删除）</strong>操作时，mysql会生成一条日志（主键+当前事务id+回滚指针，指向前一条记录）</p>
+<p>删除只是把标志位改为true，即逻辑删除</p>
+<ul>
+<li><strong>read-view</strong></li>
+</ul>
+<blockquote>
+<p>read-view是事务进行快照读时产生的读视图，记录并维护了系统中当前较为活跃的事务id</p>
+</blockquote>
+<h2 id="3-5例子"><a href="#3-5例子" class="headerlink" title="3.5例子"></a>3.5例子</h2><p>在某次事务查询时，得到read-view 为 <strong>[100,200,300]</strong></p>
+<p> 可以看出活跃事务中最小id为100，最大id为300</p>
+<p>从回滚日志中依次向后遍历，假设每次遍历到的事务id为x</p>
+<p>则有以下三种情况：</p>
+<ol>
+<li><p>x &lt; 100 表示此事务已提交，数据可用</p>
+</li>
+<li><p>x &gt; 300 表示此事务还未开始（不确定？）</p>
+</li>
+<li><p>在100和300中间，此时就要查看read-view，如果事务id在read-view里面，即说明此事务是活跃的，还没提交，数据不可用</p>
+<p>否则数据就可用。</p>
+</li>
+</ol>
+<h2 id="3-6RR和RC隔离级别下"><a href="#3-6RR和RC隔离级别下" class="headerlink" title="3.6RR和RC隔离级别下"></a>3.6RR和RC隔离级别下</h2><p>针对同一个事务来说，</p>
+<ul>
+<li><p>读已提交：每次查询都会生成新的read-view</p>
+</li>
+<li><p>可重复读：只用第一次查询时生成的read-view（解决了不可重复读）</p>
+</li>
+</ul>
+<h1 id="四、补充问题"><a href="#四、补充问题" class="headerlink" title="四、补充问题"></a>四、补充问题</h1><h2 id="4-1死锁"><a href="#4-1死锁" class="headerlink" title="4.1死锁"></a>4.1死锁</h2><p><strong>定义</strong></p>
+<p>这里的死锁可以理解成两个及以上的事务在共同竞争锁资源，而产生的等待现象。</p>
+<p><strong>解决方案一</strong></p>
+<p>设置一个超时等待时间，超时后对某个事务进行回滚，然后其他事务就可以执行下去</p>
+<p>但是光靠超时来解决的话，可能会有大量事务要进行回滚，会非常耗时</p>
+<p><strong>解决方案二</strong></p>
+<p>等待图，这可以算是一种死锁检测算法。</p>
+<p>画出各个事务之间的依赖关系，如果形成环路，说明存在死锁。</p>
+<h2 id="4-2锁升级"><a href="#4-2锁升级" class="headerlink" title="4.2锁升级"></a>4.2锁升级</h2><p><del>知识盲区…</del></p>
+<p>InnoDB存储引擎并不存在锁升级的情况，因为它并不是根据每个记录来产生行锁的。</p>
+<p>它是根据每个事务访问的每个页对锁进行管理的，采用的是位图的方式</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">whz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://aurora-ze.github.io.git/2021/05/01/MySQL/%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">https://aurora-ze.github.io.git/2021/05/01/MySQL/%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/05/01/Vue/%E6%8C%87%E4%BB%A4/"><img class="prev-cover" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/f5ac68ddaaf64.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Vue指令学习</div></div></a></div><div class="next-post pull-right"><a href="/2021/05/01/MySQL/mysql%E9%9D%A2%E8%AF%95%E9%A2%98/"><img class="next-cover" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/f5ac68ddaaf64.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info"></div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BA%8B%E5%8A%A1"><span class="toc-text">一、事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-text">相关问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">事务隔离级别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81LBCC"><span class="toc-text">二、LBCC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E9%94%81%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-text">2.1锁的类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E5%85%B1%E4%BA%AB%E9%94%81%E4%B8%8E%E6%8E%92%E4%BB%96%E9%94%81"><span class="toc-text">2.2共享锁与排他锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E6%84%8F%E5%90%91%E9%94%81"><span class="toc-text">2.3意向锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E6%84%8F%E5%90%91%E9%94%81%E5%91%A2%EF%BC%9F"><span class="toc-text">2.3.1为什么要有意向锁呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2%E6%84%8F%E5%90%91%E9%94%81"><span class="toc-text">2.3.2意向锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3%E5%AE%98%E6%96%B9%E8%A7%A3%E9%87%8A"><span class="toc-text">2.3.3官方解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-4%E9%94%81%E7%9A%84%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8"><span class="toc-text">2.3.4锁的具体使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E8%AE%B0%E5%BD%95%E9%94%81%EF%BC%88%E9%94%81%E5%AE%9A%E8%AE%B0%E5%BD%95%EF%BC%89"><span class="toc-text">2.4记录锁（锁定记录）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5%E9%97%B4%E9%9A%99%E9%94%81%EF%BC%88%E9%94%81%E5%AE%9A%E8%8C%83%E5%9B%B4%EF%BC%89"><span class="toc-text">2.5间隙锁（锁定范围）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6%E4%B8%B4%E7%95%8C%E9%94%81%EF%BC%88%E9%94%81%E5%AE%9A%E8%8C%83%E5%9B%B4%EF%BC%8C%E5%B7%A6%E5%BC%80%E5%8F%B3%E9%97%AD%EF%BC%89"><span class="toc-text">2.6临界锁（锁定范围，左开右闭）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81MVCC"><span class="toc-text">三、MVCC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E5%AE%9A%E4%B9%89"><span class="toc-text">3.1定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E5%89%8D%E7%BD%AE%E6%A6%82%E5%BF%B5"><span class="toc-text">3.2前置概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E6%80%9D%E6%83%B3"><span class="toc-text">3.3思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4%E5%AE%9E%E7%8E%B0"><span class="toc-text">3.4实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5%E4%BE%8B%E5%AD%90"><span class="toc-text">3.5例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6RR%E5%92%8CRC%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E4%B8%8B"><span class="toc-text">3.6RR和RC隔离级别下</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%A1%A5%E5%85%85%E9%97%AE%E9%A2%98"><span class="toc-text">四、补充问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1%E6%AD%BB%E9%94%81"><span class="toc-text">4.1死锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2%E9%94%81%E5%8D%87%E7%BA%A7"><span class="toc-text">4.2锁升级</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 By whz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="Increase font size"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="Decrease font size"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

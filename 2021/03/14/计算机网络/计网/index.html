@@ -1,0 +1,457 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>面试题记录 | Aurora</title><meta name="keywords" content="面试"><meta name="author" content="whz"><meta name="copyright" content="whz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="计网一、TCP三次握手的过程1.符号说明 ACK：确认标志，请求连接时为0，连接建立后所有发送的报文的ACK必须为1 SYN：同步序列号，只在三次握手建立连接时有效，值为1 ISN ：初始序列号，由生成器生成一个32位的ISN，生成器用32位长的时钟，每隔一段时间增长一次，大约5小时会重新循环。而数据包的默认最大寿命MSL为2分钟，所以可以认为初始序列号是唯一的  2.过程假设客户端和服务器的初始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题记录">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/03/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="计网一、TCP三次握手的过程1.符号说明 ACK：确认标志，请求连接时为0，连接建立后所有发送的报文的ACK必须为1 SYN：同步序列号，只在三次握手建立连接时有效，值为1 ISN ：初始序列号，由生成器生成一个32位的ISN，生成器用32位长的时钟，每隔一段时间增长一次，大约5小时会重新循环。而数据包的默认最大寿命MSL为2分钟，所以可以认为初始序列号是唯一的  2.过程假设客户端和服务器的初始">
+<meta property="og:locale">
+<meta property="og:image" content="https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg">
+<meta property="article:published_time" content="2021-03-14T03:02:20.065Z">
+<meta property="article:modified_time" content="2021-08-16T17:16:45.921Z">
+<meta property="article:author" content="whz">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://aurora-ze.github.io.git/2021/03/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-17 01:16:45'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/mycss.css"><link rel="stylesheet" href="/css/iconfont.css"><link rel="stylesheet" href="/self/code3.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">104</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">18</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Aurora</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">面试题记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-03-14T03:02:20.065Z" title="Created 2021-03-14 11:02:20">2021-03-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-08-16T17:16:45.921Z" title="Updated 2021-08-17 01:16:45">2021-08-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="面试题记录"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="计网"><a href="#计网" class="headerlink" title="计网"></a>计网</h1><h4 id="一、TCP三次握手的过程"><a href="#一、TCP三次握手的过程" class="headerlink" title="一、TCP三次握手的过程"></a>一、TCP三次握手的过程</h4><h6 id="1-符号说明"><a href="#1-符号说明" class="headerlink" title="1.符号说明"></a>1.符号说明</h6><ul>
+<li>ACK：确认标志，请求连接时为0，连接建立后所有发送的报文的ACK必须为1</li>
+<li>SYN：同步序列号，只在三次握手建立连接时有效，值为1</li>
+<li>ISN ：初始序列号，由生成器生成一个32位的ISN，生成器用32位长的时钟，每隔一段时间增长一次，大约<strong>5小时</strong>会重新循环。而数据包的默认最大寿命<strong>MSL</strong>为<strong>2分钟</strong>，所以可以认为初始序列号是唯一的</li>
+</ul>
+<h6 id="2-过程"><a href="#2-过程" class="headerlink" title="2.过程"></a>2.过程</h6><p>假设客户端和服务器的初始序列号分别为X，Y</p>
+<ol>
+<li><p>客户端发送建立连接请求，<code>SYN = 1，seq = X</code></p>
+</li>
+<li><p>服务器收到请求并回复，<code>SYN = 1，ack = X + 1，seq= Y</code></p>
+</li>
+<li><p>客户端收到回复，并告诉服务器我收到了 <code>SYN = 0，ack = Y + 1，seq = X + 1，</code></p>
+</li>
+</ol>
+<p>三次握手可以理解为</p>
+<ol>
+<li>客户端 - &gt; 服务器  SYN，my ISN is X</li>
+<li>服务器 - &gt; 客户端  ACK，your ISN is X</li>
+<li>服务器 - &gt; 客户端  SYN，my ISN is Y</li>
+<li>客户端 - &gt; 服务器  ACK，your ISN is Y</li>
+</ol>
+<p>其中2，3 可以合并</p>
+<h4 id="二、为什么要进行三次握手，而不用两次或四次？"><a href="#二、为什么要进行三次握手，而不用两次或四次？" class="headerlink" title="二、为什么要进行三次握手，而不用两次或四次？"></a>二、为什么要进行三次握手，而不用两次或四次？</h4><p>目的是建立可靠的通信信道，同时避免资源浪费。</p>
+<p>如果是采用两次握手的话，只保证了客户端的发送和接受，而服务器不知道它发出的报文是否被客户端接受到。</p>
+<p>而三次握手则保证了服务器和客户端的发送接收都没有问题。</p>
+<p>四次握手的话会浪费更多的网络资源</p>
+<h4 id="三、第二次握手为什么要传回SYN？"><a href="#三、第二次握手为什么要传回SYN？" class="headerlink" title="三、第二次握手为什么要传回SYN？"></a>三、第二次握手为什么要传回SYN？</h4><p>第二次握手既传了ACK，又传了SYN。</p>
+<p>传ACK是为了告诉发送方，我收到了你发送的信息，这表明客户端到服务器的通信是正常的。</p>
+<p>而回传SYN则是为了建立并确认服务端到客户端的通信。</p>
+<h4 id="四、四次挥手的过程"><a href="#四、四次挥手的过程" class="headerlink" title="四、四次挥手的过程"></a>四、四次挥手的过程</h4><ol>
+<li>客户端向服务器发起<code>FIN请求</code></li>
+<li>服务器收到断开连接请求后，并没有立即关闭，而是先发送<code>ACK应答报文</code>，通知客户端，它已经收到请求</li>
+<li>服务器等待资源发送完毕，再发出<code>FIN报文</code></li>
+<li>客户端收到服务器的FIN报文后，发出<code>ACK确认报文</code>给服务器，并开始计时，在<strong>2MSL（max segment lifetime）</strong>后关闭连接</li>
+</ol>
+<h4 id="五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？"><a href="#五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？" class="headerlink" title="五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？"></a>五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？</h4><p>因为在三次握手的时候，服务器接收到客户端的连接请求时，可以立即发出ACK应答报文并请求建立连接</p>
+<p>而在四次挥手过程中，服务器接收到客户端的FIN请求，它可能还有数据包还没发送完，只能先返回ACK报文来应答，等数据包发送完之后，才能返回FIN请求给客户端。</p>
+<h4 id="六、TIME-WAIT状态为什么要定义为2MSL？"><a href="#六、TIME-WAIT状态为什么要定义为2MSL？" class="headerlink" title="六、TIME_WAIT状态为什么要定义为2MSL？"></a>六、TIME_WAIT状态为什么要定义为2MSL？</h4><ol>
+<li><p>尽可能能的确保最后的ACK报文顺利到达服务器</p>
+<p> 第四次握手时，客户端向服务器发送的ACK报文可能会丢失，服务器收不到ACK报文，就会进行超时重传FIN</p>
+<p> <strong>补充：</strong>那么为什么不把时间设置成<strong>RTT（报文从发送到接受再到确认的一次往返时间）</strong></p>
+<p> <strong>答：</strong>即第二点理由</p>
+</li>
+<li><p>为了确保老的重复的报文段消失在网络中</p>
+</li>
+<li><p>一些路由器会缓存数据包，TIME_WAIT可以有效地应对这种情况</p>
+</li>
+</ol>
+<h4 id="七、TCP三次握手可以传递数据吗？"><a href="#七、TCP三次握手可以传递数据吗？" class="headerlink" title="七、TCP三次握手可以传递数据吗？"></a>七、TCP三次握手可以传递数据吗？</h4><p>前两次不可以，因为此时连接还没建立。</p>
+<p>第三次可以，因为客户端收到服务器传来的ACK报文后，处于建立连接的状态，并且知道服务器接收和发送能力是正常的，所以可以传递数据。</p>
+<h4 id="八、TCP如果没有完成第四次挥手会发生什么？"><a href="#八、TCP如果没有完成第四次挥手会发生什么？" class="headerlink" title="八、TCP如果没有完成第四次挥手会发生什么？"></a>八、TCP如果没有完成第四次挥手会发生什么？</h4><p>服务器端的重传计时器达到规定时间片，依旧没有收到来自客户端的ACK报文，就开始进行超时重传，重新发送FIN报文给客户端。</p>
+<h4 id="九、计网五层模型和七层模型（应用层协议有哪些）"><a href="#九、计网五层模型和七层模型（应用层协议有哪些）" class="headerlink" title="九、计网五层模型和七层模型（应用层协议有哪些）"></a>九、计网五层模型和七层模型（应用层协议有哪些）</h4><p>五层模型，从上到下：</p>
+<ul>
+<li><strong>应用层</strong>——<strong>DNS、HTTP</strong>、SMTP、FTP、telnet</li>
+</ul>
+<p>提供应用进程间的服务</p>
+<ul>
+<li><strong>传输层</strong>——<strong>TCP、UDP</strong></li>
+</ul>
+<p>提供端到端的通信</p>
+<p>即数据传输路径中最两端的两台网络设备之间的通信</p>
+<ul>
+<li><strong>网络层</strong>——<strong>IP</strong>、ARP、ICMP、IGMP</li>
+</ul>
+<p>路由、寻址，把数据包传送到目的地</p>
+<ul>
+<li><strong>数据链路层</strong>——PPP、CSMA/CD</li>
+</ul>
+<ul>
+<li><strong>物理层</strong>——电路交换、分组交换</li>
+</ul>
+<p><strong>透明</strong>地传输比特流，<strong>透明</strong>即让上层感受不到传输介质、接口光纤不同所带来的变化</p>
+<p>七层模型：多了两层，表示层和会话层</p>
+<h4 id="十、浏览器输入URL后发生了什么？（使用了哪些协议）"><a href="#十、浏览器输入URL后发生了什么？（使用了哪些协议）" class="headerlink" title="十、浏览器输入URL后发生了什么？（使用了哪些协议）"></a>十、浏览器输入URL后发生了什么？（使用了哪些协议）</h4><ol>
+<li><strong>DNS解析</strong></li>
+</ol>
+<p>根据域名，在<strong>浏览器缓存、系统缓存、路由器缓存</strong>等依次向上查找。</p>
+<p>另外，<strong>DNS重定向/负载均衡</strong></p>
+<ol start="2">
+<li><strong>建立TCP连接</strong></li>
+</ol>
+<p>三次握手</p>
+<ol start="3">
+<li><strong>发送HTTP请求</strong></li>
+</ol>
+<p>因为HTTP请求是明文，存在信息泄露的风险。</p>
+<p>所以采用HTTPS协议进行加密（HTTP + SSL）</p>
+<ol start="4">
+<li><p><strong>服务器处理请求并返回HTTP报文</strong></p>
+</li>
+<li><p><strong>浏览器解析渲染页面</strong></p>
+</li>
+</ol>
+<p>浏览器边解析边渲染</p>
+<p>解析HTML和CSS文件，得到DOM树和渲染树</p>
+<p>然后布局渲染树，并把它绘制到屏幕上</p>
+<h6 id="协议："><a href="#协议：" class="headerlink" title="协议："></a>协议：</h6><p>1.DNS    解析域名，获得ip地址</p>
+<p>2.TCP     与服务器建立连接</p>
+<p>3.IP        使用TCP建立连接时，网络层用到了IP协议</p>
+<p>4.OSPF  进行路由选择</p>
+<p>5.ARP     路由器与服务器通信时，根据ip地址得到MAC地址</p>
+<p>6.HTTP   发送网页数据的请求</p>
+<h4 id="十一、TCP和UDP的区别"><a href="#十一、TCP和UDP的区别" class="headerlink" title="十一、TCP和UDP的区别"></a>十一、TCP和UDP的区别</h4><p>TCP：可靠、需要建立连接、消耗资源较多</p>
+<p>UDP：不保证数据的正确，无连接，消耗资源少，程序结构简单</p>
+<h4 id="十二、TCP的可靠传输"><a href="#十二、TCP的可靠传输" class="headerlink" title="十二、TCP的可靠传输"></a>十二、TCP的可靠传输</h4><h5 id="（一）如何确保可靠性传输："><a href="#（一）如何确保可靠性传输：" class="headerlink" title="（一）如何确保可靠性传输："></a>（一）如何确保可靠性传输：</h5><p>使用超时重传来实现可靠传输，如果一个已经发送的报文段在超时时间内没有收到确认，那么就重传这个报文段。</p>
+<h5 id="（二）拥塞控制："><a href="#（二）拥塞控制：" class="headerlink" title="（二）拥塞控制："></a>（二）拥塞控制：</h5><blockquote>
+<p>发送方维护变量<strong>拥塞窗口（cwnd）</strong>，出现拥塞时，控制发送方的发送速率，算法如下：</p>
+</blockquote>
+<p><strong>1.慢开始</strong> 从发送1个报文段开始，如果该报文段被接受，就把数量*2</p>
+<p>**2.拥塞避免 **慢开始会增长地很快，当cwnd大于门限时，每次只增1</p>
+<p>如果出现了超时，就将门限设置为cwnd / 2，然后cwnd = 1，重新执行满开始</p>
+<p><strong>3.快重传与快恢复</strong></p>
+<blockquote>
+<p>接收方收到的报文段应该是有序的，例如M1，M2收到，又来了个M4，这时候接收方发送对M2的确认</p>
+</blockquote>
+<p>一旦发送方收到三个重复的确认，就可以判定下一个报文段丢失，立刻重传</p>
+<p>出现快重传后，网络并没有拥塞，只是丢失了个别报文段，因此执行快恢复。</p>
+<p>即把cwnd的值设置的大一些，具体操作为：</p>
+<p>门限 / 2，cwnd = 门限，这表示直接进入拥塞避免状态。</p>
+<h5 id="（三）TCP传输时，客户端突然断开连接，服务器如何判定？"><a href="#（三）TCP传输时，客户端突然断开连接，服务器如何判定？" class="headerlink" title="（三）TCP传输时，客户端突然断开连接，服务器如何判定？"></a>（三）TCP传输时，客户端突然断开连接，服务器如何判定？</h5><p>利用TCP协议层提供的保活探测方法来判定</p>
+<h5 id="（四）TCP的端口是为了区分什么？"><a href="#（四）TCP的端口是为了区分什么？" class="headerlink" title="（四）TCP的端口是为了区分什么？"></a>（四）TCP的端口是为了区分什么？</h5><p>区分一台设备中的不同应用进程</p>
+<h4 id="十三、常见的HTTP状态码"><a href="#十三、常见的HTTP状态码" class="headerlink" title="十三、常见的HTTP状态码"></a>十三、常见的HTTP状态码</h4><p>200，204（没有实体内容），206（部分内容）</p>
+<p>301（永久重定向），302（临时），303（临时，必须用GET请求），304（客户端发送附带条件，条件满足后的返回内容），307（临时）</p>
+<p>400（请求报文错误），401（需要HTTP认证），403（没有访问服务器的权限），404（没找到资源）</p>
+<p>500（服务器出错），503（服务器处于维护或超负载状态）</p>
+<h4 id="十四、HTTP报文"><a href="#十四、HTTP报文" class="headerlink" title="十四、HTTP报文"></a>十四、HTTP报文</h4><h5 id="（一）请求报文和响应报文的组成"><a href="#（一）请求报文和响应报文的组成" class="headerlink" title="（一）请求报文和响应报文的组成"></a>（一）请求报文和响应报文的组成</h5><p>请求报文由<strong>请求行、请求首部、请求实体</strong>组成</p>
+<p>响应报文由<strong>状态行、响应首部、响应实体</strong>组成</p>
+<h5 id="（二）HTTP请求报文包含哪些方法，GET和POST的区别"><a href="#（二）HTTP请求报文包含哪些方法，GET和POST的区别" class="headerlink" title="（二）HTTP请求报文包含哪些方法，GET和POST的区别"></a>（二）HTTP请求报文包含哪些方法，GET和POST的区别</h5><p><strong>方法</strong>有get，post，head，put，delete，options，trace，connect</p>
+<p><strong>区别：</strong></p>
+<p>1.GET用来获取资源，不会修改服务器的数据</p>
+<p>而POST用来传输实体，可能会修改数据</p>
+<p>2.GET的请求参数会附在URL之后，参数大小有限制</p>
+<p>而POST参数是放在请求实体中</p>
+<h4 id="十五、HTTP和HTTPS的区别"><a href="#十五、HTTP和HTTPS的区别" class="headerlink" title="十五、HTTP和HTTPS的区别"></a>十五、HTTP和HTTPS的区别</h4><p><strong>区别：</strong></p>
+<ol>
+<li>明文，安全性</li>
+<li>需要证书，费用不同</li>
+<li>连接方式不同</li>
+</ol>
+<p><strong>补充：</strong></p>
+<ul>
+<li>HTTPS使用混合加密机制</li>
+</ul>
+<blockquote>
+<p>服务器持有公钥 A 和私钥 A’</p>
+<p>客户端发起连接，服务器把 A 发送给客户端</p>
+<p>客户端接收 A ，本地再生成一个对称密钥 X ，用 A 加密 X ，发送给服务器</p>
+<p>服务器用 A‘ 解密，得到对称密钥 X</p>
+<p>然后双方用 X 加密报文进行通信</p>
+</blockquote>
+<ul>
+<li>数字证书</li>
+</ul>
+<blockquote>
+<p>混合加密机制也有漏洞。</p>
+<p>如果遇到“中间人攻击”，即中间人劫持服务器发送的公钥，换成自己的</p>
+<p>所以需要让客户端判断它收到的公钥是否是服务器的，而不是中间人篡改后的</p>
+<p>于是CA机构就出现了，网站向该机构申请数字证书，把公钥写入证书中，把证书传给客户端就可以了。</p>
+</blockquote>
+<ul>
+<li>数字签名</li>
+</ul>
+<blockquote>
+<p>证书也可能被篡改，所以就需要签名来判断证书是否为真。</p>
+<p>签名制作：（CA持有一对非对称密钥）</p>
+<ol>
+<li><p>CA对证书明文进行hash</p>
+</li>
+<li><p>hash后的值进行私钥加密，得到签名</p>
+</li>
+</ol>
+<p>浏览器判定：（浏览器持有CA公钥）</p>
+<ol>
+<li>用公钥解密签名</li>
+<li>根据证书说明的hash算法对明文hash</li>
+<li>比较前两者的值是否相等</li>
+</ol>
+</blockquote>
+<h4 id="十六、HTTP1-0、1-1和2-0的区别"><a href="#十六、HTTP1-0、1-1和2-0的区别" class="headerlink" title="十六、HTTP1.0、1.1和2.0的区别"></a>十六、HTTP1.0、1.1和2.0的区别</h4><p><strong>1.0与1.1：</strong>1.1默认使用长连接，支持流水线的请求</p>
+<p><strong>2.0和1.x相比：</strong></p>
+<ul>
+<li>支持多路复用</li>
+</ul>
+<blockquote>
+<p>能够在一个连接中并发处理多个请求</p>
+</blockquote>
+<ul>
+<li>头部数据压缩（开始行 + 首部。主体一般都是压缩的）</li>
+</ul>
+<blockquote>
+<p>客户端和服务器同时维护一个缓存表，避免重复传输</p>
+<p>此外，利用哈夫曼编码压缩首部字段</p>
+</blockquote>
+<ul>
+<li>服务端推送</li>
+</ul>
+<blockquote>
+<p>客户端请求资源时，会把相关资源（JS，CSS等）一起发送给客户端</p>
+</blockquote>
+<ul>
+<li>二进制、分帧层</li>
+</ul>
+<blockquote>
+<p>1.x是用文本协议的格式解析的，2.0采用二进制解析</p>
+<p>把报文分成headers和data帧</p>
+</blockquote>
+<ul>
+<li>总结</li>
+</ul>
+<p>数据流共用一个连接，提高了TCP的利用率，同时也降低了延迟。</p>
+<h4 id="十七、HTTP的缓存机制"><a href="#十七、HTTP的缓存机制" class="headerlink" title="十七、HTTP的缓存机制"></a>十七、HTTP的缓存机制</h4><p>介绍：</p>
+<p>①Expires：过期时间</p>
+<p>②Cache-Control：public，private，max-age，no-cache（不建议缓存，但还是有，相当于最大存活时间为0），no-store（不缓存），会覆盖①</p>
+<p>③Last-Modified / If-Modified-Since：最后修改时间</p>
+<p>④Etag / If-None-Match：唯一标识，如果修改了就会变化，优先级大于③</p>
+<ul>
+<li>存储策略</li>
+</ul>
+<blockquote>
+<p>服务器响应客户端的第一次请求时，缓存协商。</p>
+<p>可以是1234的任意一个（甚至多个）</p>
+</blockquote>
+<ul>
+<li>过期策略</li>
+</ul>
+<blockquote>
+<p>客户端想要请求资源时，判断有无缓存，有缓存的话是否过期。</p>
+</blockquote>
+<ul>
+<li>对比策略</li>
+</ul>
+<blockquote>
+<p>如果请求头里有If-Modified-Since，就比较修改时间</p>
+<p>如果请求头里有If-None-Match，就查找是否有Etag等于该值的数据</p>
+<p>缓存没有过期的话，返回304；过期的话，重新进行缓存协商，并返回200和新的数据</p>
+</blockquote>
+<h4 id="十八、什么是cookie和session，区别是什么，禁用cookie怎么办？"><a href="#十八、什么是cookie和session，区别是什么，禁用cookie怎么办？" class="headerlink" title="十八、什么是cookie和session，区别是什么，禁用cookie怎么办？"></a>十八、什么是cookie和session，区别是什么，禁用cookie怎么办？</h4><p>cookie和session都是会话跟踪的技术</p>
+<p>cookie是保存在客户端的，在发送请求时携带cookie，服务器可以根据cookie跟踪会话</p>
+<p>session是保存在服务端的。客户端第一次请求时，在服务器生成的一小块区域，然后服务器把session_id发给客户端，接下来的请求都带上session_id</p>
+<p>区别：</p>
+<ol>
+<li>存放的位置不同</li>
+<li>请求过多时，session会影响服务器性能</li>
+<li>单个cookie保存的数据有大小限制，浏览器一般也有数量限制</li>
+</ol>
+<h4 id="十九、页面加载不出来的原因"><a href="#十九、页面加载不出来的原因" class="headerlink" title="十九、页面加载不出来的原因"></a>十九、页面加载不出来的原因</h4></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">whz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://aurora-ze.github.io.git/2021/03/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91/">https://aurora-ze.github.io.git/2021/03/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a></div><div class="post_share"><div class="social-share" data-image="https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/16/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E5%B9%B6%E5%8F%91%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89/"><img class="prev-cover" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">并发(待完善)</div></div></a></div><div class="next-post pull-right"><a href="/2021/02/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/"><img class="next-cover" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">有限状态机</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%BD%91"><span class="toc-text">计网</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-text">一、TCP三次握手的过程</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-%E7%AC%A6%E5%8F%B7%E8%AF%B4%E6%98%8E"><span class="toc-text">1.符号说明</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-%E8%BF%87%E7%A8%8B"><span class="toc-text">2.过程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%9B%E8%A1%8C%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E8%80%8C%E4%B8%8D%E7%94%A8%E4%B8%A4%E6%AC%A1%E6%88%96%E5%9B%9B%E6%AC%A1%EF%BC%9F"><span class="toc-text">二、为什么要进行三次握手，而不用两次或四次？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BC%A0%E5%9B%9ESYN%EF%BC%9F"><span class="toc-text">三、第二次握手为什么要传回SYN？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-text">四、四次挥手的过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%97%B6%E5%80%99%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E5%85%B3%E9%97%AD%E7%9A%84%E6%97%B6%E5%80%99%E5%8D%B4%E6%98%AF%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%9F"><span class="toc-text">五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD%E3%80%81TIME-WAIT%E7%8A%B6%E6%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AE%9A%E4%B9%89%E4%B8%BA2MSL%EF%BC%9F"><span class="toc-text">六、TIME_WAIT状态为什么要定义为2MSL？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%83%E3%80%81TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%8F%AF%E4%BB%A5%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE%E5%90%97%EF%BC%9F"><span class="toc-text">七、TCP三次握手可以传递数据吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AB%E3%80%81TCP%E5%A6%82%E6%9E%9C%E6%B2%A1%E6%9C%89%E5%AE%8C%E6%88%90%E7%AC%AC%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">八、TCP如果没有完成第四次挥手会发生什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E8%AE%A1%E7%BD%91%E4%BA%94%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8C%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%EF%BC%88%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%89"><span class="toc-text">九、计网五层模型和七层模型（应用层协议有哪些）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5URL%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F%EF%BC%88%E4%BD%BF%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-text">十、浏览器输入URL后发生了什么？（使用了哪些协议）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%EF%BC%9A"><span class="toc-text">协议：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">十一、TCP和UDP的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93"><span class="toc-text">十二、TCP的可靠传输</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%EF%BC%88%E4%B8%80%EF%BC%89%E5%A6%82%E4%BD%95%E7%A1%AE%E4%BF%9D%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BC%A0%E8%BE%93%EF%BC%9A"><span class="toc-text">（一）如何确保可靠性传输：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EF%BC%88%E4%BA%8C%EF%BC%89%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%EF%BC%9A"><span class="toc-text">（二）拥塞控制：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EF%BC%88%E4%B8%89%EF%BC%89TCP%E4%BC%A0%E8%BE%93%E6%97%B6%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AA%81%E7%84%B6%E6%96%AD%E5%BC%80%E8%BF%9E%E6%8E%A5%EF%BC%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E5%88%A4%E5%AE%9A%EF%BC%9F"><span class="toc-text">（三）TCP传输时，客户端突然断开连接，服务器如何判定？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EF%BC%88%E5%9B%9B%EF%BC%89TCP%E7%9A%84%E7%AB%AF%E5%8F%A3%E6%98%AF%E4%B8%BA%E4%BA%86%E5%8C%BA%E5%88%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">（四）TCP的端口是为了区分什么？</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84HTTP%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-text">十三、常见的HTTP状态码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81HTTP%E6%8A%A5%E6%96%87"><span class="toc-text">十四、HTTP报文</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%EF%BC%88%E4%B8%80%EF%BC%89%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E5%92%8C%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E7%BB%84%E6%88%90"><span class="toc-text">（一）请求报文和响应报文的组成</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EF%BC%88%E4%BA%8C%EF%BC%89HTTP%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E5%8C%85%E5%90%AB%E5%93%AA%E4%BA%9B%E6%96%B9%E6%B3%95%EF%BC%8CGET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">（二）HTTP请求报文包含哪些方法，GET和POST的区别</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E4%BA%94%E3%80%81HTTP%E5%92%8CHTTPS%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">十五、HTTP和HTTPS的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E3%80%81HTTP1-0%E3%80%811-1%E5%92%8C2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">十六、HTTP1.0、1.1和2.0的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E4%B8%83%E3%80%81HTTP%E7%9A%84%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="toc-text">十七、HTTP的缓存机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E5%85%AB%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AFcookie%E5%92%8Csession%EF%BC%8C%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E7%A6%81%E7%94%A8cookie%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-text">十八、什么是cookie和session，区别是什么，禁用cookie怎么办？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E4%B9%9D%E3%80%81%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD%E4%B8%8D%E5%87%BA%E6%9D%A5%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-text">十九、页面加载不出来的原因</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 By whz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="Increase font size"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="Decrease font size"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

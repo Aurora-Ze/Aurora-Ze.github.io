@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="总览从加入元素过程开始思考：  如何计算hash 定位数组下标的方式，及冲突的解决方式 树化（变为红黑树）或扩容的条件  1. 计算hash计算hash主要使用的是Object对象提供的hashCode()方法 但是，它经过了一次扰动才返回真正的hash值。 key的哈希码的高16位与低16位进行异或，增加低十六位的随机性 1234static final int hash(Object key)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="总览从加入元素过程开始思考：  如何计算hash 定位数组下标的方式，及冲突的解决方式 树化（变为红黑树）或扩容的条件  1. 计算hash计算hash主要使用的是Object对象提供的hashCode()方法 但是，它经过了一次扰动才返回真正的hash值。 key的哈希码的高16位与低16位进行异或，增加低十六位的随机性 1234static final int hash(Object key)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.434Z">
+<meta property="article:modified_time" content="2021-09-30T06:25:12.635Z">
+<meta property="article:author" content="aurora">
+<meta property="article:tag" content="源码">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HashMap | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HashMap
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-30 14:25:12" itemprop="dateModified" datetime="2021-09-30T14:25:12+08:00">2021-09-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">基础</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h1><p>从<code>加入元素</code>过程开始思考：</p>
+<ul>
+<li>如何计算hash</li>
+<li>定位数组下标的方式，及冲突的解决方式</li>
+<li>树化（变为红黑树）或扩容的条件</li>
+</ul>
+<h2 id="1-计算hash"><a href="#1-计算hash" class="headerlink" title="1. 计算hash"></a>1. 计算hash</h2><p>计算hash主要使用的是Object对象提供的<code>hashCode()</code>方法</p>
+<p>但是，它经过了一次扰动才返回真正的hash值。</p>
+<p><strong>key</strong>的哈希码的高16位与低16位进行<strong>异或</strong>，增加低十六位的<strong>随机性</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h;</span><br><span class="line">        <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-计算数组下标"><a href="#2-计算数组下标" class="headerlink" title="2. 计算数组下标"></a>2. 计算数组下标</h2><p><strong>代码</strong></p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tab[i = (n - <span class="number">1</span>) <span class="meta">&amp; hash]</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以看到，计算下标的方式是<strong>与运算</strong></p>
+<p>简单地说，下标就是扰动后的hash对数组容量求余，得到的<strong>余数</strong></p>
+</blockquote>
+<p><strong>解释</strong></p>
+<p>首先，hashmap通过<code>tableSizeFor</code>方法保证数组大小是2的整数次幂</p>
+<blockquote>
+<p>PS：如果初始化时传入的不是2的整数次幂，会通过该方法调整为大于该数的最小的2的整数次幂。例如传入13，该方法返回16</p>
+</blockquote>
+<p>其次，在n是2的整数次幂的情况下，对n求余可以通过上述<code>与运算</code>进行</p>
+<p>但是，由于<code>n-1</code>的二进制低位全是1，高位全是0。这样它们进行<code>与运算</code>时，可能就只用到了hash的低位（具体用到几位和n-1位数有关）</p>
+<blockquote>
+<p>PS：16 - 1 的二进制有个特点，即<strong>低位全是1，高位全是0</strong></p>
+</blockquote>
+<p><strong>这样出现哈希冲突的可能就会增大，所以就需要扰动函数，来增加低位hash值的随机性</strong></p>
+<h2 id="3-哈希冲突"><a href="#3-哈希冲突" class="headerlink" title="3. 哈希冲突"></a>3. 哈希冲突</h2><p>计算完数组下标后，如果数组上的该位置为空，则直接把节点放入即可。</p>
+<p>如果已经有节点，就意味着发生了<code>哈希冲突</code>。</p>
+<p><strong>解决方式：拉链法或树化</strong></p>
+<p><strong>先直接尾插，然后判断，</strong></p>
+<ol>
+<li>链表长度小于等于8：什么都不做</li>
+<li>链表长度超过8，<strong>尝试</strong>树化，变为红黑树</li>
+</ol>
+<p><strong>为什么说是尝试树化呢？</strong></p>
+<p>因为树化时有一个判断：<strong>如果数组长度小于64，则不会树化，而是先扩容数组然后重新计算哈希</strong></p>
+<h2 id="4-数组扩容机制"><a href="#4-数组扩容机制" class="headerlink" title="4. 数组扩容机制"></a>4. 数组扩容机制</h2><ul>
+<li><strong>capacity：</strong>数组长度，默认为16</li>
+<li><strong>load factor：</strong>负载因子，默认为0.75</li>
+<li><strong>threshold：</strong>数组中存放元素的上限，默认12</li>
+</ul>
+<p><strong>计算公式：</strong>$\quad threshold = capacity * load factor$</p>
+<p>当HashMap中的元素个数**大于临界值(threshold)**时，就会进行扩容：</p>
+<ol>
+<li>把数组容量变为原来的两倍</li>
+<li>重新计算hash(这里是指元素在散列表中的位置，即索引，与数组大小有关，所以发生了变化)</li>
+</ol>
+<h2 id="5-插入过程"><a href="#5-插入过程" class="headerlink" title="5. 插入过程"></a>5. 插入过程</h2><p>插入元素时：</p>
+<ol>
+<li>如果数组索引处节点是空的，就新建一个节点</li>
+<li>如果索引处节点不为空，则插入到链表中（1.7头插法，1.8尾插法）</li>
+<li>如果是树节点，则调用插入树节点的方法</li>
+</ol>
+<p>插入完毕后：</p>
+<p>如果链表长度大于8，则判断数组容量，小于64就进行<strong>resize</strong>，大于64就<strong>由链表</strong>优化成<strong>红黑树</strong></p>
+<h3 id="tableSizeFor"><a href="#tableSizeFor" class="headerlink" title="tableSizeFor"></a>tableSizeFor</h3><p><strong>方法介绍</strong></p>
+<p>传入用户指定的初始容量，然后返回大于该数值的最近的2的幂次</p>
+<p>例如输入11，返回16</p>
+<p><strong>分析</strong></p>
+<ol>
+<li>n = cap - 1</li>
+<li>不考虑边界情况时，n的最高位是1；然后把最高位后的所有位都置为1<ul>
+<li>做法<ul>
+<li>n右移1位，和原数n进行与，使第二位为1</li>
+<li>n右移2位，和原数与，使第三四位为1</li>
+<li>以此类推，将n除去最高位的其他位都设置为1</li>
+</ul>
+</li>
+<li><strong>目的：得到$2^n-1$，最后把1加回来即可得到2的幂次</strong></li>
+</ul>
+</li>
+<li>n + 1</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">tableSizeFor</span><span class="params">(<span class="keyword">int</span> cap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = cap - <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">2</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">4</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">        <span class="keyword">return</span> (n &lt; <span class="number">0</span>) ? <span class="number">1</span> : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="putVal"><a href="#putVal" class="headerlink" title="putVal"></a>putVal</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="keyword">int</span> n, i;</span><br><span class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>) <span class="comment">// 判断数组是否为空或长度为0，然后进行扩容</span></span><br><span class="line">            n = (tab = resize()).length;</span><br><span class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>) <span class="comment">// 数组该下标位置为空，无哈希冲突，则直接插入到数组中</span></span><br><span class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 数组索引处存在节点，发生碰撞</span></span><br><span class="line">            Node&lt;K,V&gt; e; K k;</span><br><span class="line">            <span class="keyword">if</span> (p.hash == hash &amp;&amp;  <span class="comment">// 判断是不是重复元素，如果是的话，会在下面覆盖。</span></span><br><span class="line">                ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                e = p;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</span><br><span class="line">                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</span><br><span class="line">                    <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        p.next = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">                        <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// 尾插后链表长度大于8，尝试树化</span></span><br><span class="line">                            treeifyBin(tab, hash);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                        ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    p = e;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// 覆盖重复元素</span></span><br><span class="line">                V oldValue = e.value;</span><br><span class="line">                <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</span><br><span class="line">                    e.value = value;</span><br><span class="line">                afterNodeAccess(e);</span><br><span class="line">                <span class="keyword">return</span> oldValue; <span class="comment">// 返回旧的value，覆盖相同key的时候才会从这里返回</span></span><br><span class="line">            &#125;					 <span class="comment">// 这里还可以让HashSet的add方法返回false</span></span><br><span class="line">        &#125;						 <span class="comment">// 因为add方法调用了putVal方法，具体返回为 putVal(...) == null</span></span><br><span class="line">        ++modCount;				 <span class="comment">// false则说明在HashMap中遇到并覆盖了重复的元素</span></span><br><span class="line">        <span class="keyword">if</span> (++size &gt; threshold)</span><br><span class="line">            resize();</span><br><span class="line">        afterNodeInsertion(evict);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>HashSet的add方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-补充"><a href="#6-补充" class="headerlink" title="6.补充"></a>6.补充</h2><p><strong>1.判断是否为重复的key</strong></p>
+<p>必须满足两个条件</p>
+<ol>
+<li>两个key的hash值相同</li>
+<li>key的引用地址相同或者equals相等</li>
+</ol>
+<h1 id="其他Hash容器"><a href="#其他Hash容器" class="headerlink" title="其他Hash容器"></a>其他Hash容器</h1><h2 id="1-HashSet"><a href="#1-HashSet" class="headerlink" title="1.HashSet"></a>1.HashSet</h2><p><strong>结构？</strong></p>
+<p>内部就是使用的HasMap</p>
+<p><strong>如何去重？</strong></p>
+<p>利用了HashMap的put方法的返回值。</p>
+<p>put方法返回的值有两种情况</p>
+<ol>
+<li><strong>null</strong>：key为null或者不存在</li>
+<li><strong>非空</strong>：覆盖了已存在key，返回旧key</li>
+</ol>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.<span class="built_in">put</span>(e, PRESENT) == null;</span><br><span class="line">    <span class="comment">// 这里可以看到，HashSet添加元素，是把元素作为map的key,而map的value则是一个常量Object，在最上方定义。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-Hashtable"><a href="#2-Hashtable" class="headerlink" title="2.Hashtable"></a>2.Hashtable</h2>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/" title="HashMap">https://aurora-ze.github.io.git/2021/12/13/Java/Java容器/HashMap/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"># 源码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/ArrayList/" rel="prev" title="ArrayList">
+      <i class="fa fa-chevron-left"></i> ArrayList
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E5%B9%B6%E5%8F%91%E5%A4%9A%E7%BA%BF%E7%A8%8B/AQS%E5%AD%A6%E4%B9%A0/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E8%A7%88"><span class="nav-text">总览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%AE%A1%E7%AE%97hash"><span class="nav-text">1. 计算hash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%AE%A1%E7%AE%97%E6%95%B0%E7%BB%84%E4%B8%8B%E6%A0%87"><span class="nav-text">2. 计算数组下标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81"><span class="nav-text">3. 哈希冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%95%B0%E7%BB%84%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="nav-text">4. 数组扩容机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%8F%92%E5%85%A5%E8%BF%87%E7%A8%8B"><span class="nav-text">5. 插入过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tableSizeFor"><span class="nav-text">tableSizeFor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#putVal"><span class="nav-text">putVal</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E8%A1%A5%E5%85%85"><span class="nav-text">6.补充</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96Hash%E5%AE%B9%E5%99%A8"><span class="nav-text">其他Hash容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-HashSet"><span class="nav-text">1.HashSet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Hashtable"><span class="nav-text">2.Hashtable</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

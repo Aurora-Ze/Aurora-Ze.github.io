@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="类文件结构一、背景我们所写的程序想要被计算机执行，有两种方式，第一种是编译成由0和1组成的二进制格式，让计算机执行。 而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即： 编译成与操作系统和机器指令集无关的、平台中立的文件存储格式 这也正是字节码文件的由来。 二、介绍Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类文件结构">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="类文件结构一、背景我们所写的程序想要被计算机执行，有两种方式，第一种是编译成由0和1组成的二进制格式，让计算机执行。 而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即： 编译成与操作系统和机器指令集无关的、平台中立的文件存储格式 这也正是字节码文件的由来。 二、介绍Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.547Z">
+<meta property="article:modified_time" content="2021-04-29T10:58:39.519Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>类文件结构 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          类文件结构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-29 18:58:39" itemprop="dateModified" datetime="2021-04-29T18:58:39+08:00">2021-04-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h2><h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><p>我们所写的程序想要被计算机执行，有两种方式，第一种是<strong>编译成由0和1组成的二进制格式，让计算机执行。</strong></p>
+<p>而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即：</p>
+<p><strong>编译成与操作系统和机器指令集无关的、平台中立的文件存储格式</strong></p>
+<p>这也正是<code>字节码</code>文件的由来。</p>
+<h3 id="二、介绍"><a href="#二、介绍" class="headerlink" title="二、介绍"></a>二、介绍</h3><p>Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。</p>
+<p>但是为了让虚拟机知道这是字节码文件，就需要严格定义字节码文件的格式</p>
+<p>因此在Class文件中，它的每个数据项的顺序和数量，甚至存储的字节序（统一使用Big Endian），都是被严格限定的。</p>
+<p>下面我们将介绍字节码文件的具体结构。</p>
+<h3 id="三、文件格式"><a href="#三、文件格式" class="headerlink" title="三、文件格式"></a>三、文件格式</h3><h5 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h5><p><strong>「Class文件」</strong>采用一种类似于C语言结构体的伪结构来存储数据。</p>
+<p>数据类型只有两种，「无符号数」和「表」</p>
+<ul>
+<li><p>无符号数</p>
+<p>用<code>u1,u2,u4,u8</code>分别来表示<code>1，2，4，8</code>个字节</p>
+<p>可以用来描述<strong>数字、索引引用、数量值或UTF-8编码的字符串值</strong></p>
+</li>
+<li><p>表</p>
+<p>由多个无符号数或表构成的复合数据类型</p>
+<p>为便于区分，表名一般以<code>_info</code>结尾</p>
+</li>
+</ul>
+<p>因为存在同一类型但数量不确定的数据，所以一般会用一个前置的容量计数器来表示数量。</p>
+<h3 id="四、详细介绍"><a href="#四、详细介绍" class="headerlink" title="四、详细介绍"></a>四、详细介绍</h3><h5 id="①魔数"><a href="#①魔数" class="headerlink" title="①魔数"></a>①魔数</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u4</td>
+<td align="center">magic</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>Class文件的头四个字节称为<strong>Magic Number</strong>，用来<strong>确认文件是否是JVM所能接收的Class文件</strong></p>
+<p>使用魔数的方式来区分文件类型，这种方式在GIF和JPEG中也可以看到。</p>
+<p>至于使用头字节而不是文件的扩展名来判断文件类型，主要还是为了安全考虑，毕竟啥文件改了后缀也能变成Class文件。</p>
+<p>Class文件魔数的具体取值为<code>0xCAFEBABE</code>，即咖啡宝贝</p>
+<h5 id="②主版本号和次版本号"><a href="#②主版本号和次版本号" class="headerlink" title="②主版本号和次版本号"></a>②主版本号和次版本号</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">minor_version</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">major_version</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>紧跟着魔数的四个字节分别表示<strong>Minor Version</strong>和<strong>Major Version</strong></p>
+<p>JDK1.1以后，每个大版本都会让主版本号加一。</p>
+<p>高版本的JDK能向下兼容低版本的Class文件，但是版本比它高的Class就不行，因为《Java虚拟机规范》要求了虚拟机必须拒绝执行超过其版本号的Class文件。</p>
+<h5 id="③常量池"><a href="#③常量池" class="headerlink" title="③常量池"></a>③常量池</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">constant_pool_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">cp_info</td>
+<td align="center">constant_pool</td>
+<td align="center">constant_pool_count - 1</td>
+</tr>
+</tbody></table>
+<p>由<code>constant_pool_count</code>和<code>constant_pool</code>构成。</p>
+<p><strong>constant_pool_count（u2类型）</strong></p>
+<p>因为常量池的容量是不固定的，所以入口处有u2类型的数据，来表示「常量池的容量」。</p>
+<p>注意，它是从1开始计数的，所以常量数量为$count - 1$</p>
+<p>这样做的原因，据设计者说，是为了<strong>能够让以后某些指向常量池的索引值的数据表达“不引用任何一个常量池项目”的含义。</strong></p>
+<p><strong>constant_pool（cp_info类型）</strong></p>
+<p>常量池中主要存放两大类常量：<strong>字面量</strong>和<strong>符号引用</strong></p>
+<ul>
+<li><p><strong>字面量</strong></p>
+<p>文本字符串，声明为final的常量值等</p>
+</li>
+<li><p><strong>符号引用</strong></p>
+<p>类、接口的全限定名</p>
+<p>字段的名称和描述符</p>
+<p>方法的名称和描述符等</p>
+</li>
+</ul>
+<p>常量池中的每个常量都是一个表，截至JDK13，共有17种不同类型的常量。</p>
+<p>这17类表有一个共同特点，即<strong>第一个字节都表示tag标志位，代表当前常量属于哪个常量表</strong>，后面的字节根据不同的表而变化。</p>
+<h5 id="④访问标志"><a href="#④访问标志" class="headerlink" title="④访问标志"></a>④访问标志</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">access_flags</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>常量池结束之后的两个字节，用来表示类或接口的访问标志</p>
+<p>可以取的值有：public、final、super、interface等共9个</p>
+<h5 id="⑤索引集合"><a href="#⑤索引集合" class="headerlink" title="⑤索引集合"></a>⑤索引集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">this_class</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">super_class</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">interfaces_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">interfaces</td>
+<td align="center">interfaces_count</td>
+</tr>
+</tbody></table>
+<p>类索引和父类索引都占两个字节，而接口索引是一组数据的集合。</p>
+<p>这些索引用来确认类的全限定名、父类的全限定名以及实现的接口的名称。</p>
+<p><strong>具体确认过程如下：</strong></p>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png" alt="Snipaste_2021-04-25_17-01-01"></p>
+<h5 id="⑥字段表集合"><a href="#⑥字段表集合" class="headerlink" title="⑥字段表集合"></a>⑥字段表集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">fields_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">field_info</td>
+<td align="center">fields</td>
+<td align="center">fields_count</td>
+</tr>
+</tbody></table>
+<p>包含了类或接口声明的类级变量（static）和实例变量，但不包含方法内的局部变量。</p>
+<p>我们可以先思考下，一个字段拥有什么属性？</p>
+<ul>
+<li>修饰符，public、static、volatile等</li>
+<li>名称，字段名</li>
+<li>类型，是什么数据类型</li>
+<li>属性，如果是集合类型，里面包含的其他属性</li>
+</ul>
+<p>根据上面罗列出来的信息，我们可以总结出字段表的内部结构</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">access_flags</td>
+<td align="center">1</td>
+<td align="center">字段修饰符</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">name_index</td>
+<td align="center">1</td>
+<td align="center">简单名称</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">descriptor_index</td>
+<td align="center">1</td>
+<td align="center">描述符</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">attributes_count</td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">attribute_info</td>
+<td align="center">attributes</td>
+<td align="center">attributes_count</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>这里解释下前面提到过的三个名词，全限定名、简单名称和描述符。</p>
+<ul>
+<li><p><strong>全限定名</strong></p>
+<p>com/edu/neu/TestApplication;</p>
+<p>代表类的全限定名</p>
+</li>
+<li><p><strong>简单名称</strong></p>
+<p>sort：sort()方法的简单名称</p>
+<p>arr：arr字段的简单名称</p>
+</li>
+<li><p><strong>描述符</strong></p>
+<p>描述符和上述两者相比更加复杂一些。它是用来描述<strong>字段的数据类型</strong>、<strong>方法的参数列表</strong>和<strong>返回值</strong>。</p>
+</li>
+</ul>
+<p><strong>描述字段时</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">标识字符</th>
+<th align="center">含义</th>
+<th align="center">标识字符</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">B</td>
+<td align="center">基本类型byte</td>
+<td align="center">J</td>
+<td align="center">基本类型long</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">基本类型char</td>
+<td align="center">S</td>
+<td align="center">基本类型short</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">基本类型double</td>
+<td align="center">Z</td>
+<td align="center">基本类型boolean</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">基本类型float</td>
+<td align="center">V</td>
+<td align="center">特殊类型void</td>
+</tr>
+<tr>
+<td align="center">I</td>
+<td align="center">基本类型int</td>
+<td align="center">L</td>
+<td align="center">对象类型，如Ljava/lang/Object;</td>
+</tr>
+</tbody></table>
+<p><strong>基本数据类型和void都用大写字母来表示，对象类型则用L加上对象的全限定名来表示，数组类型在最前面加上若干个[</strong></p>
+<p>对于<code>java.lang.String[][]</code>类型，它的描述符将是<code>[[Ljava/lang/String;</code></p>
+<p>对于<code>int[]</code>，它的描述符将是<code>[I</code></p>
+<p><strong>描述方法时</strong></p>
+<p>按照<strong>先参数列表</strong>、<strong>后返回值</strong>的顺序进行描述，参数列表要放在<code>()</code>中。</p>
+<p>对于<code>int indexOf(char[] source, int srcOffset, int srcCount, char[] target, int tarOffset, int tarCount, int fromIndex)</code>，描述符将是<code>([CII[CIII)I</code></p>
+<h5 id="⑦方法表集合"><a href="#⑦方法表集合" class="headerlink" title="⑦方法表集合"></a>⑦方法表集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">methods_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">method_info</td>
+<td align="center">methods</td>
+<td align="center">methods_count</td>
+</tr>
+</tbody></table>
+<p>方法表和上述字段表集合几乎一致，所以关于表结构这部分不再介绍。</p>
+<p>但是如果只是和字段一样的话，那么它的代码怎么保存呢？</p>
+<p>事实上，方法体经过编译器编译成字节码指令后，存放在方法的属性表集合中一个名为<code>Code</code>的属性里，我们在将属性表时，会介绍这些。</p>
+<h5 id="⑧属性表集合"><a href="#⑧属性表集合" class="headerlink" title="⑧属性表集合"></a>⑧属性表集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">attributes_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">attribute_info</td>
+<td align="center">attributes</td>
+<td align="center">attributes_count</td>
+</tr>
+</tbody></table>
+<p>与Class文件中其他的数据项目要求严格的顺序、长度和内容不同，属性表集合的限制稍微宽松一些，不再要求各个属性表具有严格顺序。</p>
+<p>在最新的《Java虚拟机规范》的JavaSE12版本中，预定义属性达到29项。可想而知，它的内容非常多。</p>
+<p>下面我们介绍下属性表的基本结构</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">attribute_name_index</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u4</td>
+<td align="center">attribute_length</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u1</td>
+<td align="center">info</td>
+<td align="center">attribute_length</td>
+</tr>
+</tbody></table>
+<p>一个符合规范的属性表，它的属性名应该从常量池中引用<code>CONSTANT_Utf8_info</code>类型的常量来表示，而属性值的结构是完全自定义的，只需要通过一个<code>u4</code>长度属性去说明属性值所占用的位数即可。</p>
+<p>至于具体的属性值结构，可参考《深入理解Java虚拟机》P233。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="类文件结构">https://aurora-ze.github.io.git/2021/12/13/Java/Java虚拟机/类文件结构/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" rel="prev" title="类加载过程">
+      <i class="fa fa-chevron-left"></i> 类加载过程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/Java%E7%BA%BF%E7%A8%8B/" rel="next" title="(一).Java线程的简单介绍">
+      (一).Java线程的简单介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-text">类文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="nav-text">一、背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="nav-text">二、介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-text">三、文件格式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">数据类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D"><span class="nav-text">四、详细介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A0%E9%AD%94%E6%95%B0"><span class="nav-text">①魔数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A1%E4%B8%BB%E7%89%88%E6%9C%AC%E5%8F%B7%E5%92%8C%E6%AC%A1%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-text">②主版本号和次版本号</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A2%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="nav-text">③常量池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A3%E8%AE%BF%E9%97%AE%E6%A0%87%E5%BF%97"><span class="nav-text">④访问标志</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A4%E7%B4%A2%E5%BC%95%E9%9B%86%E5%90%88"><span class="nav-text">⑤索引集合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A5%E5%AD%97%E6%AE%B5%E8%A1%A8%E9%9B%86%E5%90%88"><span class="nav-text">⑥字段表集合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A6%E6%96%B9%E6%B3%95%E8%A1%A8%E9%9B%86%E5%90%88"><span class="nav-text">⑦方法表集合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A7%E5%B1%9E%E6%80%A7%E8%A1%A8%E9%9B%86%E5%90%88"><span class="nav-text">⑧属性表集合</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

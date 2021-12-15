@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、基本命令路径cd [path]：前往指定的路径  cd -：返回到上次的路径 cd ~：前往当前用户的用户目录 cd &#x2F;：前往根目录  pwd：打印当前路径 目录文件mkdir [dir_name]：创建一个目录 cp [src] [dst]：复制文件 mv [src] [dst]：移动文件（也可以用来重命名文件） rm [path]：删除文件  -r：表示递归的删除整个目录或文件 -f：表示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令学习">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、基本命令路径cd [path]：前往指定的路径  cd -：返回到上次的路径 cd ~：前往当前用户的用户目录 cd &#x2F;：前往根目录  pwd：打印当前路径 目录文件mkdir [dir_name]：创建一个目录 cp [src] [dst]：复制文件 mv [src] [dst]：移动文件（也可以用来重命名文件） rm [path]：删除文件  -r：表示递归的删除整个目录或文件 -f：表示">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.651Z">
+<meta property="article:modified_time" content="2021-12-15T12:33:44.584Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux命令学习 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux命令学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-15 20:33:44" itemprop="dateModified" datetime="2021-12-15T20:33:44+08:00">2021-12-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、基本命令"><a href="#一、基本命令" class="headerlink" title="一、基本命令"></a>一、基本命令</h2><h3 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h3><p><code>cd [path]</code>：前往指定的路径</p>
+<ul>
+<li><code>cd -</code>：返回到上次的路径</li>
+<li><code>cd ~</code>：前往当前用户的用户目录</li>
+<li><code>cd /</code>：前往根目录</li>
+</ul>
+<p><code>pwd</code>：打印当前路径</p>
+<h3 id="目录文件"><a href="#目录文件" class="headerlink" title="目录文件"></a>目录文件</h3><p><code>mkdir [dir_name]</code>：创建一个目录</p>
+<p><code>cp [src] [dst]</code>：复制文件</p>
+<p><code>mv [src] [dst]</code>：移动文件（也可以用来重命名文件）</p>
+<p><code>rm [path]</code>：删除文件</p>
+<ul>
+<li><code>-r</code>：表示递归的删除整个目录或文件</li>
+<li><code>-f</code>：表示不需要确认</li>
+</ul>
+<h3 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h3><p><strong>1. 搜索命令、程序等</strong></p>
+<p><code>which</code>：在<strong>PATH</strong>指定的路径中查找。（一般用于查找命令）</p>
+<p><code>whereis</code>：用于程序名的搜索，如二进制、man说明文件和源代码文件</p>
+<p><strong>2. 常规搜索</strong></p>
+<p><code>find [path] [condition]</code>：在指定目录中根据某些条件进行查询</p>
+<ul>
+<li><code>-name logfile</code>：查询文件名为logfile的文件</li>
+<li><code>-perm 644</code>：查询权限为644的文件</li>
+</ul>
+<p><code>locate</code>：可以等价于<code>find -name</code>方式，但是它是从文件数据库中进行查询，因此速度更快。</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>压缩：<code>gzip [path]</code></p>
+<p>解压缩：<code>gzip -d [path]</code></p>
+<p>此外，使用<code>tar -czvf [dst] [src]</code>和<code>tar -zxf [src]</code>也可以实现压缩和解压。</p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p><code>ln [src] [dst]</code>命令可以与文件建立链接，其中：</p>
+<ul>
+<li><strong>硬链接：</strong>一个文件的所有硬链接使用同一个<code>inode</code>。最开始的源文件可以视为是一个硬链接。</li>
+<li><strong>软链接<code>-s</code>：</strong>类似于快捷方式的存在，它存储的是<code>源文件的地址</code>，因此源文件删除后就无法再通过软链接来读取</li>
+</ul>
+<h3 id="grep与xargs"><a href="#grep与xargs" class="headerlink" title="grep与xargs"></a>grep与xargs</h3><p>在管道用法中，比较常见的两个命令就是<code>grep</code>和<code>xargs</code></p>
+<ul>
+<li><p><code>grep</code>：查询符合条件的字符串</p>
+</li>
+<li><p><code>xargs</code>：将上游的输出作为下游的输入参数</p>
+</li>
+</ul>
+<p><strong>grep用法</strong></p>
+<p><code>tail -f log | grep &quot;error&quot;</code></p>
+<p>监听并输出log日志，并查询其中的error字符串（即高亮显示）</p>
+<p><strong>xargs用法</strong></p>
+<p><code>find . -perm 644 | xargs -I @ mv @ ../newDir</code></p>
+<p>查询当前目录中权限为644的所有文件，并移动到指定目录中</p>
+<p><code>xargs</code>的<code>-I</code>参数可以定义一个指示符，这里定义为**@<strong>。然后在后面的<code>mv</code>命令中就可以使用</strong>@**来表示参数应放的位置。</p>
+<h2 id="二、用户管理"><a href="#二、用户管理" class="headerlink" title="二、用户管理"></a>二、用户管理</h2><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>操作用户</strong></p>
+<p><code>useradd [username]</code></p>
+<p><code>passwd [username]</code></p>
+<p><code>userdel [username]</code></p>
+<p><code>usermod -g [groupname] [username]</code>：修改某个用户所属的组</p>
+<p><strong>操作组</strong></p>
+<p><code>groupadd [groupname]</code></p>
+<p><code>groupmod [groupname]</code></p>
+<p><code>groupdel [groupname]</code></p>
+<h3 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h3><p>有三个和用户信息相关的文件，分别是：</p>
+<p><code>/etc/passwd</code>：</p>
+<p>记录用户基本信息，如用户名、UID、GID等等</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># structure </span></span><br><span class="line"><span class="comment"># name:password:uid:gid:comment:directory:shell</span></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">whz:x:1001:1001::/home/whz:/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><code>/etc/shadow</code>：记录加密形式的用户密码，只有root用户才能够查看</p>
+<p><code>/etc/group</code>：记录组信息</p>
+<h3 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h3><blockquote>
+<p>测试<strong>passwd</strong>命令时发现，普通用户可以修改自己的密码，但是<code>/etc/passwd</code>或<code>/etc/shadow</code>对普通用户来说都是没有权限的，那么它是怎么做到的呢？</p>
+</blockquote>
+<blockquote>
+<p>TIPS</p>
+<p><code>/etc/passwd</code>是文件，存储了用户信息。</p>
+<p><code>/usr/bin/passwd</code>是命令，修改密码时调用的。</p>
+</blockquote>
+<p>答案就在<code>/usr/bin/passwd</code>这个命令自身上。</p>
+<p>查看<code>passwd</code>命令的权限，发现一个特殊的权限<code>s</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-xr-x. 1 root root 33600 4月   6 2020 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p><code>s(Set UID)</code>表示文件在执行时暂时拥有文件所有者的权限（本例即root权限）。正因为有了root权限，普通用户才得以成功修改密码。</p>
+<h2 id="三、Shell脚本"><a href="#三、Shell脚本" class="headerlink" title="三、Shell脚本"></a>三、Shell脚本</h2><p>shell脚本一般以<code>#!/bin/bash</code>作为开头。</p>
+<p>下面是一个kafka集群（部署在单台虚拟机上）的启动和关闭脚本示例</p>
+<ol>
+<li>使用<code>$1</code>来获取执行脚本的第一个参数</li>
+<li>case语法来判断参数是<code>start</code>还是<code>stop</code></li>
+<li>通过循环来执行kafka提供的启动脚本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">case $1 in </span><br><span class="line">&quot;start&quot;)&#123;</span><br><span class="line"></span><br><span class="line">        for i in kafka1 kafka2 kafka3</span><br><span class="line">        do </span><br><span class="line">                echo &quot;------------ start $i ------------&quot;</span><br><span class="line">                /usr/local/service/$i/bin/kafka-server-start.sh -daemon /usr/local/service/$i/config/server.properties</span><br><span class="line">        done</span><br><span class="line"></span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line">&quot;stop&quot;)&#123;</span><br><span class="line">        echo &quot;------------ stop kafka ------------&quot;</span><br><span class="line">        bash /usr/local/service/kafka1/bin/kafka-server-stop.sh</span><br><span class="line">&#125;;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Systemd"><a href="#四、Systemd" class="headerlink" title="四、Systemd"></a>四、Systemd</h2><h3 id="systemd与systemctl"><a href="#systemd与systemctl" class="headerlink" title="systemd与systemctl"></a>systemd与systemctl</h3><blockquote>
+<p><strong>systemd</strong>是Linux系统的一种启动方式，它代替了原先<strong>init</strong>进程的启动方式。</p>
+<p><strong>systemctl</strong>是一组控制systemd系统和进行服务管理的命令。</p>
+</blockquote>
+<p><strong>init</strong>进程采用串行启动的方式，启动时间较长；而<strong>systemd</strong>引入了并行启动的概念。</p>
+<p>此外，使用<strong>systemd</strong>后也是存在争议的，因为它违背了Unix的哲学<code>keep it simple, stupid</code>。</p>
+<h3 id="systemctl命令"><a href="#systemctl命令" class="headerlink" title="systemctl命令"></a>systemctl命令</h3><ul>
+<li><code>systemctl start [service]</code></li>
+<li><code>systemctl stop [service]</code></li>
+<li><code>systemctl restart [service]</code></li>
+<li><code>systemctl reload [service]</code></li>
+<li><code>systemctl status [service]</code></li>
+</ul>
+<h2 id="五、权限控制"><a href="#五、权限控制" class="headerlink" title="五、权限控制"></a>五、权限控制</h2><h3 id="传统的权限控制"><a href="#传统的权限控制" class="headerlink" title="传统的权限控制"></a>传统的权限控制</h3><p>在Linux系统中，存在一种传统的权限控制方式：<strong>UGO</strong>，即<code>user-group-other</code>。</p>
+<p>ugo把文件的操作者分为三类：<strong>所有者、同组用户和其他用户</strong>。每类用户都按照<code>读、写、执行</code>来分配权限。</p>
+<p>新建的目录权限为<code>775</code>，文件为<code>664</code>，这是由默认的<code>777</code>、<code>666</code>权限减去掩码<code>0002</code>得到的。</p>
+<hr>
+<p>现代的权限控制有两种：<code>ACL</code>和<code>SELinux</code></p>
+<h3 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h3><blockquote>
+<p>Access Control List 是一张表，告知操作系统每个用户对于某个文件来说具备何种权限。</p>
+<p>每个文件都拥有一个属性标志着它的权限控制表，表中的每个条目都对应着一个用户所拥有的权限。</p>
+</blockquote>
+<p><strong>ACL</strong>是对<strong>UGO</strong>的扩展，因为<strong>UGO</strong>进行权限控制的维度是所有者、同组用户和其他用户，无法从更加细化的维度（如每个用户）进行管理。</p>
+<p><strong>相关命令</strong></p>
+<p><code>getfacl [file]</code>：打印某个文件的ACL规则</p>
+<p><code>setfacl -m u:[username]:[rwx] [file]</code>：为某个文件设置一条关于用户的ACL规则，权限为rwx</p>
+<hr>
+<p>上面提到的两种权限控制都属于<strong>自主访问控制</strong>（DAC），权限管理的主体是用户，只要用户拥有相应文件的权限，就可以访问该文件。</p>
+<p>在DAC中，他人一旦非法获得root权限，那么整个操作系统就可能会受到不可预估的后果。</p>
+<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><blockquote>
+<p>SELinux是一种强安全性的权限控制策略，它是<strong>强制访问控制</strong>（MAC）的一种典型形式。</p>
+</blockquote>
+<p>在SELinux的操作系统中，决定一个资源是否被访问的因素除了上述的<strong>读写执行权限</strong>外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" title="Linux命令学习">https://aurora-ze.github.io.git/2021/12/13/操作系统/Linux命令学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" rel="prev" title="评论">
+      <i class="fa fa-chevron-left"></i> 评论
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="next" title="操作系统——系统调用">
+      操作系统——系统调用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-text">一、基本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84"><span class="nav-text">路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6"><span class="nav-text">目录文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6"><span class="nav-text">查找文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grep%E4%B8%8Exargs"><span class="nav-text">grep与xargs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-text">二、用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-text">相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95"><span class="nav-text">记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E6%83%91"><span class="nav-text">疑惑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Shell%E8%84%9A%E6%9C%AC"><span class="nav-text">三、Shell脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Systemd"><span class="nav-text">四、Systemd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#systemd%E4%B8%8Esystemctl"><span class="nav-text">systemd与systemctl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl%E5%91%BD%E4%BB%A4"><span class="nav-text">systemctl命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-text">五、权限控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-text">传统的权限控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL"><span class="nav-text">ACL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELinux"><span class="nav-text">SELinux</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、事务关于事务的介绍，请看另一篇博客。 解决并发事务访问，主要有两种方式：  LBCC（Lock Based Concurrent Control）   MVCC（Multi-Version Concurrent Control）  相关问题 脏读，读到其他事务修改后未提交的数据 不可重复读，多次读数据，得到的不一致 幻读，多次读的结果不同（多了数据或少了数据）  事务隔离级别   级别\问题（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务并发解决方案">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、事务关于事务的介绍，请看另一篇博客。 解决并发事务访问，主要有两种方式：  LBCC（Lock Based Concurrent Control）   MVCC（Multi-Version Concurrent Control）  相关问题 脏读，读到其他事务修改后未提交的数据 不可重复读，多次读数据，得到的不一致 幻读，多次读的结果不同（多了数据或少了数据）  事务隔离级别   级别\问题（">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.614Z">
+<meta property="article:modified_time" content="2021-10-17T04:02:20.982Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>事务并发解决方案 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          事务并发解决方案
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-17 12:02:20" itemprop="dateModified" datetime="2021-10-17T12:02:20+08:00">2021-10-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一、事务"><a href="#一、事务" class="headerlink" title="一、事务"></a>一、事务</h1><p>关于事务的介绍，请看另一篇博客。</p>
+<p><strong>解决并发事务访问，主要有两种方式：</strong></p>
+<ul>
+<li><strong>LBCC</strong>（Lock Based Concurrent Control）</li>
+</ul>
+<ul>
+<li><strong>MVCC</strong>（Multi-Version Concurrent Control）</li>
+</ul>
+<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><ul>
+<li>脏读，读到其他事务修改后未提交的数据</li>
+<li>不可重复读，多次读数据，得到的不一致</li>
+<li>幻读，多次读的结果不同（多了数据或少了数据）</li>
+</ul>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
+<thead>
+<tr>
+<th align="center">级别\问题（是否存在）</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">读未提交</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">读已提交</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">可重复读</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">是（MVCC时有）</td>
+</tr>
+<tr>
+<td align="center">串行化</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<h1 id="二、LBCC"><a href="#二、LBCC" class="headerlink" title="二、LBCC"></a>二、LBCC</h1><h2 id="2-1锁的类型"><a href="#2-1锁的类型" class="headerlink" title="2.1锁的类型"></a>2.1锁的类型</h2><p>官网链接：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html">MySQL :: MySQL 8.0 Reference Manual :: 15.7.1 InnoDB Locking</a></p>
+<p>查阅MySQL官网，得知InnoDB存储引擎提到了以下几种锁方案</p>
+<ol>
+<li><p>共享锁与排他锁 （行级别）</p>
+</li>
+<li><p>意向锁 （表级别）</p>
+</li>
+<li><p>记录锁</p>
+</li>
+<li><p>间隙锁</p>
+</li>
+<li><p>Next-Key 锁</p>
+</li>
+</ol>
+<p>还有另外三种不做详细介绍，就简单说明一下概念</p>
+<ol>
+<li>插入意向锁</li>
+<li>自增锁</li>
+<li>预测锁</li>
+</ol>
+<p>下面我们将依次介绍上述5种锁的概念</p>
+<h2 id="2-2共享锁与排他锁"><a href="#2-2共享锁与排他锁" class="headerlink" title="2.2共享锁与排他锁"></a>2.2共享锁与排他锁</h2><p>共享锁和排他锁是InnoDB实现的行级别的锁。</p>
+<p><code>共享锁</code>又叫读锁，用来读取数据。多个共享锁可以同时存在。</p>
+<p><code>排他锁</code>又叫写锁，用来更新或删除数据（插入呢？），不能与其他锁并存</p>
+<p>举个简单的例子</p>
+<p>如果事务<code>T1</code>在读表中的记录<code>r</code>，那它就对记录<code>r</code>加了读锁</p>
+<p>这时候事务<code>T2</code>想要对记录<code>r</code>进行一些操作</p>
+<ul>
+<li>如果是读操作，<code>T2</code>可以直接对记录<code>r</code>加读锁</li>
+<li>如果是写操作，<code>T2</code>必须等待<code>T1</code>释放锁之后，才能对记录<code>r</code>加写锁</li>
+</ul>
+<h2 id="2-3意向锁"><a href="#2-3意向锁" class="headerlink" title="2.3意向锁"></a>2.3意向锁</h2><h3 id="2-3-1为什么要有意向锁呢？"><a href="#2-3-1为什么要有意向锁呢？" class="headerlink" title="2.3.1为什么要有意向锁呢？"></a>2.3.1为什么要有意向锁呢？</h3><p>针对一个场景：</p>
+<p>如果要对一张表加<strong>表锁</strong>，就要先确保表中的<strong>任意一行数据</strong>都没有<strong>被锁定</strong></p>
+<p>那么就需要进行全表扫描来判断，效率十分低下</p>
+<p><strong>而上述问题的本质，就是锁过于单一，只有读锁、写锁这些行级别锁的话，粒度较少，不具备灵活性。</strong></p>
+<p>所以提出了意向锁的思想 。</p>
+<h3 id="2-3-2意向锁"><a href="#2-3-2意向锁" class="headerlink" title="2.3.2意向锁"></a>2.3.2意向锁</h3><blockquote>
+<p>意向读锁：表明一个事务<strong>想要</strong>对某行数据设置读锁。</p>
+<p>意向写锁：表明一个事务<strong>想要</strong>对某行数据设置写锁。</p>
+</blockquote>
+<p>光说这个概念可能不太好理解，我们结合官网上的描述，来分析下它的主要目的、协议吧。</p>
+<h3 id="2-3-3官方解释"><a href="#2-3-3官方解释" class="headerlink" title="2.3.3官方解释"></a>2.3.3官方解释</h3><p><strong>关于意向锁的解释</strong></p>
+<blockquote>
+<p><code>InnoDB</code> supports <em>multiple granularity locking</em> which permits coexistence of row locks and table locks.</p>
+<p><code>InnoDB</code>支持多粒度的锁来保证行锁和表锁的共存。</p>
+<p>Intention locks are <code>table-level</code> locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. </p>
+<p>意向锁是表级别的锁，它代表一个事务之后想要获取的是什么类型（读锁或写锁）的锁。</p>
+<p>PS：实现了多粒度的锁。</p>
+</blockquote>
+<p><strong>意向锁的主要目的</strong></p>
+<blockquote>
+<p>Intention locks do not block anything except full table requests (for example, <code>LOCK TABLES ... WRITE</code>). The main purpose of intention locks is to show that someone is locking a row, or going to lock a row in the table.</p>
+<p>意向锁不会阻塞除<code>全表扫描</code>外的任何请求，它的主要目的就是表明其他事务正在锁，或者说将要锁某些记录。</p>
+<p>PS：结合上面的例子，有了意向锁之后，就不用靠全表扫描来判断当前事务是否可以加表锁</p>
+</blockquote>
+<p><strong>意向锁的协议</strong></p>
+<blockquote>
+<p>Before a transaction can acquire a shared lock on a row in a table, it must first acquire an <code>IS</code> lock or stronger on the table.</p>
+<p>一个事务获取某行的读锁之前，必须先获取表的意向读锁。</p>
+<p>Before a transaction can acquire an exclusive lock on a row in a table, it must first acquire an <code>IX</code> lock on the table.</p>
+<p>一个事务获取某行的写锁之前，必须先获取表的意向写锁。</p>
+</blockquote>
+<h3 id="2-3-4锁的具体使用"><a href="#2-3-4锁的具体使用" class="headerlink" title="2.3.4锁的具体使用"></a>2.3.4锁的具体使用</h3><p>首先，我们要了解意向锁和读写锁的共存关系（是否兼容）</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">IS</th>
+<th align="center">IX</th>
+<th align="center">S</th>
+<th align="center">X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>IS</strong></td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>IX</strong></td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>S</strong></td>
+<td align="center">是</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>X</strong></td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<p><strong>分析：</strong></p>
+<p>意向锁之间：仅仅代表一个加锁的意向，所以意向锁之间不冲突</p>
+<p>读写锁之间：读锁与读锁不冲突，写锁与其他锁（这里只讨论读写锁）都冲突</p>
+<p>混合：要注意有读锁的情况下，意向写锁会冲突，即不能有写的念头。</p>
+<p><strong>用法：</strong></p>
+<p>从官网摘录一段select的语句结构</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	...</span><br><span class="line">	[FOR &#123;UPDATE | SHARE&#125;</span><br><span class="line">        [<span class="keyword">OF</span> tbl_name [, tbl_name] ...]</span><br><span class="line">        [NOWAIT <span class="operator">|</span> <span class="keyword">SKIP</span> LOCKED]</span><br><span class="line">      <span class="operator">|</span> LOCK <span class="keyword">IN</span> SHARE MODE]</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用意向读锁：</strong></p>
+<p><code>select ... for share</code>或<code>select ... lock in share mode</code></p>
+<p>两种方式来获取IS锁和对应记录的S锁，基本上是等价的</p>
+<p>区别的话</p>
+<ol>
+<li><p>看上面select语句的格式，可以发现<code>for share</code>可以添加一些参数，参数在后面介绍</p>
+</li>
+<li><p><code>lock in share mode</code>提供向后兼容性。</p>
+</li>
+</ol>
+<p><strong>使用意向写锁：</strong></p>
+<p><code>select ... for update</code>语句会先尝试获取IX锁，然后再获取目标记录的写锁</p>
+<p>如果获取不到，则会阻塞等待。（如果超时了就报错）</p>
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>nowait：不等待锁释放，立刻执行，获取不到锁就报错</li>
+<li>skip locked：也是立刻执行，但忽略那些被加锁的数据，只操作不加锁的数据。</li>
+</ul>
+<p>这两个参数在基于语句复制的情况下，是不安全的（官网上提到，但我不懂…猜测一下，可能是在有主从数据库的时候，会不安全吧）</p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html">如果想看更详细的，请转至官网处</a></p>
+<hr>
+<p>下面开始是一些具体锁的介绍，先贴一张图大致表示一下</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png" alt="lock_concret"></p>
+<h2 id="2-4记录锁（锁定记录）"><a href="#2-4记录锁（锁定记录）" class="headerlink" title="2.4记录锁（锁定记录）"></a>2.4记录锁（锁定记录）</h2><p>在进行等值查询时，锁住<strong>匹配</strong>到的记录。确切地说，应该是锁住记录的主键（或隐式主键）</p>
+<p>例如<code>select * from table1 where id = 4 for update</code>就是锁住了<code>id = 4</code>的记录</p>
+<h2 id="2-5间隙锁（锁定范围）"><a href="#2-5间隙锁（锁定范围）" class="headerlink" title="2.5间隙锁（锁定范围）"></a>2.5间隙锁（锁定范围）</h2><p>在查询时，锁定<strong>区间范围</strong></p>
+<p>①<code>select * from table1 where id = 6 for update</code></p>
+<p>②<code>select * from table1 where id &gt; 20 for update</code></p>
+<p>假设表的记录为<strong>1，4，7，10</strong></p>
+<p>那么语句①锁住区间（4，7）；语句②锁住区间（10，+∞）</p>
+<p><strong>间隙锁之间并不冲突</strong></p>
+<h2 id="2-6临界锁（锁定范围，左开右闭）"><a href="#2-6临界锁（锁定范围，左开右闭）" class="headerlink" title="2.6临界锁（锁定范围，左开右闭）"></a>2.6临界锁（锁定范围，左开右闭）</h2><p>条件：进行范围查询时，包含<strong>区间</strong>和<strong>具体记录</strong></p>
+<p><code>select * from table where id &gt; 5 and id &lt; 9 for update</code></p>
+<p>那么锁定的范围为(4，7] 和 (7，10]，即(4，10]</p>
+<p>我们可以发现，<strong>临界锁 = 间隙锁 + 记录锁</strong></p>
+<p><em><strong>而间隙锁锁住区间，不让其他事务进行插入，目的就在于避免幻读问题的出现</strong></em></p>
+<hr>
+<p>讲完这些锁之后，我们谈谈在<strong>不同隔离级别</strong>下<strong>锁</strong>的<strong>实现</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RU</td>
+<td align="center">不加锁</td>
+</tr>
+<tr>
+<td align="center">Serializable</td>
+<td align="center">所有select语句隐式地转化成共享锁，会与update、delete互斥</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">普通select语句</th>
+<th align="center">加锁的select和更新语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RC</td>
+<td align="center">MVCC</td>
+<td align="center">记录锁</td>
+</tr>
+<tr>
+<td align="center">RR</td>
+<td align="center">MVCC</td>
+<td align="center">记录锁、间隙锁、临界锁</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>①普通查询时，为什么RR可以解决不可重复读，而RC不可以</p>
+<p>两者都采用MVCC，而因为RR的快照读readview使用的是同一个（第一次读时生成），而RC是每次查询生成一次新的readview</p>
+</blockquote>
+<h2 id="加锁过程"><a href="#加锁过程" class="headerlink" title="加锁过程"></a>加锁过程</h2><p>加锁最小单位：临界锁</p>
+<p>临界锁的变化：</p>
+<ul>
+<li><p>未命中时变为间隙锁</p>
+</li>
+<li><p>命中时</p>
+<ul>
+<li>如果是<strong>单列唯一索引</strong>，则降级为行锁</li>
+<li>如果是<strong>非唯一的索引或多列索引</strong>，则锁住左右两个区间及命中的索引值</li>
+</ul>
+</li>
+</ul>
+<h1 id="三、MVCC"><a href="#三、MVCC" class="headerlink" title="三、MVCC"></a>三、MVCC</h1><h2 id="3-1定义"><a href="#3-1定义" class="headerlink" title="3.1定义"></a>3.1定义</h2><p>用于实现数据库的并发访问的一种方法，全称为多版本并发控制。</p>
+<h2 id="3-2前置概念"><a href="#3-2前置概念" class="headerlink" title="3.2前置概念"></a>3.2前置概念</h2><p>在学习MVCC前，需要先知道两个概念</p>
+<p><strong>当前读</strong></p>
+<ul>
+<li>数据：读取的是数据的最新版本。</li>
+<li>特点：读取时还要加锁，保证其他并发事务不能修改当前记录</li>
+<li>示例：共享锁、排他锁</li>
+</ul>
+<p><strong>快照读</strong></p>
+<ul>
+<li>数据：读取的是数据库某一时刻的快照的数据。</li>
+<li>特点：不加锁的、非阻塞的读；读到的数据不一定是最新数据，可能是历史版本。</li>
+<li>示例：MVCC普通读</li>
+</ul>
+<h2 id="3-3思想"><a href="#3-3思想" class="headerlink" title="3.3思想"></a>3.3思想</h2><blockquote>
+<p> 维持一个数据的多个版本，使得读写操作没有冲突</p>
+</blockquote>
+<h2 id="3-4实现"><a href="#3-4实现" class="headerlink" title="3.4实现"></a>3.4实现</h2><p>隐式字段 + undo回滚日志 + 快照</p>
+<p><strong>隐式字段</strong></p>
+<blockquote>
+<p>每行记录除了有用户定义的字段外，还有隐式字段，如行创建id、行删除id、回滚指针、自增ID</p>
+</blockquote>
+<ul>
+<li><p>行创建id：指插入或修改本条记录的事务id</p>
+</li>
+<li><p>行删除id：指删除本条记录的事务id</p>
+</li>
+<li><p>回滚指针：指向回滚日志中的关于<strong>这条记录</strong>的<strong>上一个版本</strong></p>
+</li>
+</ul>
+<ul>
+<li>自增ID：当表没有设定主键且不存在非空唯一的字段时，会采用自增ID来作为主键，构建主键索引</li>
+</ul>
+<p><strong>undo回滚日志</strong></p>
+<p>记录每次修改的操作，可从前往后遍历来进行数据回滚</p>
+<p>在进行<strong>修改（更新、插入、删除）</strong>操作时，mysql会生成一条日志（主键+当前事务id+回滚指针，指向前一条记录）</p>
+<p>删除只是把标志位改为true，即逻辑删除</p>
+<p><strong>ReadView</strong></p>
+<blockquote>
+<p>ReadView是事务进行快照读时产生的读视图，记录并维护了系统中当前较为活跃的事务id</p>
+</blockquote>
+<h2 id="3-5例子"><a href="#3-5例子" class="headerlink" title="3.5例子"></a>3.5例子</h2><p>在某次事务查询时，得到readview 为 <strong>[100,200,300]</strong></p>
+<p> 可以看出活跃事务中最小id为100，最大id为300</p>
+<p>从回滚日志中依次向后遍历，假设每次遍历到的事务id为x</p>
+<p>则有以下三种情况：</p>
+<ol>
+<li><p>x &lt; 100 表示此事务已提交，数据可见</p>
+</li>
+<li><p>x &gt; 300 表示此事务是在生成readview之后开启的事务，数据不可见</p>
+</li>
+<li><p>在100和300中间，此时就要查看x是否在活跃事务id中，如果是，则它仍未提交，数据不可见。</p>
+</li>
+</ol>
+<h2 id="3-6RR和RC隔离级别下"><a href="#3-6RR和RC隔离级别下" class="headerlink" title="3.6RR和RC隔离级别下"></a>3.6RR和RC隔离级别下</h2><p>针对同一个事务来说，</p>
+<ul>
+<li><p>读已提交：每次查询都会生成新的read-view</p>
+</li>
+<li><p>可重复读：只用第一次查询时生成的read-view（解决了不可重复读）</p>
+</li>
+</ul>
+<h1 id="四、补充问题"><a href="#四、补充问题" class="headerlink" title="四、补充问题"></a>四、补充问题</h1><h2 id="4-1死锁"><a href="#4-1死锁" class="headerlink" title="4.1死锁"></a>4.1死锁</h2><p><strong>定义</strong></p>
+<p>这里的死锁可以理解成两个及以上的事务在共同竞争锁资源，而产生的等待现象。</p>
+<p><strong>解决方案一</strong></p>
+<p>设置一个超时等待时间，超时后对某个事务进行回滚，然后其他事务就可以执行下去</p>
+<p>但是光靠超时来解决的话，可能会有大量事务要进行回滚，会非常耗时</p>
+<p><strong>解决方案二</strong></p>
+<p>等待图，这可以算是一种死锁检测算法。</p>
+<p>画出各个事务之间的依赖关系，如果形成环路，说明存在死锁。</p>
+<h2 id="4-2锁升级"><a href="#4-2锁升级" class="headerlink" title="4.2锁升级"></a>4.2锁升级</h2><p><del>知识盲区…</del></p>
+<p>InnoDB存储引擎并不存在锁升级的情况，因为它并不是根据每个记录来产生行锁的。</p>
+<p>它是根据每个事务访问的每个页对锁进行管理的，采用的是位图的方式</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" title="事务并发解决方案">https://aurora-ze.github.io.git/2021/12/13/MySQL/事务：事务并发/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/MySQL/MySQL%EF%BC%9A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" rel="next" title="事务详解">
+      事务详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BA%8B%E5%8A%A1"><span class="nav-text">一、事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="nav-text">相关问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-text">事务隔离级别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81LBCC"><span class="nav-text">二、LBCC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1%E9%94%81%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">2.1锁的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2%E5%85%B1%E4%BA%AB%E9%94%81%E4%B8%8E%E6%8E%92%E4%BB%96%E9%94%81"><span class="nav-text">2.2共享锁与排他锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3%E6%84%8F%E5%90%91%E9%94%81"><span class="nav-text">2.3意向锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E6%84%8F%E5%90%91%E9%94%81%E5%91%A2%EF%BC%9F"><span class="nav-text">2.3.1为什么要有意向锁呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2%E6%84%8F%E5%90%91%E9%94%81"><span class="nav-text">2.3.2意向锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3%E5%AE%98%E6%96%B9%E8%A7%A3%E9%87%8A"><span class="nav-text">2.3.3官方解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-4%E9%94%81%E7%9A%84%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8"><span class="nav-text">2.3.4锁的具体使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4%E8%AE%B0%E5%BD%95%E9%94%81%EF%BC%88%E9%94%81%E5%AE%9A%E8%AE%B0%E5%BD%95%EF%BC%89"><span class="nav-text">2.4记录锁（锁定记录）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5%E9%97%B4%E9%9A%99%E9%94%81%EF%BC%88%E9%94%81%E5%AE%9A%E8%8C%83%E5%9B%B4%EF%BC%89"><span class="nav-text">2.5间隙锁（锁定范围）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6%E4%B8%B4%E7%95%8C%E9%94%81%EF%BC%88%E9%94%81%E5%AE%9A%E8%8C%83%E5%9B%B4%EF%BC%8C%E5%B7%A6%E5%BC%80%E5%8F%B3%E9%97%AD%EF%BC%89"><span class="nav-text">2.6临界锁（锁定范围，左开右闭）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B"><span class="nav-text">加锁过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81MVCC"><span class="nav-text">三、MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%AE%9A%E4%B9%89"><span class="nav-text">3.1定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E5%89%8D%E7%BD%AE%E6%A6%82%E5%BF%B5"><span class="nav-text">3.2前置概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3%E6%80%9D%E6%83%B3"><span class="nav-text">3.3思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4%E5%AE%9E%E7%8E%B0"><span class="nav-text">3.4实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5%E4%BE%8B%E5%AD%90"><span class="nav-text">3.5例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6RR%E5%92%8CRC%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E4%B8%8B"><span class="nav-text">3.6RR和RC隔离级别下</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%A1%A5%E5%85%85%E9%97%AE%E9%A2%98"><span class="nav-text">四、补充问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1%E6%AD%BB%E9%94%81"><span class="nav-text">4.1死锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2%E9%94%81%E5%8D%87%E7%BA%A7"><span class="nav-text">4.2锁升级</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

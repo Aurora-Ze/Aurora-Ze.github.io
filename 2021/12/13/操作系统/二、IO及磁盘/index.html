@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、I&#x2F;O和缓冲区介绍1.1抛出问题 什么是IO，有哪些IO类型 进程发起IO请求的过程是怎样的 操作系统怎样处理IO，对IO做了哪些优化  1.2阅读文章磁盘高速缓存——各类缓冲区介绍 缓存IO与直接IO 1.3理解进程在执行时可能需要读取键盘输入、或向磁盘输出数据，这些操作都属于I&#x2F;O IO类型：用户（键盘鼠标交互）、磁盘等外设、网络通信 I&#x2F;O控制最开始是由CPU直接向IO设备下达指令，并且">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统——IO及磁盘">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、I&#x2F;O和缓冲区介绍1.1抛出问题 什么是IO，有哪些IO类型 进程发起IO请求的过程是怎样的 操作系统怎样处理IO，对IO做了哪些优化  1.2阅读文章磁盘高速缓存——各类缓冲区介绍 缓存IO与直接IO 1.3理解进程在执行时可能需要读取键盘输入、或向磁盘输出数据，这些操作都属于I&#x2F;O IO类型：用户（键盘鼠标交互）、磁盘等外设、网络通信 I&#x2F;O控制最开始是由CPU直接向IO设备下达指令，并且">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210818012302.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210830123620.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.655Z">
+<meta property="article:modified_time" content="2021-09-16T13:41:12.360Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210818012302.jpg">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统——IO及磁盘 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统——IO及磁盘
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-16 21:41:12" itemprop="dateModified" datetime="2021-09-16T21:41:12+08:00">2021-09-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、I-O和缓冲区介绍"><a href="#一、I-O和缓冲区介绍" class="headerlink" title="一、I/O和缓冲区介绍"></a>一、I/O和缓冲区介绍</h2><h3 id="1-1抛出问题"><a href="#1-1抛出问题" class="headerlink" title="1.1抛出问题"></a>1.1抛出问题</h3><ol>
+<li>什么是IO，有哪些IO类型</li>
+<li>进程发起IO请求的过程是怎样的</li>
+<li>操作系统怎样处理IO，对IO做了哪些优化</li>
+</ol>
+<h3 id="1-2阅读文章"><a href="#1-2阅读文章" class="headerlink" title="1.2阅读文章"></a>1.2阅读文章</h3><p><a target="_blank" rel="noopener" href="https://houbb.github.io/2020/10/04/os-15-io-cache-buffer">磁盘高速缓存——各类缓冲区介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/406991">缓存IO与直接IO</a></p>
+<h3 id="1-3理解"><a href="#1-3理解" class="headerlink" title="1.3理解"></a>1.3理解</h3><p>进程在执行时可能需要读取键盘输入、或向磁盘输出数据，这些操作都属于I/O</p>
+<p>IO类型：用户（键盘鼠标交互）、磁盘等外设、网络通信</p>
+<h4 id="I-O控制"><a href="#I-O控制" class="headerlink" title="I/O控制"></a>I/O控制</h4><p>最开始是由CPU直接向IO设备下达指令，并且要阻塞等待IO操作完成</p>
+<p>后来：</p>
+<ul>
+<li><strong>IO模块</strong>封装各类IO的细节，向上层提供api。</li>
+<li><strong>中断指令</strong>可以让CPU执行其他进程，IO操作结束后发送中断指令给CPU，再让其切换到发起IO操作的进行来执行。<ul>
+<li><code>问题</code>中断指令是怎么发起的，是硬件提供的，还是操作系统提供的？</li>
+</ul>
+</li>
+<li><strong>DMA模块</strong><code>直接存储访问</code>可以让内存与IO模块直接进行数据传输，CPU只需要在IO开始和结束时进行干涉。</li>
+</ul>
+<h4 id="I-O缓冲"><a href="#I-O缓冲" class="headerlink" title="I/O缓冲"></a>I/O缓冲</h4><p><strong>局限性</strong></p>
+<p>我们都知道读写IO的速度是比CPU执行速度慢很多的</p>
+<p>所以当一个进程在读取磁盘上的数据块时，它会挂起（切换其他进程执行）或一直等待</p>
+<p>但是因为数据会读到进程的工作空间，所以这个进程的工作空间会被锁住，确保在等待IO期间不被换下（例如分页中的页置换）</p>
+<p><strong>优化</strong></p>
+<p>操作系统提供I/O缓冲区，缓冲策略可以是读完一个数据块后，立刻读后面的</p>
+<h2 id="二、磁盘"><a href="#二、磁盘" class="headerlink" title="二、磁盘"></a>二、磁盘</h2><h3 id="2-1抛出问题"><a href="#2-1抛出问题" class="headerlink" title="2.1抛出问题"></a>2.1抛出问题</h3><ol>
+<li>磁盘结构、常用术语</li>
+<li>向磁盘读/写数据的过程</li>
+<li>磁盘调度算法有哪些，什么场景下用哪个会更好，调度算法是在哪个过程用的</li>
+</ol>
+<h3 id="2-2阅读文章"><a href="#2-2阅读文章" class="headerlink" title="2.2阅读文章"></a>2.2阅读文章</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/iwehdio/p/13681037.html">IO控制、IO缓冲、磁盘调度</a></p>
+<h3 id="2-3总结"><a href="#2-3总结" class="headerlink" title="2.3总结"></a>2.3总结</h3><h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><p><strong>柱面、盘面、磁臂、磁头、磁道、扇区、转速</strong></p>
+<h4 id="读写过程"><a href="#读写过程" class="headerlink" title="读写过程"></a>读写过程</h4><ul>
+<li><p><strong>寻道</strong></p>
+<ul>
+<li><code>描述</code>：磁头找到对应的柱面（C、D、E盘等等），然后在盘面上找到对应的磁道</li>
+<li><code>时间计算</code>：$T_{寻道}=T_{磁头启动}+m*n(跨越n个磁道，每个磁道耗时m)$</li>
+<li><code>优化思路</code>：减少跨越磁道的个数，即<strong>磁盘调度算法</strong></li>
+</ul>
+</li>
+<li><p><strong>旋转延迟</strong></p>
+<ul>
+<li><code>描述</code>：磁盘要旋转一段距离，好让磁头定位到目标扇区</li>
+<li><code>时间计算</code>：$T_{旋转}=\frac{1}{2r}，假设平均需要转半圈$</li>
+</ul>
+</li>
+<li><p><strong>传输</strong></p>
+<ul>
+<li><code>描述</code>：接下来磁盘继续旋转，这次是进行读写了。</li>
+<li><code>时间计算</code>：$T_{传输}=\frac{b}{rN}，表示读写b个字节，磁道总字节为N$</li>
+<li><code>优化思路</code>：数据放一块，可以顺序读写，避免再次寻道（随机IO）</li>
+</ul>
+</li>
+</ul>
+<p><strong>所以在磁盘上的耗费时间也可以计算：寻道时间、旋转延迟、传输时间</strong></p>
+<h4 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h4><p><strong>使用场景</strong></p>
+<p>每个IO设备应该都有一个队列，如果磁盘正在处理某次IO，那么其他IO请求就会在队列中等待。</p>
+<p>如果按请求进来的顺序执行，就可能存在请求的磁盘位置过于分散，寻道时间大大增加的情况。</p>
+<p><strong>调度算法大致有三种类型：队列式、最短距离、扫描</strong></p>
+<ul>
+<li><strong>FIFO</strong><ul>
+<li><code>描述</code>：按队列顺序来处理IO请求</li>
+<li><code>缺点</code>：大部分情况就是随机IO</li>
+<li><code>应用</code>：访问位置比较密集时，性能还说得上去</li>
+<li><code>变种</code>：<strong>LIFO</strong>后进来的先处理，充分利用了局部性</li>
+</ul>
+</li>
+<li><strong>SSTF</strong><ul>
+<li><code>描述</code>：每次选择与当前磁道最近的请求进行执行</li>
+<li><code>缺点</code>：可能会出现饥饿，距离远的永远达不到；还有就是得计算距离</li>
+<li><code>应用</code>：比FIFO快蛮多的</li>
+</ul>
+</li>
+</ul>
+<p>下面是扫描算法，有好几种变种</p>
+<ul>
+<li><p><strong>SCAN</strong></p>
+<ul>
+<li><code>描述</code>：磁臂沿着一个方向扫描，处理遇到的所有请求，到边界后再调头扫描</li>
+<li><code>缺点</code>：对磁臂周围的局部区域不公平，因为等待时间长；多余扫描</li>
+</ul>
+</li>
+<li><p><strong>C-SCAN</strong></p>
+<ul>
+<li><code>描述</code>：和SCAN类似，但它不调头，而是重复从起点到终点的扫描</li>
+<li><code>应用</code>：这样对局部区域比较公平</li>
+<li><code>缺点</code>：还有个缺点没解决，就是多余扫描</li>
+</ul>
+</li>
+<li><p><strong>C-LOOK</strong></p>
+<ul>
+<li><code>描述</code>：前面没有请求了，就直接回到起点</li>
+</ul>
+</li>
+<li><p>N步SCAN：把请求队列划分成多个长度为N的子队列</p>
+</li>
+<li><p>FSCAN：用两个子队列，新请求全放在另一个队列中</p>
+</li>
+</ul>
+<h4 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h4><p>IO请求多时，一个磁盘处理不过来</p>
+<p>那就用多个磁盘集成在一起，就是RAID了</p>
+<h4 id="磁盘高速缓存"><a href="#磁盘高速缓存" class="headerlink" title="磁盘高速缓存"></a>磁盘高速缓存</h4><p>跟CPU和内存之间建立的高速缓存一样，内存中有一块地方专门做磁盘的缓存。</p>
+<p>IO请求先判断能否命中磁盘高速缓存，再去决定是否进行IO</p>
+<p><strong>命中缓存时，如何把数据交给进程</strong></p>
+<ul>
+<li>就硬传，把数据传到进程的工作空间</li>
+<li>以共享内存的方式，把地址传给进程即可</li>
+</ul>
+<p><strong>新的磁盘IO完成后，高速缓存要存入新的数据，采取怎样的更新策略（页置换）</strong></p>
+<ul>
+<li><strong>LRU</strong><ul>
+<li>最近最少使用</li>
+<li>用栈（双端队列）维护，每次用到一个页，把它放到栈顶。置换时把栈底（最久没用过）的换出去</li>
+<li>缺点：如果大量读入新的页，可能会导致热点页来到栈底，被置换出去</li>
+</ul>
+</li>
+<li><strong>LFU</strong><ul>
+<li>使用频率最低</li>
+<li>对每个页计数</li>
+<li>缺点：可能某个页刚放进来又被置换出去了，对局部性情况不友好。</li>
+</ul>
+</li>
+</ul>
+<h2 id="三、Linux中的IO"><a href="#三、Linux中的IO" class="headerlink" title="三、Linux中的IO"></a>三、Linux中的IO</h2><h3 id="3-1抛出问题"><a href="#3-1抛出问题" class="headerlink" title="3.1抛出问题"></a>3.1抛出问题</h3><ol>
+<li>IO的读写过程，缓冲区？</li>
+<li>执行IO的方式有哪些，系统调用和stdio库函数的区别？</li>
+<li>关于磁盘的一些常用指令</li>
+</ol>
+<h3 id="3-2阅读文章"><a href="#3-2阅读文章" class="headerlink" title="3.2阅读文章"></a>3.2阅读文章</h3><p><a target="_blank" rel="noopener" href="https://www.litreily.top/2018/10/25/io-cache/">Linux中的文件I/O缓冲</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018499770">一文掌握 Linux 性能分析之 I/O 篇</a></p>
+<h3 id="3-3理解"><a href="#3-3理解" class="headerlink" title="3.3理解"></a>3.3理解</h3><h4 id="执行IO的过程"><a href="#执行IO的过程" class="headerlink" title="执行IO的过程"></a>执行IO的过程</h4><p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210818012302.jpg"></p>
+<p>可以看到其实有两层IO</p>
+<ol>
+<li><p>首先是在用户空间中，如果调用的是封装的<strong>stdio</strong>库函数的话，它会先处理库提供的缓冲</p>
+</li>
+<li><p>然后<strong>stdio</strong>库底层实际上也是read、write等系统调用，因此还有内核空间的文件IO缓冲<code>和磁盘高速缓存有什么区别？</code></p>
+</li>
+</ol>
+<h4 id="磁盘IO相关指令"><a href="#磁盘IO相关指令" class="headerlink" title="磁盘IO相关指令"></a>磁盘IO相关指令</h4><p><strong>磁盘基本信息</strong></p>
+<ul>
+<li>fdisk -l<ul>
+<li>磁盘大小、扇区个数和大小。</li>
+</ul>
+</li>
+<li>df<ul>
+<li>各个磁盘的使用情况，如剩余空间、利用率等等。</li>
+</ul>
+</li>
+</ul>
+<p><strong>磁盘性能分析</strong></p>
+<ul>
+<li>vmstat<ul>
+<li>正在等待的IO任务数、每秒读写磁盘块数</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210830123620.png" alt="image-20210830123620336"></p>
+<ul>
+<li>iostat <code>专业分析IO性能的工具</code><ul>
+<li>安装：sudo yum install sysstat</li>
+<li>使用：iostat（-c，-d）</li>
+</ul>
+</li>
+<li>iotop<ul>
+<li>进程维度的IO情况分析</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/" title="操作系统——IO及磁盘">https://aurora-ze.github.io.git/2021/12/13/操作系统/二、IO及磁盘/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/" rel="prev" title="操作系统——内存管理">
+      <i class="fa fa-chevron-left"></i> 操作系统——内存管理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%94%E3%80%81%E8%BF%9B%E7%A8%8B/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81I-O%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、I&#x2F;O和缓冲区介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E6%8A%9B%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-text">1.1抛出问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0"><span class="nav-text">1.2阅读文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3%E7%90%86%E8%A7%A3"><span class="nav-text">1.3理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#I-O%E6%8E%A7%E5%88%B6"><span class="nav-text">I&#x2F;O控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#I-O%E7%BC%93%E5%86%B2"><span class="nav-text">I&#x2F;O缓冲</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%A3%81%E7%9B%98"><span class="nav-text">二、磁盘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E6%8A%9B%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-text">2.1抛出问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0"><span class="nav-text">2.2阅读文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E6%80%BB%E7%BB%93"><span class="nav-text">2.3总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-text">基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E8%BF%87%E7%A8%8B"><span class="nav-text">读写过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-text">调度算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RAID"><span class="nav-text">RAID</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-text">磁盘高速缓存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Linux%E4%B8%AD%E7%9A%84IO"><span class="nav-text">三、Linux中的IO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1%E6%8A%9B%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-text">3.1抛出问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0"><span class="nav-text">3.2阅读文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3%E7%90%86%E8%A7%A3"><span class="nav-text">3.3理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8CIO%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-text">执行IO的过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A3%81%E7%9B%98IO%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4"><span class="nav-text">磁盘IO相关指令</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

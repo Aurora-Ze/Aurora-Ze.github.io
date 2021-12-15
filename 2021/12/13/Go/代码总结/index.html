@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="记录完成需求时，需要注意的一些编码习惯 1.使用cast包进行类型转换涉及string转uint64或其他类型时，多用cast.ToUint64、cast.ToString等函数 12&#x2F;&#x2F; &quot;github.com&#x2F;spf13&#x2F;cast&quot;feedIDSet.Add(cast.ToUint64(v.ContentID))  用cast包时遇到一个问题 描述：  类型OrderPos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码总结">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/Go/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="记录完成需求时，需要注意的一些编码习惯 1.使用cast包进行类型转换涉及string转uint64或其他类型时，多用cast.ToUint64、cast.ToString等函数 12&#x2F;&#x2F; &quot;github.com&#x2F;spf13&#x2F;cast&quot;feedIDSet.Add(cast.ToUint64(v.ContentID))  用cast包时遇到一个问题 描述：  类型OrderPos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.418Z">
+<meta property="article:modified_time" content="2021-08-28T07:30:48.444Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/Go/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>代码总结 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Go/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          代码总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-28 15:30:48" itemprop="dateModified" datetime="2021-08-28T15:30:48+08:00">2021-08-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>记录完成需求时，需要注意的一些编码习惯</p>
+<h3 id="1-使用cast包进行类型转换"><a href="#1-使用cast包进行类型转换" class="headerlink" title="1.使用cast包进行类型转换"></a>1.使用cast包进行类型转换</h3><p>涉及<code>string</code>转<code>uint64</code>或其他类型时，多用<code>cast.ToUint64</code>、<code>cast.ToString</code>等函数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &quot;github.com/spf13/cast&quot;</span></span><br><span class="line">feedIDSet.Add(cast.ToUint64(v.ContentID))</span><br></pre></td></tr></table></figure>
+
+<p>用cast包时遇到一个问题</p>
+<p><strong>描述：</strong></p>
+<blockquote>
+<p>类型OrderPostStatus等价于类型int32。</p>
+<p>现在拿到一个OrderPostStatus类型的变量，想要转换成int32，于是我很自然地就想到用cast.ToInt32()，之后发现这个值一直是0，没有转换成功</p>
+</blockquote>
+<p><strong>分析：</strong></p>
+<p>查看ToInt32()的代码，发现它是先用类型断言来判断类型，然后再根据判断得到的类型，进行值的转换。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">switch</span> s := i.(<span class="keyword">type</span>) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">int</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">int32</span>(s), <span class="literal">nil</span></span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">int64</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">int32</span>(s), <span class="literal">nil</span></span><br><span class="line">	<span class="comment">// 此处省略一堆类型...</span></span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, fmt.Errorf(<span class="string">&quot;unable to cast %#v of type %T to int32&quot;</span>, i, i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而这些类型断言都只是判断了基本的类型，对于自定义的类型，它会走到default代码块里返回0</p>
+<p><strong>解决：</strong></p>
+<p>直接用<code>int32(value)</code>进行强转</p>
+<h3 id="2-使用WaitGroup"><a href="#2-使用WaitGroup" class="headerlink" title="2.使用WaitGroup"></a>2.使用WaitGroup</h3><p><code>ao</code>层涉及到对举报信息进行组装，需要调用3个微服务分别来获取<code>用户名</code>、<code>动态内容图片</code>和<code>评论内容</code>。</p>
+<p>原先的写法是都写在主线程中，这样耗时比较大；正确的做法应该是<code>开启3个协程</code>去调用三个微服务</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">wg.Add(<span class="number">3</span>)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> wg.Done()</span><br><span class="line">	s.getReportUserID(ctx, reports)</span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> wg.Done()</span><br><span class="line">	s.getFeedDetail(ctx, reports)</span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> wg.Done()</span><br><span class="line">	s.getCommentDetail(ctx, reports)</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line">wg.Wait()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-使用set"><a href="#3-使用set" class="headerlink" title="3.使用set"></a>3.使用set</h3><p>golang没有提供set集合，在添加id到集合中时，可以使用自建的<code>set.NewUint64Set()</code>来获取set，以进行去重。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &quot;git.code.oa.com/demeter/groupshop/group-shop-comm/set&quot;</span></span><br><span class="line">reportUserIDSet := set.NewUint64Set()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-pb文件"><a href="#4-pb文件" class="headerlink" title="4.pb文件"></a>4.pb文件</h3><p>对于协议中定义的枚举类型。pb文件中会提供map方便进行转换，就不用自己去做实现了</p>
+<p>例如<code>product_post.proto</code>文件中定义如下枚举</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">OrderPostStatus</span> </span>&#123;</span><br><span class="line">    PostOrderNotExist = <span class="number">0</span>; <span class="comment">//未进入待评价状态</span></span><br><span class="line">    PostOrderWaitPublish = <span class="number">1</span>; <span class="comment">//待评价</span></span><br><span class="line">    PostOrderPublished = <span class="number">2</span>; <span class="comment">//已评价</span></span><br><span class="line">    PostOrderClosed = <span class="number">3</span>; <span class="comment">//订单已完成，不予评价</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生成的<code>product_post.pb.go</code>文件会带有map</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Enum value maps for OrderPostStatus.</span></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	OrderPostStatus_name = <span class="keyword">map</span>[<span class="keyword">int32</span>]<span class="keyword">string</span>&#123;</span><br><span class="line">		<span class="number">0</span>: <span class="string">&quot;PostOrderNotExist&quot;</span>,</span><br><span class="line">		<span class="number">1</span>: <span class="string">&quot;PostOrderWaitPublish&quot;</span>,</span><br><span class="line">		<span class="number">2</span>: <span class="string">&quot;PostOrderPublished&quot;</span>,</span><br><span class="line">		<span class="number">3</span>: <span class="string">&quot;PostOrderClosed&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	OrderPostStatus_value = <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int32</span>&#123;</span><br><span class="line">		<span class="string">&quot;PostOrderNotExist&quot;</span>:    <span class="number">0</span>,</span><br><span class="line">		<span class="string">&quot;PostOrderWaitPublish&quot;</span>: <span class="number">1</span>,</span><br><span class="line">		<span class="string">&quot;PostOrderPublished&quot;</span>:   <span class="number">2</span>,</span><br><span class="line">		<span class="string">&quot;PostOrderClosed&quot;</span>:      <span class="number">3</span>,</span><br><span class="line">	&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>补充：更方便的是直接强转，不要用cast包（参照第一点中的问题）</p>
+<h3 id="5-输出日志"><a href="#5-输出日志" class="headerlink" title="5.输出日志"></a>5.输出日志</h3><p>调试时多打一些日志来看数据，方便定位问题</p>
+<h3 id="6-优化代码逻辑"><a href="#6-优化代码逻辑" class="headerlink" title="6.优化代码逻辑"></a>6.优化代码逻辑</h3><p>遇到复杂的需求，一开始单纯为了完成需求，写完后发现for循环内写了一堆逻辑，就要多想想怎么优化它。</p>
+<h3 id="7-格式化输出记录"><a href="#7-格式化输出记录" class="headerlink" title="7.格式化输出记录"></a>7.格式化输出记录</h3><ol>
+<li><p><strong>通用的占位符</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">%v    <span class="comment">//根据值的类型，输出它该有的样子</span></span><br><span class="line">%+v   <span class="comment">//带上包和结构体名</span></span><br><span class="line">%#v   <span class="comment">//输出时带上结构体的每个字段名</span></span><br><span class="line">%T    <span class="comment">//输出类型</span></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>常用类型</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">%b    <span class="comment">//布尔</span></span><br><span class="line">%d    <span class="comment">//整数</span></span><br><span class="line">%s    <span class="comment">//字符串</span></span><br><span class="line">%p    <span class="comment">//指针</span></span><br><span class="line">%q    <span class="comment">//带双引号的字符串，自动转义</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="8-初始化二维数组"><a href="#8-初始化二维数组" class="headerlink" title="8.初始化二维数组"></a>8.初始化二维数组</h3><p>在家刷leetcode时遇到题目需要一个二维切片<code>visited</code>来表示是否访问过当前位置。</p>
+<p><strong>错误做法</strong></p>
+<p>因为之前创建一维切片用的是make函数，所以我以为创建二维切片只要在函数里多传一个参数就可以了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 想创建一个3行5列的二维数组</span></span><br><span class="line">visited := <span class="built_in">make</span>([][]<span class="keyword">bool</span>, <span class="number">3</span>, <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>上面创建的<code>visited</code>，确实是3行，但是每行的长度都为0，说明第二个长度参数<code>5</code>并没有生效</p>
+<p>于是我去仔细地看了下make函数的注释说明</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//	Slice: The size specifies the length. The capacity of the slice is</span></span><br><span class="line"><span class="comment">//	equal to its length. A second integer argument may be provided to</span></span><br><span class="line"><span class="comment">//	specify a different capacity; it must be no smaller than the</span></span><br><span class="line"><span class="comment">//	length. For example, make([]int, 0, 10) allocates an underlying array</span></span><br><span class="line"><span class="comment">//	of size 10 and returns a slice of length 0 and capacity 10 that is</span></span><br><span class="line"><span class="comment">//	backed by this underlying array.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">make</span><span class="params">(t Type, size ...IntegerType)</span> <span class="title">Type</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这才发现：</p>
+<ul>
+<li>传入一个<code>size</code>时，它就表示切片的长度和容量，即两者相等</li>
+<li>传入两个<code>size</code>时，第一个参数表示长度，第二个参数表示切片容量（容量不小于长度）</li>
+</ul>
+<p>所以刚才make函数创建的实际上是一个长度3，容量5的二维切片，但是每个一维切片是空的，如下所示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[] [] []]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>正确做法</strong></p>
+<p>从上面可以看出，创建的每个一维切片还是空的，所以需要对每个一维切片做一次初始化操作</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">visited := <span class="built_in">make</span>([][]<span class="keyword">bool</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> visited &#123;</span><br><span class="line">    visited[i] = <span class="built_in">make</span>([]<span class="keyword">bool</span>, <span class="number">5</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-遍历map"><a href="#9-遍历map" class="headerlink" title="9.遍历map"></a>9.遍历map</h3><p><strong>问题描述：</strong></p>
+<p>在返回的已买商品列表中，相同的商品带有相同的订单号，我们期待的是不同的订单号。</p>
+<p>因为在实现中订单和商品是一对一的关系，所以就算是购买相同商品，每次购买的订单号一定是不同的。</p>
+<p><strong>问题定位：</strong></p>
+<p>遍历订单时，把从map中得到的<code>商品信息</code>重复添加到切片中</p>
+<p>然后切片中两个元素的指针是相同的，导致修改一个的订单号，就会修改其他相同指针的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _, order := <span class="keyword">range</span> orders &#123;</span><br><span class="line">	<span class="keyword">if</span> spuInfo, ok := spuIDMap[order.SpuId]; ok &#123;</span><br><span class="line">		spuInfo.OrderID = cast.ToString(order.OrderId)</span><br><span class="line">		spuInfosRsp = <span class="built_in">append</span>(spuInfosRsp, spuInfo)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>正确做法：</strong></p>
+<p>得到商品信息<code>spuInfo</code>后，深拷贝一份新的，这样它们的地址就不相同，修改一个也不会影响到其他。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _, order := <span class="keyword">range</span> orders &#123;</span><br><span class="line">	<span class="keyword">if</span> spuInfo, ok := spuIDMap[order.SpuId]; ok &#123;</span><br><span class="line">		newSpu := deepCopy(spuInfo)</span><br><span class="line">		newSpu.OrderID = cast.ToString(order.OrderId)</span><br><span class="line">		spuInfosRsp = <span class="built_in">append</span>(spuInfosRsp, newSpu)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="10-使用多个逻辑运算符时注意优先级！！！"><a href="#10-使用多个逻辑运算符时注意优先级！！！" class="headerlink" title="10.使用多个逻辑运算符时注意优先级！！！"></a>10.使用多个逻辑运算符时注意优先级！！！</h3><p>如在下面这段代码中，第三个判断想表达的意思是：</p>
+<p>当查询类型为<code>订单支付数</code>或<code>订单成交额</code>，且数组指定位置元素的订单<code>指标为空</code>时，对它进行赋值</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> topResults[<span class="number">0</span>][i] == <span class="literal">nil</span> &#123;</span><br><span class="line">	topResults[<span class="number">0</span>][i] = indicator</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> queryType == cgi.TopIndicateType_UserPayCnt &amp;&amp; topResults[<span class="number">0</span>][i].UserIndicator == <span class="literal">nil</span> &#123;</span><br><span class="line">	topResults[<span class="number">0</span>][i].UserIndicator = userIndicator</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> queryType == cgi.TopIndicateType_OrderPayCnt || queryType == cgi.TopIndicateType_Turnover &amp;&amp;</span><br><span class="line">	topResults[<span class="number">0</span>][i].OrderIndicator == <span class="literal">nil</span> &#123;</span><br><span class="line">	topResults[<span class="number">0</span>][i].OrderIndicator = orderIndicator</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是因为<code>与运算</code>优先级更高，所以得不到想要的逻辑，应该在<code>或运算</code>时加上括号</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (queryType == cgi.TopIndicateType_OrderPayCnt || queryType == cgi.TopIndicateType_Turnover) &amp;&amp;</span><br><span class="line">			topResults[<span class="number">0</span>][i].OrderIndicator == <span class="literal">nil</span> &#123;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/Go/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/" title="代码总结">https://aurora-ze.github.io.git/2021/12/13/Go/代码总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Go/gee/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/String%E4%B8%8EStringBuffer/" rel="next" title="String、StringBuffer">
+      String、StringBuffer <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BD%BF%E7%94%A8cast%E5%8C%85%E8%BF%9B%E8%A1%8C%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-text">1.使用cast包进行类型转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8WaitGroup"><span class="nav-text">2.使用WaitGroup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8set"><span class="nav-text">3.使用set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-pb%E6%96%87%E4%BB%B6"><span class="nav-text">4.pb文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%BE%93%E5%87%BA%E6%97%A5%E5%BF%97"><span class="nav-text">5.输出日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91"><span class="nav-text">6.优化代码逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA%E8%AE%B0%E5%BD%95"><span class="nav-text">7.格式化输出记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="nav-text">8.初始化二维数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E9%81%8D%E5%8E%86map"><span class="nav-text">9.遍历map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6%E6%97%B6%E6%B3%A8%E6%84%8F%E4%BC%98%E5%85%88%E7%BA%A7%EF%BC%81%EF%BC%81%EF%BC%81"><span class="nav-text">10.使用多个逻辑运算符时注意优先级！！！</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

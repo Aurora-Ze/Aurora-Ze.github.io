@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、项目介绍1. 背景本项目旨在搭建一个交流平台，主要目标是爱好写作、分享博客的各位小伙伴们 用户可以在其中浏览文章，发布文章、发表评论等。 当遇到美文时，可以点赞，或关注作者，以及时获取其最新推送 2. 需求分析用户：发布文章，修改文章，删除文章，点赞，发布评论，关注作者 系统：推送消息给用户 3. 模块划分按功能来划分，可以分成以下模块  文章模块  对文章进行操作，包括发布、修改、删除、点赞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目介绍">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、项目介绍1. 背景本项目旨在搭建一个交流平台，主要目标是爱好写作、分享博客的各位小伙伴们 用户可以在其中浏览文章，发布文章、发表评论等。 当遇到美文时，可以点赞，或关注作者，以及时获取其最新推送 2. 需求分析用户：发布文章，修改文章，删除文章，点赞，发布评论，关注作者 系统：推送消息给用户 3. 模块划分按功能来划分，可以分成以下模块  文章模块  对文章进行操作，包括发布、修改、删除、点赞">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.797Z">
+<meta property="article:modified_time" content="2021-05-02T07:53:16.380Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>项目介绍 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          项目介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-02 15:53:16" itemprop="dateModified" datetime="2021-05-02T15:53:16+08:00">2021-05-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tensquare/" itemprop="url" rel="index"><span itemprop="name">tensquare</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="一、项目介绍"><a href="#一、项目介绍" class="headerlink" title="一、项目介绍"></a>一、项目介绍</h4><h6 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h6><p>本项目旨在搭建一个交流平台，主要目标是爱好写作、分享博客的各位小伙伴们</p>
+<p>用户可以在其中浏览文章，发布文章、发表评论等。</p>
+<p>当遇到美文时，可以点赞，或关注作者，以及时获取其最新推送</p>
+<h6 id="2-需求分析"><a href="#2-需求分析" class="headerlink" title="2. 需求分析"></a>2. 需求分析</h6><p>用户：发布文章，修改文章，删除文章，点赞，发布评论，关注作者</p>
+<p>系统：推送消息给用户</p>
+<h6 id="3-模块划分"><a href="#3-模块划分" class="headerlink" title="3. 模块划分"></a>3. 模块划分</h6><p>按功能来划分，可以分成以下模块</p>
+<ul>
+<li>文章模块</li>
+</ul>
+<p>对文章进行操作，包括发布、修改、删除、点赞等</p>
+<ul>
+<li>评论模块</li>
+</ul>
+<p>用户在某一篇文章下发表评论、删除评论</p>
+<ul>
+<li>用户模块</li>
+</ul>
+<p>用户登录、注册</p>
+<ul>
+<li>消息模块</li>
+</ul>
+<p>消息推送，包括文章被读者点赞，或者是关注的作者发表了新文章</p>
+<h6 id="4-架构及技术选型"><a href="#4-架构及技术选型" class="headerlink" title="4. 架构及技术选型"></a>4. 架构及技术选型</h6><ul>
+<li><h6 id="开发模式"><a href="#开发模式" class="headerlink" title="开发模式"></a>开发模式</h6></li>
+</ul>
+<p>采用前后端分离的开发方式</p>
+<ul>
+<li>后端架构</li>
+</ul>
+<p>采用当前主流的基于 Spring Cloud 的微服务架构</p>
+<p>用到的技术有：Spring Boot、Spring Cloud、MyBatis Plus、MySQL</p>
+<p>用到的组件有：</p>
+<table>
+<thead>
+<tr>
+<th align="center">组件</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Eureka</td>
+<td align="center">用来注册服务</td>
+</tr>
+<tr>
+<td align="center">Maven</td>
+<td align="center">管理依赖</td>
+</tr>
+<tr>
+<td align="center">Feign</td>
+<td align="center">服务间调用</td>
+</tr>
+<tr>
+<td align="center">Redis</td>
+<td align="center">缓存用户间的订阅和点赞关系</td>
+</tr>
+<tr>
+<td align="center">netty</td>
+<td align="center">异步通信，配合消息队列完成消息推送</td>
+</tr>
+<tr>
+<td align="center">RabbitMQ</td>
+<td align="center">存放通知消息</td>
+</tr>
+<tr>
+<td align="center">MongoDB</td>
+<td align="center">持久化存储评论数据（不太重要的数据）</td>
+</tr>
+<tr>
+<td align="center">docker</td>
+<td align="center">部署虚拟化容器</td>
+</tr>
+</tbody></table>
+<h6 id="5-补充"><a href="#5-补充" class="headerlink" title="5. 补充"></a>5. 补充</h6><p>模块划分后，又添加了common模块和encrypt模块</p>
+<p> <code>common</code> 用来部署一些公共部分，如状态码StatusCode，返回结果Result，分页查询结果PageResult、ID生成器IdWorker</p>
+<p> <code>encrypt</code> 用来进行接口加密，前端用公钥对数据进行加密，后端用私钥进行解密</p>
+<h4 id="二、难点总结"><a href="#二、难点总结" class="headerlink" title="二、难点总结"></a>二、难点总结</h4><h5 id="1-分页查询"><a href="#1-分页查询" class="headerlink" title="1. 分页查询"></a>1. 分页查询</h5><p>controller层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;search/&#123;page&#125;/&#123;size&#125;&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result <span class="title">findByPage</span><span class="params">(<span class="meta">@PathVariable</span> Integer page,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="meta">@PathVariable</span> Integer size,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="meta">@RequestBody</span> Map&lt;String,Object&gt; map)</span> </span>&#123;      <span class="comment">// json数据转成map而不是对象，方便遍历属性</span></span><br><span class="line">    Page&lt;Article&gt; pageData = articleService.search(map, page, size); <span class="comment">// 调用service层的方法</span></span><br><span class="line">    PageResult&lt;Article&gt; pageResult = <span class="keyword">new</span> PageResult&lt;&gt;(               <span class="comment">// 封装成自己定义的结果类</span></span><br><span class="line">            pageData.getTotal(), pageData.getRecords()</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Result(<span class="keyword">true</span>, StatusCode.OK, <span class="string">&quot;查询成功&quot;</span>, pageResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>service层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Page&lt;Article&gt; <span class="title">search</span><span class="params">(Map&lt;String, Object&gt; map, Integer page, Integer size)</span> </span>&#123;</span><br><span class="line">    EntityWrapper&lt;Article&gt; wrapper = <span class="keyword">new</span> EntityWrapper&lt;Article&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String field : map.keySet()) &#123;</span><br><span class="line">        wrapper.eq(<span class="keyword">null</span> != map.get(field), field, map.get(field));<span class="comment">// 不考虑字段值为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    Page&lt;Article&gt; pageData = <span class="keyword">new</span> Page&lt;&gt;(page, size);</span><br><span class="line">    List list = articleDao.selectPage(pageData, wrapper); <span class="comment">// 传入分页参数（Page）、查询条件（EntityWrapper）</span></span><br><span class="line">    pageData.setRecords(list);                            <span class="comment">// 目的是找到和 map 中非空的键值对相匹配的数据</span></span><br><span class="line">    <span class="keyword">return</span> pageData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-使用redis"><a href="#2-使用redis" class="headerlink" title="2. 使用redis"></a>2. 使用redis</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">String userKey = <span class="string">&quot;article_subscribe_&quot;</span> + userId;  <span class="comment">// 作者集合</span></span><br><span class="line">String authorKey = <span class="string">&quot;article_author_&quot;</span> + authorId; <span class="comment">// 读者集合</span></span><br><span class="line">Boolean flag = redisTemplate.boundSetOps(userKey).isMember(authorId);<span class="comment">// 查询该用户是否已经订阅作者</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="comment">// 取消订阅</span></span><br><span class="line">    redisTemplate.boundSetOps(userKey).remove(authorId); <span class="comment">// redis 删除指定集合的某条数据</span></span><br><span class="line">    redisTemplate.boundSetOps(authorKey).remove(userId);</span><br><span class="line">    <span class="comment">// 删除绑定关系</span></span><br><span class="line">    rabbitAdmin.removeBinding(binding);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 进行订阅</span></span><br><span class="line">    redisTemplate.boundSetOps(userKey).add(authorId);    <span class="comment">// redis 往指定集合添加一条数据</span></span><br><span class="line">    redisTemplate.boundSetOps(authorKey).add(userId);</span><br><span class="line">    <span class="comment">// 声明队列、添加绑定关系</span></span><br><span class="line">    rabbitAdmin.declareQueue(queue);</span><br><span class="line">    rabbitAdmin.declareBinding(binding);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-rabbitMQ使用"><a href="#3-rabbitMQ使用" class="headerlink" title="3.rabbitMQ使用"></a>3.rabbitMQ使用</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建管理器</span></span><br><span class="line">RabbitAdmin rabbitAdmin = <span class="keyword">new</span> RabbitAdmin(rabbitTemplate.getConnectionFactory());</span><br><span class="line"><span class="comment">// 声明交换机，路由键为article_subscribe，消息通过交换机来发送</span></span><br><span class="line">DirectExchange exchange = <span class="keyword">new</span> DirectExchange(<span class="string">&quot;article_subscribe&quot;</span>);</span><br><span class="line">rabbitAdmin.declareExchange(exchange);</span><br><span class="line"><span class="comment">// 创建消息队列</span></span><br><span class="line">Queue queue = <span class="keyword">new</span> Queue(<span class="string">&quot;article_subscribe_&quot;</span> +  userId, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// 绑定交换机与队列</span></span><br><span class="line">Binding binding = BindingBuilder.bind(queue).to(exchange).with(authorId);</span><br><span class="line"></span><br><span class="line"><span class="keyword">boolean</span> flag; <span class="comment">// 获取是否订阅的关系</span></span><br><span class="line"><span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="comment">//如果已经订阅，就取消绑定队列与交换机的绑定关系</span></span><br><span class="line">	rabbitAdmin.removeBinding(binding);    </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	rabbitAdmin.declareQueue(queue);</span><br><span class="line">    rabbitAdmin.declareBinding(binding);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//...关注作者发布文章后，生成消息推送</span></span><br><span class="line">rabbitTemplate.convertAndSend(<span class="string">&quot;article_subscribe&quot;</span>, userId, id);</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" title="项目介绍">https://aurora-ze.github.io.git/2021/12/13/项目/十次方/项目总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BD%BF%E7%94%A8/" rel="prev" title="虚拟机使用">
+      <i class="fa fa-chevron-left"></i> 虚拟机使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/MyBatis-Plus/" rel="next" title="MyBatis-Plus">
+      MyBatis-Plus <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、项目介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-text">2. 需求分析</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-%E6%A8%A1%E5%9D%97%E5%88%92%E5%88%86"><span class="nav-text">3. 模块划分</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-%E6%9E%B6%E6%9E%84%E5%8F%8A%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-text">4. 架构及技术选型</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F"><span class="nav-text">开发模式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-%E8%A1%A5%E5%85%85"><span class="nav-text">5. 补充</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%9A%BE%E7%82%B9%E6%80%BB%E7%BB%93"><span class="nav-text">二、难点总结</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="nav-text">1. 分页查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8redis"><span class="nav-text">2. 使用redis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-rabbitMQ%E4%BD%BF%E7%94%A8"><span class="nav-text">3.rabbitMQ使用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

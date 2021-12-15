@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、背景在介绍Java内存模型之前，我们先了解下计算机的内存模型，这对Java的内存模型有着很大的参考作用。 1.1计算机—多任务处理 当前计算机大部分是支持多任务处理；在许多场景下，计算机可以同时处理多个任务。  为什么这样做  压榨CPU资源 如果只有一个任务，它进行I&#x2F;O操作时，CPU会空闲 因此安排多任务执行，避免资源浪费  多请求的客观事实 一个服务器端往往会同时收到几个客户端的请求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java内存模型">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、背景在介绍Java内存模型之前，我们先了解下计算机的内存模型，这对Java的内存模型有着很大的参考作用。 1.1计算机—多任务处理 当前计算机大部分是支持多任务处理；在许多场景下，计算机可以同时处理多个任务。  为什么这样做  压榨CPU资源 如果只有一个任务，它进行I&#x2F;O操作时，CPU会空闲 因此安排多任务执行，避免资源浪费  多请求的客观事实 一个服务器端往往会同时收到几个客户端的请求">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504152643.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504153055.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504154702.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504155538.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.538Z">
+<meta property="article:modified_time" content="2021-10-11T07:23:57.336Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504152643.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java内存模型 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java内存模型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-11 15:23:57" itemprop="dateModified" datetime="2021-10-11T15:23:57+08:00">2021-10-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>在介绍Java内存模型之前，我们先了解下计算机的内存模型，这对Java的内存模型有着很大的参考作用。</p>
+<h2 id="1-1计算机—多任务处理"><a href="#1-1计算机—多任务处理" class="headerlink" title="1.1计算机—多任务处理"></a>1.1计算机—多任务处理</h2><blockquote>
+<p>当前计算机大部分是支持多任务处理；在许多场景下，计算机可以同时处理多个任务。</p>
+</blockquote>
+<p>为什么这样做</p>
+<ol>
+<li><p>压榨CPU资源</p>
+<p>如果只有一个任务，它进行I/O操作时，CPU会空闲</p>
+<p>因此安排多任务执行，避免资源浪费</p>
+</li>
+<li><p>多请求的客观事实</p>
+<p>一个服务器端往往会同时收到几个客户端的请求</p>
+</li>
+</ol>
+<h2 id="1-2计算机—内存模型"><a href="#1-2计算机—内存模型" class="headerlink" title="1.2计算机—内存模型"></a>1.2计算机—内存模型</h2><h3 id="版本1"><a href="#版本1" class="headerlink" title="版本1"></a>版本1</h3><p>根据冯诺依曼提出的计算机体系结构，我们令处理器和主存进行通信：</p>
+<img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504152643.png" alt="image-20210504152623819" style="zoom: 67%;" />
+
+<p><strong>缺陷：</strong></p>
+<p>处理器访问寄存器的速度远快于访问主存的速度，而每次都要从主存读数据，要等待很久</p>
+<h3 id="版本2-1"><a href="#版本2-1" class="headerlink" title="版本2.1"></a>版本2.1</h3><p>添加高速缓存，把常用的数据放在缓存中，供处理器直接访问。它的访问速度仅次于寄存器，但是比主存快很多。</p>
+<img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504153055.png" alt="image-20210504153047767" style="zoom:67%;" />
+
+<p><strong>缺陷：</strong></p>
+<ul>
+<li><p>缓存一致性：多个高速缓存如何保证数据的一致（或者说，同步）</p>
+</li>
+<li><p>指令重排序问题：</p>
+<p>处理器内部会优化指令的顺序，以保证CPU资源的高效利用；</p>
+<p>指令重排序保证当前任务内排序后的结果是和原先保持一致的，但不保证多任务间数据的协调。</p>
+</li>
+</ul>
+<h3 id="版本2-2"><a href="#版本2-2" class="headerlink" title="版本2.2"></a>版本2.2</h3><p>添加缓存一致性协议，来确保缓存间数据的可见性</p>
+<p><strong>可见性</strong>就是指当一个高速缓存内的数据发生变化时，其他拥有该数据的高速缓存应该能察觉到它的变化。</p>
+<img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504154702.png" alt="image-20210504154658533" style="zoom:67%;" />
+
+<h1 id="二、Java内存模型"><a href="#二、Java内存模型" class="headerlink" title="二、Java内存模型"></a>二、Java内存模型</h1><p>Java内存模型设计如下：</p>
+<p>可以看到，它和计算机的内存模型基本一致。</p>
+<ul>
+<li><p>Java线程用来执行任务，每个线程都拥有工作内存；</p>
+</li>
+<li><p>所有的任务都必须在工作内存中执行。</p>
+</li>
+<li><p>所有的数据都存放在主内存中，通过<code>save</code>和<code>load</code>等操作加载到工作内存中</p>
+</li>
+</ul>
+<img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210504155538.png" alt="image-20210504155535163" style="zoom:67%;" />
+
+<h2 id="2-1原子操作"><a href="#2-1原子操作" class="headerlink" title="2.1原子操作"></a>2.1原子操作</h2><p>Java提供了一些原子的、不可再分的操作，如下。</p>
+<h3 id="作用于主内存中的变量"><a href="#作用于主内存中的变量" class="headerlink" title="作用于主内存中的变量"></a>作用于主内存中的变量</h3><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">lock</td>
+<td align="center">加锁，标志一个变量为线程独占状态</td>
+</tr>
+<tr>
+<td align="center">unlock</td>
+<td align="center">解锁，把一个处于线程独占状态的变量释放出来</td>
+</tr>
+<tr>
+<td align="center">read</td>
+<td align="center">把变量传输到工作内存中，配合load使用</td>
+</tr>
+<tr>
+<td align="center">write</td>
+<td align="center">把工作内存传来的变量写入到主内存中，配合store使用</td>
+</tr>
+</tbody></table>
+<h3 id="作用于工作内存中的变量"><a href="#作用于工作内存中的变量" class="headerlink" title="作用于工作内存中的变量"></a>作用于工作内存中的变量</h3><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">load</td>
+<td align="center">把主内存传来的变量放入工作内存的变量副本中</td>
+</tr>
+<tr>
+<td align="center">use</td>
+<td align="center">把变量传递给执行引擎</td>
+</tr>
+<tr>
+<td align="center">assign</td>
+<td align="center">把执行引擎传过来的变量赋值给工作内存</td>
+</tr>
+<tr>
+<td align="center">store</td>
+<td align="center">把变量传给主内存</td>
+</tr>
+</tbody></table>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>使用<code>read</code>和<code>load</code>组合把变量从<code>主内存</code>传递到<code>工作内存</code>，并保存在工作内存的变量副本中。</p>
+<p>使用<code>store</code>和<code>write</code>组合把变量从<code>工作内存</code>传递到<code>主内存</code>，并写入。</p>
+<h1 id="三、内存模型三大特征"><a href="#三、内存模型三大特征" class="headerlink" title="三、内存模型三大特征"></a>三、内存模型三大特征</h1><blockquote>
+<p>Java内存模型以及相关指令主要是围绕<strong>如何处理并发过程中的原子性、可见性和有序性</strong>进行的。</p>
+</blockquote>
+<p>下面我们就来谈谈这三大特征。</p>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><blockquote>
+<p>原子性，指某个操作不可再分。</p>
+</blockquote>
+<p>上面提到的8个指令都支持原子性：</p>
+<ul>
+<li><p>8个指令本身都是原子性的</p>
+<p>单个操作是原子性的，一起使用就不一定了</p>
+</li>
+<li><p>lock和unlock可以保证更大维度的原子性</p>
+<p><code>synchronized</code>关键字是用字节码指令<code>monitorenter</code>和<code>monitorexit</code>实现的，这两个指令隐式的表达了<code>lock</code>和<code>unlock</code>的意思。</p>
+</li>
+</ul>
+<p>所以我们可以认为：</p>
+<ol>
+<li><p><strong>基本数据类型的访问、读写都是具有原子性的</strong></p>
+</li>
+<li><p><strong><code>synchronized</code>关键字修饰的代码块是具有原子性的</strong></p>
+</li>
+<li><p><strong><code>volatile</code>关键字修饰的变量是不具备原子性的</strong></p>
+<p>这个如何理解呢？</p>
+<p>volatile修饰，只是保证了读取变量时，是最新的正确的</p>
+<p>但是后续的更新、赋值过程，别的线程是可以修改变量，从而使当前值失效的。</p>
+</li>
+</ol>
+<h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><blockquote>
+<p>可见性指<strong>volatile</strong>修饰的变量，一旦被某个线程修改，其他线程可以立刻察觉到变化。</p>
+</blockquote>
+<p>Java有3个关键字能实现可见性，分别是<code>volatile</code>、<code>synchronized</code>和<code>final</code></p>
+<ul>
+<li><p><strong>volatile</strong>，后面会介绍</p>
+</li>
+<li><p><strong>synchronized</strong></p>
+<p><code>unlock</code>后必须写回到主内存，从而保证了可见性</p>
+</li>
+<li><p><strong>final</strong></p>
+<p>该关键字修饰的变量，一旦完成初始化，其他线程都可见。</p>
+</li>
+</ul>
+<h2 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h2><blockquote>
+<p>如果在本线程内观察，所有操作都是有序的；如果在其他线程中观察，那么观察到的都是无序的操作。</p>
+</blockquote>
+<p>两种方式实现有序性：</p>
+<ul>
+<li><p>volatile，后面介绍</p>
+</li>
+<li><p>synchronized</p>
+<p>因为变量在同一时间只能被一个线程<code>lock</code>，所以代码块只能串行进入。</p>
+</li>
+</ul>
+<h1 id="四、Volatile关键字"><a href="#四、Volatile关键字" class="headerlink" title="四、Volatile关键字"></a>四、Volatile关键字</h1><p><code>volatile</code>关键字用来修饰变量，它有两个作用：</p>
+<ul>
+<li>保证可见性</li>
+<li>禁止指令重排序</li>
+</ul>
+<p>接下来我们从内存模型的角度理解一下它的实现。</p>
+<h2 id="3-1保证可见性"><a href="#3-1保证可见性" class="headerlink" title="3.1保证可见性"></a>3.1保证可见性</h2><blockquote>
+<p>可见性指<strong>volatile</strong>修饰的变量，一旦被某个线程修改，其他线程可以立刻察觉到变化。</p>
+</blockquote>
+<p>Java虚拟机通过原子操作实现了这一点</p>
+<p>现在假设变量<code>a</code>是被volatile修饰的，那么</p>
+<ol>
+<li><p><code>read</code>、<code>load</code>和<code>use</code>组合使用</p>
+<p><code>a</code>在使用时必须从主内存中读取到工作内存中，然后再传递给执行引擎</p>
+</li>
+<li><p><code>asign</code>、<code>store</code>和<code>write</code>组合使用</p>
+<p><code>a</code>修改后，由执行引擎传递给工作空间，然后必须再写回主内存中。</p>
+</li>
+</ol>
+<h2 id="3-2禁止指令重排序"><a href="#3-2禁止指令重排序" class="headerlink" title="3.2禁止指令重排序"></a>3.2禁止指令重排序</h2><blockquote>
+<p>指令重排序是处理器为了高效利用资源而进行的操作</p>
+<p>该操作不影响当前线程的最终结果</p>
+</blockquote>
+<p>在多线程环境下，指令重排序可能会造成访问数据错误。</p>
+<p>虚拟机通过设置<code>内存屏障</code>的方式来禁止指令重排，具体地说，是禁止让屏障之后的指令，重排序到内存屏障的前面。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" title="Java内存模型">https://aurora-ze.github.io.git/2021/12/13/Java/Java虚拟机/Java内存模型/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="prev" title="三、垃圾回收机制">
+      <i class="fa fa-chevron-left"></i> 三、垃圾回收机制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E9%94%81%E6%9C%BA%E5%88%B6/" rel="next" title="Java锁机制">
+      Java锁机制 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="nav-text">一、背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1%E8%AE%A1%E7%AE%97%E6%9C%BA%E2%80%94%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%A4%84%E7%90%86"><span class="nav-text">1.1计算机—多任务处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2%E8%AE%A1%E7%AE%97%E6%9C%BA%E2%80%94%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-text">1.2计算机—内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC1"><span class="nav-text">版本1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC2-1"><span class="nav-text">版本2.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC2-2"><span class="nav-text">版本2.2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-text">二、Java内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-text">2.1原子操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E4%BA%8E%E4%B8%BB%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F"><span class="nav-text">作用于主内存中的变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E4%BA%8E%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F"><span class="nav-text">作用于工作内存中的变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%B3%95"><span class="nav-text">用法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%89%E5%A4%A7%E7%89%B9%E5%BE%81"><span class="nav-text">三、内存模型三大特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-text">可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E6%80%A7"><span class="nav-text">有序性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Volatile%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">四、Volatile关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E4%BF%9D%E8%AF%81%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-text">3.1保证可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E7%A6%81%E6%AD%A2%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="nav-text">3.2禁止指令重排序</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

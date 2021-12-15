@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、对象1.1 对象构成是怎样的？在JVM中，堆中的对象可以由三部分组成：  对象头 实例数据 对齐填充（满足8字节的整数倍）  其中对象头又可以分为markword和类型指针，前者包含对象自身运行时的数据，如哈希码、锁标志、分代年龄等；后者是指向方法区对象类型信息的指针。 1.2 如何分配对象？创建对象意味着要给对象分配一块内存空间，有两种常见的分配方式：指针碰撞和空闲列表 指针碰撞  由已分配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Aurora">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="一、对象1.1 对象构成是怎样的？在JVM中，堆中的对象可以由三部分组成：  对象头 实例数据 对齐填充（满足8字节的整数倍）  其中对象头又可以分为markword和类型指针，前者包含对象自身运行时的数据，如哈希码、锁标志、分代年龄等；后者是指向方法区对象类型信息的指针。 1.2 如何分配对象？创建对象意味着要给对象分配一块内存空间，有两种常见的分配方式：指针碰撞和空闲列表 指针碰撞  由已分配">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.534Z">
+<meta property="article:modified_time" content="2021-10-11T12:35:17.857Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-11 20:35:17" itemprop="dateModified" datetime="2021-10-11T20:35:17+08:00">2021-10-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、对象"><a href="#一、对象" class="headerlink" title="一、对象"></a>一、对象</h2><h3 id="1-1-对象构成是怎样的？"><a href="#1-1-对象构成是怎样的？" class="headerlink" title="1.1 对象构成是怎样的？"></a>1.1 对象构成是怎样的？</h3><p>在JVM中，堆中的对象可以由三部分组成：</p>
+<ol>
+<li><strong>对象头</strong></li>
+<li><strong>实例数据</strong></li>
+<li><strong>对齐填充</strong>（满足8字节的整数倍）</li>
+</ol>
+<p>其中对象头又可以分为<code>markword</code>和<code>类型指针</code>，前者包含对象自身运行时的数据，如哈希码、锁标志、分代年龄等；后者是指向方法区对象类型信息的指针。</p>
+<h3 id="1-2-如何分配对象？"><a href="#1-2-如何分配对象？" class="headerlink" title="1.2 如何分配对象？"></a>1.2 如何分配对象？</h3><p>创建对象意味着要给对象分配一块内存空间，有两种常见的分配方式：<strong>指针碰撞</strong>和<strong>空闲列表</strong></p>
+<p><strong>指针碰撞</strong></p>
+<ul>
+<li>由<code>已分配 | 未分配</code>的格式构成，分配时只需移动中间的指针即可。</li>
+</ul>
+<p><strong>空闲列表</strong></p>
+<ul>
+<li>通过链表记录可用的内存块，然后进行分配。</li>
+</ul>
+<h3 id="1-3-如何访问对象实例？"><a href="#1-3-如何访问对象实例？" class="headerlink" title="1.3 如何访问对象实例？"></a>1.3 如何访问对象实例？</h3><p><strong>Java的引用存在于栈中，我们需要有一种方式来通过引用访问堆上的对象实例。</strong></p>
+<p>主流的方式有<strong>句柄</strong>和<strong>直接地址</strong>。</p>
+<p><strong>句柄</strong></p>
+<ul>
+<li>描述：在堆中维护句柄池，引用先指向句柄池，再由句柄池指向对象</li>
+<li>特点：解决了移动对象需要修改引用的问题，但增加了句柄池的开销</li>
+</ul>
+<p><strong>直接地址</strong></p>
+<ul>
+<li>描述：引用直接指向对象实例</li>
+<li>特点：对象移动时需要修改引用</li>
+</ul>
+<h2 id="二、对象与垃圾回收的常见问题"><a href="#二、对象与垃圾回收的常见问题" class="headerlink" title="二、对象与垃圾回收的常见问题"></a>二、对象与垃圾回收的常见问题</h2><h3 id="2-1-对象的跨代、跨区域引用"><a href="#2-1-对象的跨代、跨区域引用" class="headerlink" title="2.1 对象的跨代、跨区域引用"></a>2.1 对象的跨代、跨区域引用</h3><p><strong>产生原因</strong></p>
+<p>使用根可达算法遍历对象图时，如果对象存在跨代引用，则我们可能需要把其他代的对象也全部遍历一次，<strong>来保证根可达算法的准确性</strong></p>
+<p><strong>解决方案</strong></p>
+<p>通过分代假说理论，可以得知产生跨代引用的对象并不多。可以使用<code>记忆集</code>的思想来记录发生跨代引用的区域。</p>
+<p>具体方式为：将另一代分成若干个区域，只需在<code>记忆集</code>中记录发生跨代引用的区域，然后扫描那些区域即可。</p>
+<p><strong>记忆集的具体实现方式为：卡表。</strong>可以把它看作是一个数组，它的每个元素代表一块内存区域，如果存在跨代引用的对象，则置1，不存在则置0。</p>
+<p><strong>卡表存在的两个问题：写屏障和伪共享</strong></p>
+<ul>
+<li><strong>写屏障</strong><ul>
+<li>问题由来：跨代引用产生在对象引用赋值时，如果采用编译执行的方式，如何在执行机器码时维护卡表。</li>
+<li>简单理解：代码已经写死了，你要怎样动态地插入代码</li>
+<li><strong>解决：使用类似于AOP的写屏障，在引用赋值的前后，维护卡表</strong></li>
+</ul>
+</li>
+<li><strong>伪共享</strong><ul>
+<li>问题由来：现代CPU的缓存使用缓存行，即一行为单位进行存储。如果多个卡表元素位于同一个缓存行时，可能会出现并发情况下的数据失效。</li>
+<li>解决：修改卡表前增加一次判断操作，确认卡表元素未标记（表示没有跨代引用）时，才进行标记操作。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2并发扫描时可能产生的对象错误"><a href="#2-2并发扫描时可能产生的对象错误" class="headerlink" title="2.2并发扫描时可能产生的对象错误"></a>2.2并发扫描时可能产生的对象错误</h3><p><strong>三色指针</strong>：通过三种颜色来标志对象在扫描过程中的状态。</p>
+<ul>
+<li>黑：对象已被扫描过，且它的所有引用也扫描过</li>
+<li>灰：对象被扫描，但它的引用还没扫描完</li>
+<li>白：垃圾收集器还没访问，或访问不到</li>
+</ul>
+<p>并发扫描时，因为用户线程也在运行着，所以有可能出现对象被判定为垃圾的致命情况，当且仅当以下两个条件<strong>同时满足</strong>：</p>
+<ol>
+<li><strong>删除所有从灰色节点到目标白色节点的引用</strong><ul>
+<li>如果没有其他引用，那么这个对象已经是垃圾了</li>
+</ul>
+</li>
+<li><strong>新增从黑色节点到目标白色节点的引用</strong><ul>
+<li>这个操作保证目标节点是对象</li>
+</ul>
+</li>
+</ol>
+<p>解释：上面两个条件满足后，对象仍然是活的，但是它却是白色的，且再也无法被扫描到，就会被当作垃圾回收掉。</p>
+<p>为了避免这种致命情况发生，我们必须破坏上述的至少一个条件，因此产生了两种解决方案：<strong>增量更新</strong>和<strong>原始快照</strong></p>
+<ul>
+<li><strong>增量更新</strong><ul>
+<li>新增<code>黑色</code>节点到<code>白色</code>节点的引用时，记录下<code>黑色</code>节点；然后到最后再以黑色节点为根开始扫描一次。</li>
+<li>理解：黑色节点新增引用后，就视为灰色节点了</li>
+</ul>
+</li>
+<li><strong>原始快照</strong><ul>
+<li>删除<code>灰色</code>节点到<code>白色</code>节点的引用时，记录下<code>灰色</code>节点；然后最后再以灰色节点为根扫描一次</li>
+<li>理解：无论是否删除，都以删除前一刻的快照进行扫描</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/" title="">https://aurora-ze.github.io.git/2021/12/13/Java/Java虚拟机/3.1对象/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/2.JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" rel="prev" title="JVM内存结构">
+      <i class="fa fa-chevron-left"></i> JVM内存结构
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="next" title="三、垃圾回收机制">
+      三、垃圾回收机制 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AF%B9%E8%B1%A1"><span class="nav-text">一、对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%AF%B9%E8%B1%A1%E6%9E%84%E6%88%90%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="nav-text">1.1 对象构成是怎样的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%A6%82%E4%BD%95%E5%88%86%E9%85%8D%E5%AF%B9%E8%B1%A1%EF%BC%9F"><span class="nav-text">1.2 如何分配对象？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B%EF%BC%9F"><span class="nav-text">1.3 如何访问对象实例？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-text">二、对象与垃圾回收的常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%B7%A8%E4%BB%A3%E3%80%81%E8%B7%A8%E5%8C%BA%E5%9F%9F%E5%BC%95%E7%94%A8"><span class="nav-text">2.1 对象的跨代、跨区域引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E5%B9%B6%E5%8F%91%E6%89%AB%E6%8F%8F%E6%97%B6%E5%8F%AF%E8%83%BD%E4%BA%A7%E7%94%9F%E7%9A%84%E5%AF%B9%E8%B1%A1%E9%94%99%E8%AF%AF"><span class="nav-text">2.2并发扫描时可能产生的对象错误</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

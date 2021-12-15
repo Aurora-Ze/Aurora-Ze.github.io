@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="索引一、索引数据结构类型B-Tree索引这是一类由B-Tree、B+Tree或B*Tree的数据结构来进行表数据存储的索引结构。 至于这三者的区别，因为与索引优化无关，就不再这里介绍。 B+Tree结构 每个节点都可以看作是逻辑页，中间节点存储了指向下层逻辑页的指针，然后叶子节点存储了指向其他叶子节点的指针。 即中上部分是树，且最底层的叶子用双向链表相接 一般来说，B-Tree作为索引，可以支持多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引及优化">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="索引一、索引数据结构类型B-Tree索引这是一类由B-Tree、B+Tree或B*Tree的数据结构来进行表数据存储的索引结构。 至于这三者的区别，因为与索引优化无关，就不再这里介绍。 B+Tree结构 每个节点都可以看作是逻辑页，中间节点存储了指向下层逻辑页的指针，然后叶子节点存储了指向其他叶子节点的指针。 即中上部分是树，且最底层的叶子用双向链表相接 一般来说，B-Tree作为索引，可以支持多">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.620Z">
+<meta property="article:modified_time" content="2021-08-16T15:15:27.450Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>索引及优化 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          索引及优化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-16 23:15:27" itemprop="dateModified" datetime="2021-08-16T23:15:27+08:00">2021-08-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="一、索引数据结构类型"><a href="#一、索引数据结构类型" class="headerlink" title="一、索引数据结构类型"></a>一、索引数据结构类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>这是一类由<code>B-Tree</code>、<code>B+Tree</code>或<code>B*Tree</code>的数据结构来进行表数据存储的索引结构。</p>
+<p>至于这三者的区别，因为与索引优化无关，就不再这里介绍。</p>
+<p><strong>B+Tree结构</strong></p>
+<p>每个节点都可以看作是逻辑页，中间节点存储了指向下层逻辑页的指针，然后叶子节点存储了指向其他叶子节点的指针。</p>
+<p><strong>即中上部分是树，且最底层的叶子用双向链表相接</strong></p>
+<p>一般来说，B-Tree作为索引，可以支持多种方式的查询（这里指能用到索引的查询方式）</p>
+<ul>
+<li>全值匹配<ul>
+<li>查询条件和索引的所有列匹配</li>
+<li>例如以姓名和年龄建了索引，那么执行<code>SELECT * FRPM user WHERE name = &quot;zhangsan&quot; AND age = 18</code>就用到了全值匹配</li>
+</ul>
+</li>
+<li>最左前缀匹配<ul>
+<li>用索引的第一列查询</li>
+<li>例如只用<code>name</code>来查询，但是如果只用<code>age</code>查询，无法走索引查询，因为索引树在构建时，是先按name再按age的顺序来排的。</li>
+</ul>
+</li>
+<li>范围匹配<ul>
+<li>匹配索引第一列的某个范围</li>
+</ul>
+</li>
+</ul>
+<p><strong>使用B-Tree这类索引的限制</strong></p>
+<p>最左前缀原则，查找时必须匹配索引的第一列才行，不能跳过。</p>
+<h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>哈希索引是通过计算索引列的值得到哈希码，然后去哈希表中拿到对应数据的地址，最后获取数据的。</p>
+<p>例如<code>name</code>字段建立了哈希索引，那么在查询<code>name = &quot;zhangsan&quot;</code>时，会计算得到某个key，然后去哈希表中得到value。value表示的就是数据存放的地址。</p>
+<p>因此它不支持范围查找、部分索引列查找、排序等等。</p>
+<p>但是它也有优点，相对来说查询速度会更快。。</p>
+<blockquote>
+<p>这里提一句，InnoDB引擎实现了自适应哈希索引，即在B+Tree基础上，对于一些频繁使用的索引值，系统会对它们创建一个哈希索引。</p>
+<p>只能说InnoDB牛批！</p>
+</blockquote>
+<h3 id="空间索引R-Tree"><a href="#空间索引R-Tree" class="headerlink" title="空间索引R-Tree"></a>空间索引R-Tree</h3><p>MyISAM支持空间索引，它不需要前缀匹配，因为它会从所有维度来索引数据？？？</p>
+<p>但是MySQL的GIS支持不完善，不推荐使用…</p>
+<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>这是一种特殊的索引，它查找的是文本中的关键词，而不是直接比较索引值。    </p>
+<h2 id="二、索引优点"><a href="#二、索引优点" class="headerlink" title="二、索引优点"></a>二、索引优点</h2><ul>
+<li>减少服务器需要扫描的数据量</li>
+<li>避免排序和临时表</li>
+<li>将随机IO变为顺序IO</li>
+</ul>
+<h2 id="三、索引优化"><a href="#三、索引优化" class="headerlink" title="三、索引优化"></a>三、索引优化</h2><h3 id="使用独立的列"><a href="#使用独立的列" class="headerlink" title="使用独立的列"></a>使用独立的列</h3><p>假如age建立了索引，那么查询时要使用<code>age = 18</code>而不是<code>age + 1 = 19</code>这种形式。</p>
+<h3 id="模拟哈希索引"><a href="#模拟哈希索引" class="headerlink" title="模拟哈希索引"></a>模拟哈希索引</h3><p>假设表采用InnoDB引擎，如果查询条件包含url字符串，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> url <span class="keyword">WHERE</span> url <span class="operator">=</span> &quot;www.baidu.com&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>对<code>url</code>字段直接建索引，会使得索引的体积非常大，因为url本身是有一定长度的。</p>
+<p>这时我们可以采取伪哈希索引，即在表中新增一列<code>url_crc</code>，然后该列的值为对url字段进行哈希后的整型，对整型建索引和查找是比较高效的。</p>
+<p>这里有个注意点，因为哈希值可能会发生冲突（即重复），所以查询时还是要带上原url，如下所示</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> url <span class="keyword">WHERE</span> url <span class="operator">=</span> &quot;www.baidu.com&quot; <span class="keyword">AND</span> url_crc <span class="operator">=</span> CRC32(&quot;www.baidu.com&quot;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h3><p>另一种解决查询条件的字符串过长的方法，是建立前缀索引</p>
+<p>在前缀的长度和区分度上寻求一个平衡，使得既能提高查询效率，又不至于出现太多重复的索引值。</p>
+<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p>如之前提过的<code>name</code>和<code>age</code>，两者查询是交集的话，就可以建立以name和age共同构建的联合索引，而不是两个单列索引。</p>
+<p>如果两者查询是并集，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> &quot;zhangsan&quot; <span class="keyword">OR</span> age <span class="operator">=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这样可以建立两个单列索引，但是查询写法要改一下，用<code>union</code>使两个查询都能用到索引（虽然MySQL现在也会优化成联合的方式）</p>
+<p><strong>正确做法</strong></p>
+<ul>
+<li>建两个单列索引</li>
+<li>使用联合</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> &quot;zhangsan&quot;</span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">!=</span> &quot;zhangsan&quot; <span class="keyword">AND</span> age <span class="operator">=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h3><p>这是由存储引擎实现的，这里讨论的是InnoDB。</p>
+<p>聚簇索引就是在索引中把数据和索引值都放在一起，可以说，<strong>聚簇索引就是一张表</strong>，默认用主键来构建聚簇索引。</p>
+<p>在InnoDB的实现中，B+Tree的叶子节点存放了索引列的值和其他列的值（即所有数据），中间节点只存放了索引列的值</p>
+<p><strong>好处</strong></p>
+<p>查询和非聚簇索引相比更快，因为可以直接拿到数据，不用再去其他地方读</p>
+<p>聚簇索引中获取一个页中的相关数据会非常快，比如用户的所有邮箱数据都聚集在一个页中，那么可以快速获得</p>
+<p><strong>坏处</strong></p>
+<p>插入时：按照主键递增的顺序插入效率最高，如果主键不递增，那么插入到索引的中间位置，开销就会变大</p>
+<p>更新时：在聚簇索引中，想要在修改索引列的值，代价会非常高</p>
+<p><strong>二级索引</strong></p>
+<p>主键构成的索引就是聚簇索引，那么其他列构成的索引就是二级索引了。</p>
+<p>二级索引的叶子存储了对应记录的主键，思考一哈，为啥不存指向那行数据的指针呢？</p>
+<blockquote>
+<p>原因就是降低维护成本。如果二级索引的叶子节点存储数据的行指针，那么数据的位置发生变化（行移动或页分裂）时，就要增加二级索引的维护工作。</p>
+</blockquote>
+<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>查询时如果当前索引就包含了要查询的内容，不必再拿着主键去聚簇索引中查找，这种情况就被称为<code>覆盖索引</code></p>
+<p>使用覆盖索引查询，就减少了回表的次数，提高查询效率</p>
+<h3 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序"></a>索引排序</h3><p>两种方式可以得到有序的数据：排序和索引顺序扫描。</p>
+<p><strong>索引顺序扫描</strong></p>
+<p>在索引按顺序扫描时，如果每条记录都不能覆盖所需字段，它就得回表查询对应的数据行</p>
+<p>这样产生的IO开销，会导致索引顺序扫描的速度比顺序全表扫描还来的慢。</p>
+<h3 id="冗余和重复索引"><a href="#冗余和重复索引" class="headerlink" title="冗余和重复索引"></a>冗余和重复索引</h3><p><code>重复索引</code>是指索引列及其顺序都一致，这种重复情况应该避免。</p>
+<p>而<code>索引冗余</code>是指，某个索引包含了原有的索引，是其超集。</p>
+<p>例如现在已经建立<code>name</code>字段的索引，现在又新建了一个<code>name</code>和<code>age</code>字段的联合索引，这种情况就是冗余索引。</p>
+<p><strong>那我们可不可以扩展原先的<code>name</code>索引呢，这样不就可以避免索引冗余了</strong></p>
+<p>但是扩展<code>name</code>索引，给它加上age字段，会使原来的索引变大，从而影响其他使用原索引的查询速度</p>
+<p>索引冗余有个致命的缺陷，就是索引越多，增删改的性能就会越低。所以要根据具体情况来决定是否冗余索引。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/" title="索引及优化">https://aurora-ze.github.io.git/2021/12/13/MySQL/索引：理论/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%AE%9E%E8%B7%B5/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="next" title="PART1——数据系统的基石">
+      PART1——数据系统的基石 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95"><span class="nav-text">索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%B4%A2%E5%BC%95%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">一、索引数据结构类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree%E7%B4%A2%E5%BC%95"><span class="nav-text">B-Tree索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95"><span class="nav-text">哈希索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95R-Tree"><span class="nav-text">空间索引R-Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95"><span class="nav-text">全文索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%B4%A2%E5%BC%95%E4%BC%98%E7%82%B9"><span class="nav-text">二、索引优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="nav-text">三、索引优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%8B%AC%E7%AB%8B%E7%9A%84%E5%88%97"><span class="nav-text">使用独立的列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95"><span class="nav-text">模拟哈希索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95"><span class="nav-text">前缀索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="nav-text">联合索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="nav-text">聚簇索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95"><span class="nav-text">覆盖索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%8E%92%E5%BA%8F"><span class="nav-text">索引排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%97%E4%BD%99%E5%92%8C%E9%87%8D%E5%A4%8D%E7%B4%A2%E5%BC%95"><span class="nav-text">冗余和重复索引</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

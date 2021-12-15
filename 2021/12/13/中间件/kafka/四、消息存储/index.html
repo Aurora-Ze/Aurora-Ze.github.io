@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Kafka消息存储一、相关概念broker kafka服务节点 如果是单机的kafka，那么broker就只有一个；如果是集群，则会有多个broker  topic 主题，是一种逻辑概念。 一个主题可以包含多个分区，每个分区位于不同的节点上。  partition 分区，是一种物理概念 可以在某一个broker的数据目录下找到以”主题-分区”命名的文件夹  二、带着问题学习2.1生产者发出的消息存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息存储">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="Kafka消息存储一、相关概念broker kafka服务节点 如果是单机的kafka，那么broker就只有一个；如果是集群，则会有多个broker  topic 主题，是一种逻辑概念。 一个主题可以包含多个分区，每个分区位于不同的节点上。  partition 分区，是一种物理概念 可以在某一个broker的数据目录下找到以”主题-分区”命名的文件夹  二、带着问题学习2.1生产者发出的消息存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171444098.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171444616.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171526705.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.849Z">
+<meta property="article:modified_time" content="2021-12-13T12:00:54.604Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171444098.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>消息存储 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          消息存储
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:00:54" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Kafka消息存储"><a href="#Kafka消息存储" class="headerlink" title="Kafka消息存储"></a>Kafka消息存储</h1><h2 id="一、相关概念"><a href="#一、相关概念" class="headerlink" title="一、相关概念"></a>一、相关概念</h2><h3 id="broker"><a href="#broker" class="headerlink" title="broker"></a>broker</h3><ul>
+<li><strong>kafka服务节点</strong></li>
+<li>如果是单机的kafka，那么broker就只有一个；如果是集群，则会有多个broker</li>
+</ul>
+<h3 id="topic"><a href="#topic" class="headerlink" title="topic"></a>topic</h3><ul>
+<li><strong>主题，是一种逻辑概念。</strong></li>
+<li>一个主题可以包含多个分区，每个分区位于不同的节点上。</li>
+</ul>
+<h3 id="partition"><a href="#partition" class="headerlink" title="partition"></a>partition</h3><ul>
+<li><strong>分区，是一种物理概念</strong></li>
+<li>可以在某一个broker的数据目录下找到以”主题-分区”命名的文件夹</li>
+</ul>
+<h2 id="二、带着问题学习"><a href="#二、带着问题学习" class="headerlink" title="二、带着问题学习"></a>二、带着问题学习</h2><h3 id="2-1生产者发出的消息存在哪儿？"><a href="#2-1生产者发出的消息存在哪儿？" class="headerlink" title="2.1生产者发出的消息存在哪儿？"></a>2.1生产者发出的消息存在哪儿？</h3><p>这个是由<code>server.properties</code>文件中的<code>log.dirs</code>配置项来决定的。例如我配置在<code>kafka1/data</code>路径下。</p>
+<p>数据目录的内容如下，里面的每个文件夹都是一个分区，命名格式为<code>topic-partition</code></p>
+<ul>
+<li><p><code>__consumer_offsets</code>：kafka内部主题</p>
+</li>
+<li><p><code>topic_first</code>和<code>topic_second</code>等自定义的主题及分区</p>
+</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171444098.png" alt="image-20211117121306130"></p>
+<p>查看topic_second-0的内容发现目前存放了5个文件，分别是：</p>
+<ol>
+<li><code>.index</code>：偏移量索引文件</li>
+<li><code>.log</code>：真正的消息文件，即数据</li>
+<li><code>.timeindex</code>：时间索引文件</li>
+<li>leader-epoch-checkpoint</li>
+<li>partition.metadata</li>
+</ol>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171444616.png" alt="image-20211117121739809"></p>
+<hr>
+<h3 id="2-2kafka是如何存储消息的？"><a href="#2-2kafka是如何存储消息的？" class="headerlink" title="2.2kafka是如何存储消息的？"></a>2.2kafka是如何存储消息的？</h3><p>为了防止数据文件过大，kafka采用了<code>分段</code>和<code>索引</code>的方式。每一段可以由一个log文件和两个索引文件组成（以及可能的其他文件）。</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111171526705.png" alt="image-20211117152613529"></p>
+<h4 id="分段"><a href="#分段" class="headerlink" title="分段"></a>分段</h4><p>数据文件被分成多个<code>log</code>文件进行存储，其中：</p>
+<ul>
+<li>文件名：起始偏移量，表示在该文件记录的所有消息中的最小偏移量。如上图的<code>00000000000000000000.log</code>，因为是从第一条消息开始记录，所以偏移量为0</li>
+<li>文件大小：由<code>log.segment.bytes</code>配置项决定，默认为1GB</li>
+</ul>
+<p><strong>如何定位消息所在的log文件？</strong></p>
+<p>维护一个跳表，跳表的key是每个文件的起始偏移量，这样就可以得知消息在哪个log文件中。</p>
+<p>例如查找消息的偏移量为121，那就在<code>120.log</code>中</p>
+<table>
+<thead>
+<tr>
+<th align="center">baseoffset=0</th>
+<th align="center">baseoffset=120</th>
+<th align="center">baseoffset=365</th>
+<th align="center">baseoffset=488</th>
+<th align="center">baseoffset=788</th>
+</tr>
+</thead>
+</table>
+<h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><p>我们知道消息在哪个log文件之后，还需要知道消息在log中的具体位置，这就需要借助<code>索引文件</code>。</p>
+<p><strong>索引文件结构</strong></p>
+<p>每个索引项都占8字节，结构如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">relativeOffset</th>
+<th align="center">position</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">4字节</td>
+<td align="center">4字节</td>
+</tr>
+</tbody></table>
+<p><strong>如何根据索引文件来定位消息在log文件中的位置？</strong></p>
+<p>在相对偏移量中进行二分查找，确定小于目标offset的最接近的偏移量，然后得到物理位置去log文件中往下找。</p>
+<p>例如在<code>27.index</code>中查找offset为50的消息位置：</p>
+<table>
+<thead>
+<tr>
+<th align="center">relativeOffset</th>
+<th align="center">position</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">14</td>
+<td align="center">156</td>
+</tr>
+<tr>
+<td align="center">22</td>
+<td align="center">459</td>
+</tr>
+<tr>
+<td align="center">35</td>
+<td align="center">666</td>
+</tr>
+<tr>
+<td align="center">45</td>
+<td align="center">863</td>
+</tr>
+</tbody></table>
+<ol>
+<li>计算相对偏移量<ul>
+<li>50-27=23</li>
+</ul>
+</li>
+<li>通过<code>二分查找</code>在索引文件中找到22的一项</li>
+<li>去<code>27.log</code>文件中的459字节处开始往下找</li>
+</ol>
+<hr>
+<h3 id="2-3消息的过期机制是怎样的？"><a href="#2-3消息的过期机制是怎样的？" class="headerlink" title="2.3消息的过期机制是怎样的？"></a>2.3消息的过期机制是怎样的？</h3><p>消息在磁盘上存储为一个个log文件，这些log文件会占据磁盘一定的容量。</p>
+<p>因此Kafka提供了基于<strong>时间</strong>、<strong>文件大小</strong>和<strong>起始偏移量</strong>的删除策略。</p>
+<p><strong>存在时间</strong>和<strong>文件大小</strong>都是由配置项决定的，默认配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log.retention.hours=168                <span class="comment"># log文件保留七天</span></span><br><span class="line">log.segment.bytes=1073741824           <span class="comment"># 每个log文件最大1GB，超过则写新文件中</span></span><br><span class="line">log.retention.check.interval.ms=300000 <span class="comment"># 每隔5分钟检查是否可以删除</span></span><br></pre></td></tr></table></figure>
+
+<p>另外，基于日志起始偏移量的删除是因为log文件有可能被截断，那么小于起始偏移量的消息就不应该被保留。</p>
+<hr>
+<h3 id="2-4Kafka高性能、高吞吐是怎样做到的？"><a href="#2-4Kafka高性能、高吞吐是怎样做到的？" class="headerlink" title="2.4Kafka高性能、高吞吐是怎样做到的？"></a>2.4Kafka高性能、高吞吐是怎样做到的？</h3><h5 id="顺序追加"><a href="#顺序追加" class="headerlink" title="顺序追加"></a>顺序追加</h5><p>消息顺序的写到磁盘文件中，并使用操作系统的刷盘策略。</p>
+<p>兼顾消息的读写性能与完整性。</p>
+<h5 id="页缓存"><a href="#页缓存" class="headerlink" title="页缓存"></a>页缓存</h5><p>操作系统利用内存加载了大量的磁盘页（即页缓存），使用<strong>预读</strong>和<strong>后写</strong>的方式大大加快了IO效率。</p>
+<blockquote>
+<p><strong>预读</strong>指读磁盘上的数据时，把后面的一部分数据也读到内存中，这样加快下一次读的效率</p>
+<p><strong>后写</strong>指向磁盘写数据时，只是把数据写入到一个缓冲区中，然后由操作系统决定何时写入磁盘。在用户看来已经写入完毕。</p>
+</blockquote>
+<h5 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h5><p>正常传输流程：</p>
+<ol>
+<li>从磁盘读数据到内核的READ BUFFER缓冲区中</li>
+<li>数据从内核传输到用户</li>
+<li>用户态下的数据传递给socket</li>
+<li>socket把数据传递给网卡（NIC）</li>
+</ol>
+<p>零拷贝利用<code>DMA</code>(直接内存访问)的方式，直接把数据从内核缓冲区传输到socket中。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/" title="消息存储">https://aurora-ze.github.io.git/2021/12/13/中间件/kafka/四、消息存储/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" rel="prev" title="生产者与消费者实践">
+      <i class="fa fa-chevron-left"></i> 生产者与消费者实践
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="Redis客户端与服务器">
+      Redis客户端与服务器 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8"><span class="nav-text">Kafka消息存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-text">一、相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#broker"><span class="nav-text">broker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#topic"><span class="nav-text">topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partition"><span class="nav-text">partition</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E5%AD%A6%E4%B9%A0"><span class="nav-text">二、带着问题学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E7%94%9F%E4%BA%A7%E8%80%85%E5%8F%91%E5%87%BA%E7%9A%84%E6%B6%88%E6%81%AF%E5%AD%98%E5%9C%A8%E5%93%AA%E5%84%BF%EF%BC%9F"><span class="nav-text">2.1生产者发出的消息存在哪儿？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2kafka%E6%98%AF%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E6%B6%88%E6%81%AF%E7%9A%84%EF%BC%9F"><span class="nav-text">2.2kafka是如何存储消息的？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5"><span class="nav-text">分段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95"><span class="nav-text">索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E6%B6%88%E6%81%AF%E7%9A%84%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="nav-text">2.3消息的过期机制是怎样的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4Kafka%E9%AB%98%E6%80%A7%E8%83%BD%E3%80%81%E9%AB%98%E5%90%9E%E5%90%90%E6%98%AF%E6%80%8E%E6%A0%B7%E5%81%9A%E5%88%B0%E7%9A%84%EF%BC%9F"><span class="nav-text">2.4Kafka高性能、高吞吐是怎样做到的？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E8%BF%BD%E5%8A%A0"><span class="nav-text">顺序追加</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A1%B5%E7%BC%93%E5%AD%98"><span class="nav-text">页缓存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="nav-text">零拷贝</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

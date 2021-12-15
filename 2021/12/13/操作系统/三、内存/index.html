@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="内存管理一、内存基础1.1问题 什么是内存，它在计算机中的作用 内存的结构是怎样的，它是如何分区的 分区之后，应采取怎样的策略来给进程分配内存空间（放置算法或者说分配策略）  1.2解答作用 重定位：进程被换出后再次换进到内存中，会分配到一个不同的内存区域上，因此原先的指令就要做一个映射 保护：每个进程的内存区域不应该被其他进程所干扰，处理器的硬件层面上应该提供这个判断 共享：多个程序执行时，可能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统——内存管理">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="内存管理一、内存基础1.1问题 什么是内存，它在计算机中的作用 内存的结构是怎样的，它是如何分区的 分区之后，应采取怎样的策略来给进程分配内存空间（放置算法或者说分配策略）  1.2解答作用 重定位：进程被换出后再次换进到内存中，会分配到一个不同的内存区域上，因此原先的指令就要做一个映射 保护：每个进程的内存区域不应该被其他进程所干扰，处理器的硬件层面上应该提供这个判断 共享：多个程序执行时，可能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210831205328.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210906112000.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.654Z">
+<meta property="article:modified_time" content="2021-10-25T06:23:09.633Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210831205328.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统——内存管理 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统——内存管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-25 14:23:09" itemprop="dateModified" datetime="2021-10-25T14:23:09+08:00">2021-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><h2 id="一、内存基础"><a href="#一、内存基础" class="headerlink" title="一、内存基础"></a>一、内存基础</h2><h3 id="1-1问题"><a href="#1-1问题" class="headerlink" title="1.1问题"></a>1.1问题</h3><ol>
+<li>什么是内存，它在计算机中的作用</li>
+<li>内存的结构是怎样的，它是如何分区的</li>
+<li>分区之后，应采取怎样的策略来给进程分配内存空间（放置算法或者说分配策略）</li>
+</ol>
+<h3 id="1-2解答"><a href="#1-2解答" class="headerlink" title="1.2解答"></a>1.2解答</h3><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><ul>
+<li><strong>重定位</strong>：进程被换出后再次换进到内存中，会分配到一个不同的内存区域上，因此原先的指令就要做一个映射</li>
+<li><strong>保护</strong>：每个进程的内存区域不应该被其他进程所干扰，处理器的硬件层面上应该提供这个判断</li>
+<li><strong>共享</strong>：多个程序执行时，可能会有共享一些数据的需求，操作系统需要管理这块共享内存</li>
+<li><strong>逻辑组织与物理组织</strong>：逻辑地址连续，物理地址不连续</li>
+</ul>
+<h4 id="分区的方式"><a href="#分区的方式" class="headerlink" title="分区的方式"></a>分区的方式</h4><p>简单来看，有两种分区的方式，即<strong>固定分区</strong>和<strong>动态分区</strong>。</p>
+<p><strong>固定分区</strong></p>
+<ul>
+<li>定义：内存分为固定大小的块，每块可以相同，也可以不同</li>
+<li>缺点<ul>
+<li>会有大量的内部碎片产生</li>
+<li>限制了活动进程的最大数量</li>
+</ul>
+</li>
+<li>优点：分配简单</li>
+</ul>
+<p><strong>动态分区</strong></p>
+<ul>
+<li>定义：根据进程大小来按需分配</li>
+<li>缺点：随着进程的换进换出，会产生外部碎片</li>
+<li>特点：需要考虑内存的<strong>分配策略</strong>，下面介绍</li>
+</ul>
+<p><strong>内存分配策略</strong></p>
+<ul>
+<li>首次适配：从头开始，匹配满足条件的第一块内存</li>
+<li>下次适配：从上次分配的地方开始，匹配满足条件的第一块内存</li>
+<li>最佳适配：全量扫描，找到最佳的内存块进行分配</li>
+</ul>
+<h4 id="一种特殊的分区方式：伙伴系统"><a href="#一种特殊的分区方式：伙伴系统" class="headerlink" title="一种特殊的分区方式：伙伴系统"></a>一种特殊的分区方式：伙伴系统</h4><p><strong>描述</strong></p>
+<ol>
+<li>最开始将内存看成一块整体</li>
+<li>当请求内存大小为<code>x</code>时，将一块内存分成等大的两块，即$2^n=2^{n-1} + 2^{n-1}$</li>
+<li>直到满足$2^{k-1}&lt;x&lt;=2^k$时，把大小为$2^k$的内存块分配出去。</li>
+</ol>
+<p><strong>思路：把大于所需内存的第一个2的整数次幂大小的内存块分配出去。</strong></p>
+<h4 id="分页、分段"><a href="#分页、分段" class="headerlink" title="分页、分段"></a>分页、分段</h4><p>不管是分页还是分段，都需要将<code>逻辑地址</code>转化为<code>物理地址</code></p>
+<p><strong>逻辑地址</strong>：包含了页号和页偏移</p>
+<p><strong>物理地址</strong>：物理页的起始地址+页内偏移量</p>
+<p>借助<code>页表</code>或<code>段表</code>，通过映射得到物理页的位置，然后再加上页内偏移量就得到最终的物理地址。</p>
+<h4 id="置换策略"><a href="#置换策略" class="headerlink" title="置换策略"></a>置换策略</h4><p><strong>OPT</strong></p>
+<ul>
+<li>描述：最优策略，置换下次使用距离当前最久的那一页</li>
+<li>特点：理想的算法，一般作为参考</li>
+</ul>
+<p><strong>FIFO</strong></p>
+<ul>
+<li>描述：先来的页先置换，其实就是把驻留在内存中最久的页置换出去</li>
+<li>缺点：对于间隔一段时间后重复使用的页，不太友好</li>
+</ul>
+<p><strong>LRU</strong></p>
+<ul>
+<li>描述：把最久未使用的页置换出去</li>
+<li>缺点：实现复杂，维护困难（需要维护一个栈）</li>
+</ul>
+<p><strong>LFU</strong></p>
+<ul>
+<li>描述：把使用频率最低的页置换出去</li>
+<li>缺点：对局部性原理不友好，刚置换进来的页可能又被置换出去了</li>
+</ul>
+<p><strong>时钟</strong></p>
+<ul>
+<li>描述：对FIFO的一种优化，同时又希望性能可以逼近LRU</li>
+<li>特点：实现相对简单一些</li>
+<li>算法<ul>
+<li>每页加入内存时，<code>使用位</code>置1</li>
+<li>用到某页时：<code>使用位</code>置1</li>
+<li>缺页时：从指针开始遍历，遇1置0，遇0则直接置换；然后指针指向下一页，作为下次缺页时的起点</li>
+</ul>
+</li>
+</ul>
+<h2 id="二、虚拟内存"><a href="#二、虚拟内存" class="headerlink" title="二、虚拟内存"></a>二、虚拟内存</h2><h3 id="2-1问题"><a href="#2-1问题" class="headerlink" title="2.1问题"></a>2.1问题</h3><ol>
+<li>对虚拟内存的简单理解，为什么会有虚拟内存</li>
+<li>虚拟内存如何实现虚拟地址到物理地址的转换，转换的过程是怎样的</li>
+</ol>
+<h3 id="2-2解答"><a href="#2-2解答" class="headerlink" title="2.2解答"></a>2.2解答</h3><h4 id="虚拟内存的由来"><a href="#虚拟内存的由来" class="headerlink" title="虚拟内存的由来"></a>虚拟内存的由来</h4><p>上面提到的分页分段以及内存分配是最简单粗暴的方式，即把整个进程加入到内存中。</p>
+<p>事实上，我们只需把进程中<strong>要执行的部分</strong>添加到内存中即可，剩余的可以留在磁盘等辅存中。</p>
+<p>通过这种方式，我们可以给进程和用户一种<strong>错觉</strong>，让它们觉得每个人都有4GB的内存空间，而实际上在进程执行时，<strong>内存中只保留了正在执行和将要执行的部分页</strong>，其余页都在磁盘中，等待置换。这就是<strong>虚拟内存</strong>的思想</p>
+<h3 id="虚拟地址转化为物理地址"><a href="#虚拟地址转化为物理地址" class="headerlink" title="虚拟地址转化为物理地址"></a>虚拟地址转化为物理地址</h3><p><strong>普通页表、多级页表</strong></p>
+<ul>
+<li>描述：页表项和虚拟地址一一对应</li>
+<li>理解：假设页号为5，那么在页表中查找5对应的页框号，因此<strong>虚拟地址越大，页表就会越大。</strong></li>
+</ul>
+<p><strong>倒排页表</strong></p>
+<ul>
+<li>描述：维护哈希表和倒排表。</li>
+<li>理解：以页号为键，在哈希表中得到一个指针，指向倒排表；而倒排表中每项与物理页框一一对应，因此<strong>物理内存越大，页表越大</strong></li>
+</ul>
+<h3 id="转化过程"><a href="#转化过程" class="headerlink" title="转化过程"></a>转化过程</h3><p>省略了TLB缓冲区和内存高速缓存……</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210831205328.png" alt="image-20210831205328599"></p>
+<h2 id="三、Linux内存管理"><a href="#三、Linux内存管理" class="headerlink" title="三、Linux内存管理"></a>三、Linux内存管理</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/149581303">linux内存管理</a></p>
+<h4 id="地址映射"><a href="#地址映射" class="headerlink" title="地址映射"></a>地址映射</h4><p>使用3级页表，分别是全局目录，页中间目录和页表。</p>
+<p>对于某些已有两级分页的硬件，页中间目录大小会设置为1</p>
+<h4 id="页面分配"><a href="#页面分配" class="headerlink" title="页面分配"></a>页面分配</h4><p>分配内存采用<code>伙伴算法</code>，维护多种不同大小的页框组</p>
+<p><strong>内核内存分配</strong></p>
+<ul>
+<li>描述：伙伴算法分配的最小空间就是一页，但是内核所需的空间可能经常小于1页。因此在分配小块内存时，使用了<code>slab</code>分配方案。</li>
+<li>大致介绍：<ul>
+<li>slab是对伙伴算法的补充，维护了一个小内存的缓冲区。</li>
+<li>当申请小块内存时，从缓冲区中取</li>
+<li>释放时也回到缓冲区中，而不是交给伙伴算法中的链表。</li>
+</ul>
+</li>
+</ul>
+<h4 id="页置换算法"><a href="#页置换算法" class="headerlink" title="页置换算法"></a>页置换算法</h4><p><strong>1.时钟算法</strong></p>
+<p>Linux2.6.28以前使用的是基于LFU的时钟算法，通过<code>使用位</code>来计数；每次访问某页时，使用位加1。</p>
+<p>此外，Linux会在后台周期性的扫描页池，将扫描到的页<code>使用位减一</code>，这样<code>使用位为0</code>的页就是最适合置换的页。</p>
+<p><strong>缺点：周期性的扫描会占用处理器的时间</strong></p>
+<p><strong>2.两级LRU算法</strong></p>
+<p>从Linux2.6.28开始，使用两级的LRU算法。</p>
+<p>算法：</p>
+<ul>
+<li>维护两个链表，分别代表不活跃和活跃的内存页</li>
+<li>在超时时间内，一个页如果被访问两次，就会从<code>不活跃链表</code>移到<code>活跃链表</code>中</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210906112000.png" alt="image-20210906111953408"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/" title="操作系统——内存管理">https://aurora-ze.github.io.git/2021/12/13/操作系统/三、内存/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="prev" title="操作系统——系统调用">
+      <i class="fa fa-chevron-left"></i> 操作系统——系统调用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/" rel="next" title="操作系统——IO及磁盘">
+      操作系统——IO及磁盘 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%86%85%E5%AD%98%E5%9F%BA%E7%A1%80"><span class="nav-text">一、内存基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E9%97%AE%E9%A2%98"><span class="nav-text">1.1问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E8%A7%A3%E7%AD%94"><span class="nav-text">1.2解答</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-text">作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-text">分区的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%9A%84%E5%88%86%E5%8C%BA%E6%96%B9%E5%BC%8F%EF%BC%9A%E4%BC%99%E4%BC%B4%E7%B3%BB%E7%BB%9F"><span class="nav-text">一种特殊的分区方式：伙伴系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E3%80%81%E5%88%86%E6%AE%B5"><span class="nav-text">分页、分段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5"><span class="nav-text">置换策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="nav-text">二、虚拟内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E9%97%AE%E9%A2%98"><span class="nav-text">2.1问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E8%A7%A3%E7%AD%94"><span class="nav-text">2.2解答</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E7%9A%84%E7%94%B1%E6%9D%A5"><span class="nav-text">虚拟内存的由来</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80"><span class="nav-text">虚拟地址转化为物理地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E5%8C%96%E8%BF%87%E7%A8%8B"><span class="nav-text">转化过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Linux%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-text">三、Linux内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84"><span class="nav-text">地址映射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E5%88%86%E9%85%8D"><span class="nav-text">页面分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="nav-text">页置换算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

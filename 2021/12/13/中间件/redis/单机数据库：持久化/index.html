@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Redis是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。 因此Redis用到了两种持久化策略，分别是RDB和AOF  RDB(快照)对于一种持久化方式，我们可能会有以下一些疑惑：  它持久化了什么 持久化是怎样进行的 如何恢复数据 特点  下面我们会围绕这些问题进行介绍。 一、RDB介绍RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis持久化">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="Redis是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。 因此Redis用到了两种持久化策略，分别是RDB和AOF  RDB(快照)对于一种持久化方式，我们可能会有以下一些疑惑：  它持久化了什么 持久化是怎样进行的 如何恢复数据 特点  下面我们会围绕这些问题进行介绍。 一、RDB介绍RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.855Z">
+<meta property="article:modified_time" content="2021-12-13T12:08:50.323Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis持久化 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis持久化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:50" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><code>Redis</code>是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。</p>
+<p>因此<code>Redis</code>用到了两种持久化策略，分别是<code>RDB</code>和<code>AOF</code></p>
+</blockquote>
+<h2 id="RDB-快照"><a href="#RDB-快照" class="headerlink" title="RDB(快照)"></a>RDB(快照)</h2><p>对于一种持久化方式，我们可能会有以下一些疑惑：</p>
+<ol>
+<li>它持久化了什么</li>
+<li>持久化是怎样进行的</li>
+<li>如何恢复数据</li>
+<li>特点</li>
+</ol>
+<p>下面我们会围绕这些问题进行介绍。</p>
+<h3 id="一、RDB介绍"><a href="#一、RDB介绍" class="headerlink" title="一、RDB介绍"></a>一、RDB介绍</h3><p>RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻的<strong>所有数据</strong>，即<strong>快照</strong></p>
+<p>它的文件结构大致如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">REDIS</th>
+<th align="center">db_version</th>
+<th align="center">databases</th>
+<th align="center">EOF</th>
+<th align="center">checksum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">魔数</td>
+<td align="center">rdb版本</td>
+<td align="center">多个数据库数据</td>
+<td align="center">标志结束</td>
+<td align="center">校验和</td>
+</tr>
+</tbody></table>
+<h3 id="二、RDB文件的生成与载入"><a href="#二、RDB文件的生成与载入" class="headerlink" title="二、RDB文件的生成与载入"></a>二、RDB文件的生成与载入</h3><h5 id="2-1RDB相关命令"><a href="#2-1RDB相关命令" class="headerlink" title="2.1RDB相关命令"></a>2.1RDB相关命令</h5><p>生成RDB文件的相关命令有两个，分别是<code>save</code>和<code>bgsave</code></p>
+<ul>
+<li><code>save</code>：会阻塞服务器进程</li>
+<li><code>bgsave</code>：创建子进程进行持久化，不阻塞</li>
+</ul>
+<h5 id="2-2生成情况：手动or自动"><a href="#2-2生成情况：手动or自动" class="headerlink" title="2.2生成情况：手动or自动"></a>2.2生成情况：手动or自动</h5><p>Redis客户端可以通过上述的<code>save</code>或<code>bgsave</code>命令手动进行持久化。</p>
+<p>此外，服务端也支持配置，在满足配置条件时自动执行RDB持久。</p>
+<p>例如<code>save 900 1</code>配置表示在900秒内修改1次，就会启动RDB。</p>
+<h5 id="2-3加载RDB文件"><a href="#2-3加载RDB文件" class="headerlink" title="2.3加载RDB文件"></a>2.3加载RDB文件</h5><p>如果没有开启AOF，服务器会在启动时寻找RDB文件并进行加载。</p>
+<h3 id="三、相关配置"><a href="#三、相关配置" class="headerlink" title="三、相关配置"></a>三、相关配置</h3><p><strong>RDB的默认配置</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">save</span> <span class="number">900</span> <span class="number">1</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">300</span> <span class="number">10</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">60</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关闭RDB持久化</strong></p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">save</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="AOF-追加"><a href="#AOF-追加" class="headerlink" title="AOF(追加)"></a>AOF(追加)</h2><h3 id="一、AOF介绍"><a href="#一、AOF介绍" class="headerlink" title="一、AOF介绍"></a>一、AOF介绍</h3><p>AOF持久化通过记录Redis服务器的<strong>写操作</strong>来实现持久化。</p>
+<h3 id="二、AOF文件的生成与载入"><a href="#二、AOF文件的生成与载入" class="headerlink" title="二、AOF文件的生成与载入"></a>二、AOF文件的生成与载入</h3><h5 id="2-1实现AOF文件"><a href="#2-1实现AOF文件" class="headerlink" title="2.1实现AOF文件"></a>2.1实现AOF文件</h5><p>实现AOF持久化的过程可以分为3步：<strong>命令追加</strong>、<strong>文件写入</strong>和<strong>文件同步</strong>。</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png" alt="image-20211025123206155"></p>
+<ul>
+<li>命令追加<ul>
+<li>redis在处理命令请求时，用AOF缓冲区记录执行过的一些写操作</li>
+</ul>
+</li>
+<li>文件写入<ul>
+<li>redis处理完请求后，会将AOF缓冲区的内容写入到AOF文件中</li>
+</ul>
+</li>
+<li>文件同步<ul>
+<li>由于操作系统缓冲的存在，就会产生怎样写的情况</li>
+<li>文件同步通过一个<code>appendfsync</code>参数来配置。</li>
+</ul>
+</li>
+</ul>
+<p><strong>appendfsync参数配置</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">取值</th>
+<th align="center">对应策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">always</td>
+<td align="center">每次文件写入时都进行同步</td>
+</tr>
+<tr>
+<td align="center">everysec（默认）</td>
+<td align="center">正常写（会经过OS缓冲），后台线程判断超过一秒钟时进行同步操作</td>
+</tr>
+<tr>
+<td align="center">no</td>
+<td align="center">正常写，由操作系统决定啥时候同步</td>
+</tr>
+</tbody></table>
+<p><strong>代码示例</strong></p>
+<p>写入文件时直接刷新到磁盘上，有两种方式可以做到。</p>
+<p>第一种：打开文件时使用<code>O_SYNC</code>标志位</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 同步打开</span></span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR|O_SYNC);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        </span><br><span class="line">    	close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种，写完文件后调用<code>fsync</code>、<code>fdatasync</code>等系统调用进行同步</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        fsync(fd);</span><br><span class="line">    </span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-2加载AOF文件"><a href="#2-2加载AOF文件" class="headerlink" title="2.2加载AOF文件"></a>2.2加载AOF文件</h5><p>服务器启动时，如果开启了AOF持久化，则redis会开启一个伪客户端，把分析得到的命令交给伪客户端执行。</p>
+<h3 id="三、AOF重写"><a href="#三、AOF重写" class="headerlink" title="三、AOF重写"></a>三、AOF重写</h3><h5 id="3-1为什么要重写AOF文件？"><a href="#3-1为什么要重写AOF文件？" class="headerlink" title="3.1为什么要重写AOF文件？"></a>3.1为什么要重写AOF文件？</h5><p>AOF文件记录的是写操作，容易发生文件体积膨胀的问题。</p>
+<p>此外加载AOF文件时，执行效率也会降低。</p>
+<h5 id="3-2怎样重写AOF文件"><a href="#3-2怎样重写AOF文件" class="headerlink" title="3.2怎样重写AOF文件"></a>3.2怎样重写AOF文件</h5><p>redis开启子进程，在后台利用当前数据库的数据来重新生成AOF文件并覆盖原文件。</p>
+<p>使用<code>BGREWRITEAOF</code>命令可以手动开启重写。</p>
+<p><strong>特点：</strong></p>
+<ol>
+<li>使用子进程而不是当前进程：防止服务器阻塞</li>
+<li>没有使用原AOF文件的方式：</li>
+</ol>
+<p><strong>问题：子进程在后台生成AOF文件时，当前数据库的数据可能会发生变化，导致持久化的数据与实际数据不一致的情况</strong></p>
+<p>解决：重写AOF时，服务器把写操作记录到AOF缓冲和AOF重写缓冲中。</p>
+<p>解释：前者是为了AOF持久化的正常工作，后者是将AOF重写过程中的数据变化记录下来，等子进程重写完毕后把这一部分发送给它。</p>
+<h3 id="四、相关配置"><a href="#四、相关配置" class="headerlink" title="四、相关配置"></a>四、相关配置</h3><p><strong>AOF默认为关闭，如果要开启，改为yes</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">appendonly</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文件同步策略</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta"># appendfsync no</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>自动重写AOF</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AOF文件大小为上次重写后AOF文件大小时，开始重写</span></span><br><span class="line">auto-aof-rewrite-percentage 100 </span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动进行AOF文件重写的最小大小</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结一下RDB与AOF的特点，从持久化速度、加载速度、文件大小、数据安全性等多个维度进行讨论。</p>
+<table>
+<thead>
+<tr>
+<th align="center">场景</th>
+<th align="center">RDB</th>
+<th align="center">AOF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">持久化速度</td>
+<td align="center">不支持秒级，慢</td>
+<td align="center">支持秒级</td>
+</tr>
+<tr>
+<td align="center">加载速度</td>
+<td align="center">很快</td>
+<td align="center">执行写操作，慢</td>
+</tr>
+<tr>
+<td align="center">文件大小</td>
+<td align="center">压缩后小</td>
+<td align="center">文件较大</td>
+</tr>
+<tr>
+<td align="center">数据安全性</td>
+<td align="center">距离上次持久化后的数据都可能会丢</td>
+<td align="center">默认配置下最多丢1秒的数据</td>
+</tr>
+<tr>
+<td align="center">开销</td>
+<td align="center">每次持久化都会fork一个子进程</td>
+<td align="center">处理事件后需要写缓冲</td>
+</tr>
+</tbody></table>
+<h2 id="RDB与AOF的混合使用"><a href="#RDB与AOF的混合使用" class="headerlink" title="RDB与AOF的混合使用"></a>RDB与AOF的混合使用</h2><p>redis4.0提出了两种持久化方式混合使用的方案：</p>
+<p>RDB以一定的频率运行，然后在两次RDB间使用AOF记录写操作。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis持久化">https://aurora-ze.github.io.git/2021/12/13/中间件/redis/单机数据库：持久化/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="Redis客户端与服务器">
+      <i class="fa fa-chevron-left"></i> Redis客户端与服务器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" rel="next" title="Redis过期与淘汰策略">
+      Redis过期与淘汰策略 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB-%E5%BF%AB%E7%85%A7"><span class="nav-text">RDB(快照)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81RDB%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、RDB介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81RDB%E6%96%87%E4%BB%B6%E7%9A%84%E7%94%9F%E6%88%90%E4%B8%8E%E8%BD%BD%E5%85%A5"><span class="nav-text">二、RDB文件的生成与载入</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1RDB%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-text">2.1RDB相关命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E7%94%9F%E6%88%90%E6%83%85%E5%86%B5%EF%BC%9A%E6%89%8B%E5%8A%A8or%E8%87%AA%E5%8A%A8"><span class="nav-text">2.2生成情况：手动or自动</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3%E5%8A%A0%E8%BD%BDRDB%E6%96%87%E4%BB%B6"><span class="nav-text">2.3加载RDB文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-text">三、相关配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF-%E8%BF%BD%E5%8A%A0"><span class="nav-text">AOF(追加)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81AOF%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、AOF介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81AOF%E6%96%87%E4%BB%B6%E7%9A%84%E7%94%9F%E6%88%90%E4%B8%8E%E8%BD%BD%E5%85%A5"><span class="nav-text">二、AOF文件的生成与载入</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1%E5%AE%9E%E7%8E%B0AOF%E6%96%87%E4%BB%B6"><span class="nav-text">2.1实现AOF文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E5%8A%A0%E8%BD%BDAOF%E6%96%87%E4%BB%B6"><span class="nav-text">2.2加载AOF文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81AOF%E9%87%8D%E5%86%99"><span class="nav-text">三、AOF重写</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%87%8D%E5%86%99AOF%E6%96%87%E4%BB%B6%EF%BC%9F"><span class="nav-text">3.1为什么要重写AOF文件？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2%E6%80%8E%E6%A0%B7%E9%87%8D%E5%86%99AOF%E6%96%87%E4%BB%B6"><span class="nav-text">3.2怎样重写AOF文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-text">四、相关配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB%E4%B8%8EAOF%E7%9A%84%E6%B7%B7%E5%90%88%E4%BD%BF%E7%94%A8"><span class="nav-text">RDB与AOF的混合使用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

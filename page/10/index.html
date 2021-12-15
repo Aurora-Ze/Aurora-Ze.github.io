@@ -1,462 +1,1544 @@
-<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aurora - 矢志前行，拥抱未来！</title><meta name="author" content="whz"><meta name="copyright" content="whz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="website">
 <meta property="og:title" content="Aurora">
 <meta property="og:url" content="https://aurora-ze.github.io.git/page/10/index.html">
 <meta property="og:site_name" content="Aurora">
-<meta property="og:locale">
-<meta property="og:image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-<meta property="article:author" content="whz">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="aurora">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://aurora-ze.github.io.git/page/10/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
-  root: '/',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: 'days',
-  date_suffix: {
-    just: 'Just',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: undefined,
-  lightbox: 'fancybox',
-  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
-  source: {
-    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
-    justifiedGallery: {
-      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-    },
-    fancybox: {
-      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
-    }
-  },
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2021-08-17 02:11:28'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
 
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(win=>{
-    win.saveToLocal = {
-      set: function setWithExpiry(key, value, ttl) {
-        if (ttl === 0) return
-        const now = new Date()
-        const expiryDay = ttl * 86400000
-        const item = {
-          value: value,
-          expiry: now.getTime() + expiryDay,
-        }
-        localStorage.setItem(key, JSON.stringify(item))
-      },
+<link rel="canonical" href="https://aurora-ze.github.io.git/page/10/">
 
-      get: function getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key)
 
-        if (!itemStr) {
-          return undefined
-        }
-        const item = JSON.parse(itemStr)
-        const now = new Date()
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
 
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return item.value
-      }
-    }
+  <title>Aurora</title>
   
-    win.getScript = url => new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = url
-      script.async = true
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    })
-  
-      win.activateDarkMode = function () {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = function () {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
-    
-          if (t === 'dark') activateDarkMode()
-          else if (t === 'light') activateLightMode()
-        
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
-    
-    const fontSizeVal = saveToLocal.get('global-font-size')
-    if (fontSizeVal !== undefined) {
-      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
-    }
-    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/mycss.css"><link rel="stylesheet" href="/css/iconfont.css"><link rel="stylesheet" href="/self/code3.css"><!-- hexo injector head_end start -->
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">104</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">18</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://gitee.com/aurora1004/pictures/raw/master/%E5%95%86%E5%8A%A1,%E4%BD%8F%E5%AE%85%E6%88%BF%E9%97%B4,%E8%83%8C%E6%99%AF,%E7%A9%BA%E7%9A%84,%E4%B8%AD%E5%BA%AD,%E7%95%99%E7%99%BD,%E6%96%B0%E7%9A%84,%E7%BA%AF%E5%87%80,%E5%A4%A9%E8%8A%B1%E6%9D%BF,%E7%81%AF.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Aurora</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-heart"></i><span> 时间线</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comments"></i><span> 生活</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于</span></a></li><li><a class="site-page child" href="/myself/"><i class="fa-fw fa fa-id-card"></i><span> 我的</span></a></li><li><a class="site-page child" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Aurora</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://weixin.qq.com/" target="_blank" title="微信"><i class="iconfont icon-weixin"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1635951075&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="iconfont icon-linedesign-17"></i></a><a class="social-icon" href="https://github.com/Aurora-Ze" target="_blank" title="Github"><i class="iconfont icon-github"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/07/%E5%B7%A5%E5%85%B7/%E5%85%BB%E7%9C%BC/" title="养眼">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="养眼"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/07/%E5%B7%A5%E5%85%B7/%E5%85%BB%E7%9C%BC/" title="养眼">养眼</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-04-06T23:54:45.932Z" title="Created 2021-04-07 07:54:45">2021-04-07</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
           
 
-</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/06/TODO/IO%E6%A8%A1%E5%9E%8B/" title="I/O模型">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="I/O模型"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/06/TODO/IO%E6%A8%A1%E5%9E%8B/" title="I/O模型">I/O模型</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-04-06T13:10:16.582Z" title="Created 2021-04-06 21:10:16">2021-04-06</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/todolist/">todolist</a></span></div><div class="content">1. 传统IO模型是阻塞式的，服务器监听客户端的请求
-每来一个连接请求，服务器就创建一个线程去执行该请求
-当请求数量较大时，需要创建非常多的线程，资源耗费大
-而且它使用字节流的形式传输数据，效率不高
-2. NIO模型又叫做非阻塞式IO，由信道、选择器、缓冲区构成
-
-Channel
-
-是传统 IO Stream 流的升级版，支持双向传输
-
-Selector
-
-从线程池中选择线程，来执行多个注册在它上的信道。
-通过一定的选择机制，实现了IO多路复用
-
-Buffer
-
-缓冲可以看作一块内存区域，先写入，后读取
-3. NIO的优势
-IO是面向流的，只能按字节读取数据，并且只能从一端读到另一端，不能前后移动流中的数据
-
-而NIO是面向缓冲区的，可以读取一块区域
-
-IO是阻塞的，这意味着，当一个线程读取数据或写数据时，该线程被阻塞，直到有一些数据被读取，或数据完全写入，在此期间该线程不能干其他任何事情。而NIO是非阻塞的，不需要一直等待操作完成才能干其他事情，而是在等待的过程中可以同时去做别的事情，所以能最大限度地使用服务器的资源。
-NIO引入了IO多路复用器selector。selector是一 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/05/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/" title="(二).线程的返回结果">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="(二).线程的返回结果"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/05/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/" title="(二).线程的返回结果">(二).线程的返回结果</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-04-05T13:26:12.270Z" title="Created 2021-04-05 21:26:12">2021-04-05</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程和线程池</a></span></div><div class="content">严肃脸.jpg: Java实现线程三种方式是哪三种？
-答: Thread、Runnable、Callable
-其中Runnable接口定义的run方法是没有返回参数的，那么这样看来：
-Java的线程想要返回结果，就需要用到实现Callable接口的对象。
-那我们来看看这个接口
-public interface Callable&lt;V&gt; &#123;    /**     * Computes a result, or throws an exception if unable to do so.     *     * @return computed result     * @throws Exception if unable to compute a result     */    V call() throws Exception;&#125;
-
-里面只定义了一个call()方法，返回的是泛型。
-注释里提到，既可以是返回结果，也可以是抛出异常
-
-
-上面这张图能够方便我们了解线程池各类的关系。
-另外，我们一般是用线程池的方式来创建线程执行任务。
-所以再来看看线程池提 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/01/Java/Java%E5%AE%B9%E5%99%A8/ArrayList/" title="ArrayList">     <img class="post_bg" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ArrayList"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/01/Java/Java%E5%AE%B9%E5%99%A8/ArrayList/" title="ArrayList">ArrayList</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-04-01T11:31:58.425Z" title="Created 2021-04-01 19:31:58">2021-04-01</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></span></div><div class="content">谈谈arraylist
-1.底层实现    是对象数组
-2.构造方法   3种
-3.扩容机制
-默认大小是10
-如果不指定大小，会先创建空数组，在添加元素的时候把数组扩容成10，然后放满都不会扩容，直到添加第11个元素
-如果指定大小，比如5，那么放入第六个元素时才会进行扩容
-扩容是每次容量*1.5倍，用了位运算
-4.最大容量
-整型最大值 - 8
-大于这个值，就调用hugeCapacity方法，把容量变成整型的最大值
-如果溢出，就抛出错误。
-5.添加大量元素
-添加大量元素时，arraylist会经过多次扩容，性能较低，这时候可以调用ensureCapacity方法，提前让数组扩容一次，以满足需求
-</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" title="信件错排">     <img class="post_bg" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="信件错排"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" title="信件错排">信件错排</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-04-01T07:06:51.585Z" title="Created 2021-04-01 15:06:51">2021-04-01</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a></span></div><div class="content">1.信件错排描述存在n个信封和n封信，每封信都有个正确的信封存放，那么所有信都放错的情况有几种？
-可以只写出转移方程
-解法$dp[i]$ 表示 $i$ 封信错排的总数
-假设现在有5个信封和5封信，编号为1~5
-如果我们把信1放入到信封2中，那么信2想要维持错排的状态，就有两种可能：一是放入信封1，二是放到其他信封(3,4,5)中
-
-针对情况一，信2放入到信封1后，就剩下了编号为3、4、5的信和信封，问题就转化为求3封信3个信封错排情况，即 $dp[i-2]$
-针对情况二，信2要放入3、4、5中，如果我们把信2和信封1看成是一对，就有四对要错排的元素，那么就变成了求四封信四个信封的错排数，即 $dp[i-1]$
-综上信1放入信封2时， $dp[i] = dp[i-1] + dp[i-2]$
-而最开始，信1还可能放到3、4、5中，总共有 $n-1$ 种可能
-所以：$$dp[i] = (i-1) * (dp[i-1] + dp[i-2])$$至于具体解，可以通过 一个for循环 和 滑动窗口 来计算
-</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/03/26/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/Java%E7%BA%BF%E7%A8%8B/" title="(一).Java线程的简单介绍">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="(一).Java线程的简单介绍"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/03/26/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/Java%E7%BA%BF%E7%A8%8B/" title="(一).Java线程的简单介绍">(一).Java线程的简单介绍</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-03-26T13:01:11.418Z" title="Created 2021-03-26 21:01:11">2021-03-26</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程和线程池</a></span></div><div class="content">1. Java实现线程的三种方式
-继承Thread类
-
-查看Thread的源码，可以发现，它是实现了 Runnable 接口
-因此也是通过调用 run 方法来运行的
-
-实现Runnable接口
-
-是一个接口，定义了run方法。
-
-实现Callable接口
-
-第三种比较特殊，是用于需要线程返回信息的情况。
-2. 线程的生命周期线程池管理着多个线程的创建与销毁
-那么线程的生命周期是怎样的呢，让我们来一探究竟！
-
-新建（new）
-
-使用 new 关键字创建线程后，就处于 新建 状态，JVM为线程分配内存空间，并初始化成员变量
-
-就绪（runnable）
-调用 start 方法后，处于 就绪 状态，JVM为它创建方法栈和程序计数器
-
-运行（running）
-
-
-得到CPU时间片后，开始执行 run 方法体
-
-阻塞（blocked）
-
-线程因某种原因放弃了CPU，进入阻塞
-
-
-
-阻塞类型
-描述
-结果
-
-
-
-等待阻塞
-执行wait方法
-进入等待队列中（waiting queue）
-
-
-同步阻塞
-获取锁失败
-进入锁池（lock pool）
-
-
-其他阻塞
-执行sleep或join或IO请求
-状态置为阻 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/03/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" title="加密算法">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="加密算法"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/03/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" title="加密算法">加密算法</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-03-24T08:10:38.826Z" title="Created 2021-03-24 16:10:38">2021-03-24</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span></div><div class="content">1. 摘要算法对明文进行hash，生成一段固定长度的密文
-有以下几个特点：
-
-相同的明文，经过相同的摘要算法，得到的密文一定是一样的
-摘要算法要尽量避免碰撞
-明文变成密文的过程是不可逆的
-
-常见的摘要算法有MD5、SHA
-2. 对称加密存在一个密钥
-
-明文通过密钥加密，变成密文
-
-
-密文通过密钥解密，得到明文
-
-如果要保证数据传输的安全性，就得考虑怎样安全的把密钥告知对方
-否则一旦密钥泄露，数据就会变得透明
-3. 非对称加密
-存在一对密钥，公钥和私钥
-一个来加密，另一个来解密，才能获得原文。
-
-HTTPS 通信基础版：混合加密机制
-服务器 S 有一对公钥和私钥，客户端 C 有一个密钥
-
-S 把公钥发给 C
-
-C 获得公钥后，用公钥加密它自己的密钥，发给 S
-
-S 收到密文，用私钥解密，得到 C 的密钥
-
-
-然后双方就可以用对称加密的方式进行通信。
-但是……
-这样的机制还是会有安全问题
-比如客户端判断不出它收到的公钥是服务器发的，还是被中间人篡改了的
-如果公钥是被中间人篡改过的，那么它就可以伪装成服务器，与客户端进行通信
-而服务器和客户端都无法感觉到这件事。
-4. 数字签名基于以上中间人 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/03/22/Java/Java%E5%AE%B9%E5%99%A8/HashMap/" title="HashMap">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HashMap"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/03/22/Java/Java%E5%AE%B9%E5%99%A8/HashMap/" title="HashMap">HashMap</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-03-22T12:27:04.184Z" title="Created 2021-03-22 20:27:04">2021-03-22</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></span></div><div class="content">1. hash算法即扰动函数
-key 的哈希码的高16位与低16位进行异或，增加低十六位的随机性
-static final int hash(Object key) &#123;        int h;        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);&#125;
-
-
-
-2. 计算数组下标
-简单地说，下标就是 hash 除以 数组容量，得到的余数
-具体计算采用的是与运算
-
-n表示数组大小，初始值为16
-在n是2的整数幂情况下，n - 1的二进制低位全是1，高位全是0
-这样 n - 1与哈希值进行与运算时，就只保留了hash的低位，来作为数组下标访问
-因此Java规定该数组大小必须是2的整数次幂，是通过tableSizeFor方法实现的
-16 - 1 的二进制有个特点，即低位全是1，高位全是0
-这样做明显会出现碰撞的可能，所以就需要上述1中的扰动函数，来增加低位hash值的随机性
-tab[i = (n - 1) &amp; hash]
-
-
-
-3. 扩容机制（resize）
-thr ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/03/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%A2%E9%BB%91%E6%A0%91/" title="红黑树">     <img class="post_bg" data-lazy-src="https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="红黑树"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/03/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%A2%E9%BB%91%E6%A0%91/" title="红黑树">红黑树</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-03-22T12:10:36.527Z" title="Created 2021-03-22 20:10:36">2021-03-22</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a></span></div><div class="content">红黑树1. 定义
-红黑树是一种含有红黑节点并能自平衡的二叉查找树
-
-
-每个节点只能是红色或黑色
-根节点为黑色
-每个叶子节点（这里是指为空的节点）是黑色
-红色节点的子节点一定是黑色
-任意一个节点到每个叶子节点的路径都包含相同数量的黑色节点
-
-2. 插入元素（每个新插入的节点默认是红色）红黑树在插入节点时：
-
-先按搜索的顺序，把节点放在合适位置（类似二叉查找）
-然后判断是否满足红黑树定义
-不满足就会发生旋转和变色现象
-
-判断条件如下：
-
-
-
-情况
-做法
-
-
-
-父节点为黑色
-什么都不做
-
-
-父节点红色，且叔叔也是红色
-父亲叔叔变黑，祖父变红
-
-
-父红色，且叔叔为空或黑色
-旋转 + 变色
-
-
-
-
-父节点红色，叔叔为黑色的情形：
-3. HashMap红黑树部分源码红黑树插入节点 x 时，进行了以下判断：
-
-若x的父亲是null，说明x是根节点，直接返回x（这里x就是根节点了，所以返回x）
-若x的父亲是黑色 或者 x的祖父是空（即x的父亲为根节点，而根节点一定是黑色的），直接返回根节点
-
-
-static &lt;K,V&gt; TreeNode&lt;K,V&gt; balanceInsertio ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/03/16/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E5%B9%B6%E5%8F%91%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89/" title="并发(待完善)">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="并发(待完善)"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/03/16/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E5%B9%B6%E5%8F%91%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89/" title="并发(待完善)">并发(待完善)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-03-16T12:40:52.404Z" title="Created 2021-03-16 20:40:52">2021-03-16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程和线程池</a></span></div><div class="content">Java并发一、多线程的优缺点
-优点
-
-和进程相比，线程的调度和切换成本更小。
-多核CPU能够让多个线程同时运行，还能减少线程上下文切换的开销，提高CPU利用率
-
-缺点
-
-可能会遇到内存泄漏、死锁、线程不安全的情况
-
-补充
-
-Java内存泄漏：主要是由于长生命周期的对象持有短生命周期的引用，如集合里存放类对象
-二、死锁
-互斥性
-
-
-同一时间只能有一个线程持有某个对象的锁
-
-
-可见性
-
-
-锁释放之前，共享变量的修改要对其他线程可见
-
-
-Java内存模型：
-内存分为主内存和工作内存
-主内存是所有线程共享的，如堆、方法区
-工作内存是线程私有的区域，如虚拟机栈、程序计数器等
-
-volatile关键字的作用：
-
-保证线程间变量的可见性
-
-一个变量如果用volatile修饰，那么：
-①某个线程修改变量后，要写回主内存中
-②某个线程要读取该变量时，要从主内存中读，而不是缓存
-
-禁止指令重排序
-
-注意：volatile不保证原子性
-三、锁
-互斥锁
-偏向锁
-
-背景：在多数情况下，锁不仅不存在多线程竞争，而且还总是由同一线程多次获得
-目的：让线程获得锁的代价更低
-实现：
-一个线程想要获取对象锁时，先查看对 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/9/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#content-inner">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/#content-inner">11</a><a class="extend next" rel="next" href="/page/11/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">whz</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">104</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">18</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Aurora-Ze"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://weixin.qq.com/" target="_blank" title="微信"><i class="iconfont icon-weixin"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1635951075&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="iconfont icon-linedesign-17"></i></a><a class="social-icon" href="https://github.com/Aurora-Ze" target="_blank" title="Github"><i class="iconfont icon-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">欢迎大家</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/08/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="操作系统——系统调用"><img data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统——系统调用"/></a><div class="content"><a class="title" href="/2021/08/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="操作系统——系统调用">操作系统——系统调用</a><time datetime="2021-08-16T15:22:00.912Z" title="Created 2021-08-16 23:22:00">2021-08-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/IO%E5%8F%8A%E7%A3%81%E7%9B%98/" title="操作系统——IO及磁盘"><img data-lazy-src="https://upimage.alexhchu.com/2020/10/21/671e773d973ae.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统——IO及磁盘"/></a><div class="content"><a class="title" href="/2021/08/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/IO%E5%8F%8A%E7%A3%81%E7%9B%98/" title="操作系统——IO及磁盘">操作系统——IO及磁盘</a><time datetime="2021-08-16T15:22:00.824Z" title="Created 2021-08-16 23:22:00">2021-08-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/16/%E5%B7%A5%E5%85%B7/protocol%20buffers/" title="Protobuf入门"><img data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Protobuf入门"/></a><div class="content"><a class="title" href="/2021/08/16/%E5%B7%A5%E5%85%B7/protocol%20buffers/" title="Protobuf入门">Protobuf入门</a><time datetime="2021-08-16T15:18:20.796Z" title="Created 2021-08-16 23:18:20">2021-08-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/16/golang/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/" title="代码总结"><img data-lazy-src="https://upimage.alexhchu.com/2020/10/21/5fecb0b094b73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="代码总结"/></a><div class="content"><a class="title" href="/2021/08/16/golang/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/" title="代码总结">代码总结</a><time datetime="2021-08-16T15:12:05.793Z" title="Created 2021-08-16 23:12:05">2021-08-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/16/%E5%B7%A5%E5%85%B7/Git&amp;Github%E4%BD%BF%E7%94%A8/" title="Git&amp;GitHub使用"><img data-lazy-src="https://upimage.alexhchu.com/2020/10/21/f5ac68ddaaf64.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Git&amp;GitHub使用"/></a><div class="content"><a class="title" href="/2021/08/16/%E5%B7%A5%E5%85%B7/Git&amp;Github%E4%BD%BF%E7%94%A8/" title="Git&amp;GitHub使用">Git&amp;GitHub使用</a><time datetime="2021-08-16T15:11:57.718Z" title="Created 2021-08-16 23:11:57">2021-08-16</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
-            <i class="fas fa-folder-open"></i>
-            <span>Categories</span>
-            <a class="card-more-btn" href="/categories/" title="More">
-    <i class="fas fa-angle-right"></i></a>
-            </div>
-            <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">8</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/MySQL/"><span class="card-category-list-name">MySQL</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/SpringBoot/"><span class="card-category-list-name">SpringBoot</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Vue/"><span class="card-category-list-name">Vue</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/leetcode/"><span class="card-category-list-name">leetcode</span><span class="card-category-list-count">17</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/tensquare/"><span class="card-category-list-name">tensquare</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/todolist/"><span class="card-category-list-name">todolist</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><span class="card-category-list-name">分布式</span><span class="card-category-list-count">1</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/BFS/" style="font-size: 1.2em; color: #999da3">BFS</a> <a href="/tags/docker/" style="font-size: 1.1em; color: #999">docker</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 1.5em; color: #99a9bf">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 1.3em; color: #99a1ac">双指针</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88-%E9%93%BE%E8%A1%A8/" style="font-size: 1.1em; color: #999">双指针 - 链表</a> <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="font-size: 1.1em; color: #999">字符串</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 1.2em; color: #999da3">排序</a> <a href="/tags/%E6%A0%88/" style="font-size: 1.1em; color: #999">栈</a> <a href="/tags/%E6%A0%91/" style="font-size: 1.2em; color: #999da3">树</a> <a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 1.4em; color: #99a5b6">源码</a> <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" style="font-size: 1.1em; color: #999">线程池</a> <a href="/tags/%E8%B4%AA%E5%BF%83/" style="font-size: 1.2em; color: #999da3">贪心</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 1.2em; color: #999da3">链表</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.1em; color: #999">面试</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">August 2021</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/05/"><span class="card-archive-list-date">May 2021</span><span class="card-archive-list-count">26</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/04/"><span class="card-archive-list-date">April 2021</span><span class="card-archive-list-count">63</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">March 2021</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/02/"><span class="card-archive-list-date">February 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/01/"><span class="card-archive-list-date">January 2021</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">104</div></div><div class="webinfo-item"><div class="item-name">Run time :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-04-06T12:00:00.000Z"></div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-08-16T18:11:27.599Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 By whz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="font-plus" type="button" title="Increase font size"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="Decrease font size"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
-  if (true) { 
-    var typed = new Typed("#subtitle", {
-      strings: "所有的不平凡都来自平凡".split(","),
-      startDelay: 300,
-      typeSpeed: 150,
-      loop: true,
-      backSpeed: 50
-    })
-  } else {
-    document.getElementById("subtitle").innerHTML = '所有的不平凡都来自平凡'
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Linux命令学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-15 20:33:44" itemprop="dateModified" datetime="2021-12-15T20:33:44+08:00">2021-12-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、基本命令"><a href="#一、基本命令" class="headerlink" title="一、基本命令"></a>一、基本命令</h2><h3 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h3><p><code>cd [path]</code>：前往指定的路径</p>
+<ul>
+<li><code>cd -</code>：返回到上次的路径</li>
+<li><code>cd ~</code>：前往当前用户的用户目录</li>
+<li><code>cd /</code>：前往根目录</li>
+</ul>
+<p><code>pwd</code>：打印当前路径</p>
+<h3 id="目录文件"><a href="#目录文件" class="headerlink" title="目录文件"></a>目录文件</h3><p><code>mkdir [dir_name]</code>：创建一个目录</p>
+<p><code>cp [src] [dst]</code>：复制文件</p>
+<p><code>mv [src] [dst]</code>：移动文件（也可以用来重命名文件）</p>
+<p><code>rm [path]</code>：删除文件</p>
+<ul>
+<li><code>-r</code>：表示递归的删除整个目录或文件</li>
+<li><code>-f</code>：表示不需要确认</li>
+</ul>
+<h3 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h3><p><strong>1. 搜索命令、程序等</strong></p>
+<p><code>which</code>：在<strong>PATH</strong>指定的路径中查找。（一般用于查找命令）</p>
+<p><code>whereis</code>：用于程序名的搜索，如二进制、man说明文件和源代码文件</p>
+<p><strong>2. 常规搜索</strong></p>
+<p><code>find [path] [condition]</code>：在指定目录中根据某些条件进行查询</p>
+<ul>
+<li><code>-name logfile</code>：查询文件名为logfile的文件</li>
+<li><code>-perm 644</code>：查询权限为644的文件</li>
+</ul>
+<p><code>locate</code>：可以等价于<code>find -name</code>方式，但是它是从文件数据库中进行查询，因此速度更快。</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>压缩：<code>gzip [path]</code></p>
+<p>解压缩：<code>gzip -d [path]</code></p>
+<p>此外，使用<code>tar -czvf [dst] [src]</code>和<code>tar -zxf [src]</code>也可以实现压缩和解压。</p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p><code>ln [src] [dst]</code>命令可以与文件建立链接，其中：</p>
+<ul>
+<li><strong>硬链接：</strong>一个文件的所有硬链接使用同一个<code>inode</code>。最开始的源文件可以视为是一个硬链接。</li>
+<li><strong>软链接<code>-s</code>：</strong>类似于快捷方式的存在，它存储的是<code>源文件的地址</code>，因此源文件删除后就无法再通过软链接来读取</li>
+</ul>
+<h3 id="grep与xargs"><a href="#grep与xargs" class="headerlink" title="grep与xargs"></a>grep与xargs</h3><p>在管道用法中，比较常见的两个命令就是<code>grep</code>和<code>xargs</code></p>
+<ul>
+<li><p><code>grep</code>：查询符合条件的字符串</p>
+</li>
+<li><p><code>xargs</code>：将上游的输出作为下游的输入参数</p>
+</li>
+</ul>
+<p><strong>grep用法</strong></p>
+<p><code>tail -f log | grep &quot;error&quot;</code></p>
+<p>监听并输出log日志，并查询其中的error字符串（即高亮显示）</p>
+<p><strong>xargs用法</strong></p>
+<p><code>find . -perm 644 | xargs -I @ mv @ ../newDir</code></p>
+<p>查询当前目录中权限为644的所有文件，并移动到指定目录中</p>
+<p><code>xargs</code>的<code>-I</code>参数可以定义一个指示符，这里定义为**@<strong>。然后在后面的<code>mv</code>命令中就可以使用</strong>@**来表示参数应放的位置。</p>
+<h2 id="二、用户管理"><a href="#二、用户管理" class="headerlink" title="二、用户管理"></a>二、用户管理</h2><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>操作用户</strong></p>
+<p><code>useradd [username]</code></p>
+<p><code>passwd [username]</code></p>
+<p><code>userdel [username]</code></p>
+<p><code>usermod -g [groupname] [username]</code>：修改某个用户所属的组</p>
+<p><strong>操作组</strong></p>
+<p><code>groupadd [groupname]</code></p>
+<p><code>groupmod [groupname]</code></p>
+<p><code>groupdel [groupname]</code></p>
+<h3 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h3><p>有三个和用户信息相关的文件，分别是：</p>
+<p><code>/etc/passwd</code>：</p>
+<p>记录用户基本信息，如用户名、UID、GID等等</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># structure </span></span><br><span class="line"><span class="comment"># name:password:uid:gid:comment:directory:shell</span></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">whz:x:1001:1001::/home/whz:/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><code>/etc/shadow</code>：记录加密形式的用户密码，只有root用户才能够查看</p>
+<p><code>/etc/group</code>：记录组信息</p>
+<h3 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h3><blockquote>
+<p>测试<strong>passwd</strong>命令时发现，普通用户可以修改自己的密码，但是<code>/etc/passwd</code>或<code>/etc/shadow</code>对普通用户来说都是没有权限的，那么它是怎么做到的呢？</p>
+</blockquote>
+<blockquote>
+<p>TIPS</p>
+<p><code>/etc/passwd</code>是文件，存储了用户信息。</p>
+<p><code>/usr/bin/passwd</code>是命令，修改密码时调用的。</p>
+</blockquote>
+<p>答案就在<code>/usr/bin/passwd</code>这个命令自身上。</p>
+<p>查看<code>passwd</code>命令的权限，发现一个特殊的权限<code>s</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-xr-x. 1 root root 33600 4月   6 2020 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p><code>s(Set UID)</code>表示文件在执行时暂时拥有文件所有者的权限（本例即root权限）。正因为有了root权限，普通用户才得以成功修改密码。</p>
+<h2 id="三、Shell脚本"><a href="#三、Shell脚本" class="headerlink" title="三、Shell脚本"></a>三、Shell脚本</h2><p>shell脚本一般以<code>#!/bin/bash</code>作为开头。</p>
+<p>下面是一个kafka集群（部署在单台虚拟机上）的启动和关闭脚本示例</p>
+<ol>
+<li>使用<code>$1</code>来获取执行脚本的第一个参数</li>
+<li>case语法来判断参数是<code>start</code>还是<code>stop</code></li>
+<li>通过循环来执行kafka提供的启动脚本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">case $1 in </span><br><span class="line">&quot;start&quot;)&#123;</span><br><span class="line"></span><br><span class="line">        for i in kafka1 kafka2 kafka3</span><br><span class="line">        do </span><br><span class="line">                echo &quot;------------ start $i ------------&quot;</span><br><span class="line">                /usr/local/service/$i/bin/kafka-server-start.sh -daemon /usr/local/service/$i/config/server.properties</span><br><span class="line">        done</span><br><span class="line"></span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line">&quot;stop&quot;)&#123;</span><br><span class="line">        echo &quot;------------ stop kafka ------------&quot;</span><br><span class="line">        bash /usr/local/service/kafka1/bin/kafka-server-stop.sh</span><br><span class="line">&#125;;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Systemd"><a href="#四、Systemd" class="headerlink" title="四、Systemd"></a>四、Systemd</h2><h3 id="systemd与systemctl"><a href="#systemd与systemctl" class="headerlink" title="systemd与systemctl"></a>systemd与systemctl</h3><blockquote>
+<p><strong>systemd</strong>是Linux系统的一种启动方式，它代替了原先<strong>init</strong>进程的启动方式。</p>
+<p><strong>systemctl</strong>是一组控制systemd系统和进行服务管理的命令。</p>
+</blockquote>
+<p><strong>init</strong>进程采用串行启动的方式，启动时间较长；而<strong>systemd</strong>引入了并行启动的概念。</p>
+<p>此外，使用<strong>systemd</strong>后也是存在争议的，因为它违背了Unix的哲学<code>keep it simple, stupid</code>。</p>
+<h3 id="systemctl命令"><a href="#systemctl命令" class="headerlink" title="systemctl命令"></a>systemctl命令</h3><ul>
+<li><code>systemctl start [service]</code></li>
+<li><code>systemctl stop [service]</code></li>
+<li><code>systemctl restart [service]</code></li>
+<li><code>systemctl reload [service]</code></li>
+<li><code>systemctl status [service]</code></li>
+</ul>
+<h2 id="五、权限控制"><a href="#五、权限控制" class="headerlink" title="五、权限控制"></a>五、权限控制</h2><h3 id="传统的权限控制"><a href="#传统的权限控制" class="headerlink" title="传统的权限控制"></a>传统的权限控制</h3><p>在Linux系统中，存在一种传统的权限控制方式：<strong>UGO</strong>，即<code>user-group-other</code>。</p>
+<p>ugo把文件的操作者分为三类：<strong>所有者、同组用户和其他用户</strong>。每类用户都按照<code>读、写、执行</code>来分配权限。</p>
+<p>新建的目录权限为<code>775</code>，文件为<code>664</code>，这是由默认的<code>777</code>、<code>666</code>权限减去掩码<code>0002</code>得到的。</p>
+<hr>
+<p>现代的权限控制有两种：<code>ACL</code>和<code>SELinux</code></p>
+<h3 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h3><blockquote>
+<p>Access Control List 是一张表，告知操作系统每个用户对于某个文件来说具备何种权限。</p>
+<p>每个文件都拥有一个属性标志着它的权限控制表，表中的每个条目都对应着一个用户所拥有的权限。</p>
+</blockquote>
+<p><strong>ACL</strong>是对<strong>UGO</strong>的扩展，因为<strong>UGO</strong>进行权限控制的维度是所有者、同组用户和其他用户，无法从更加细化的维度（如每个用户）进行管理。</p>
+<p><strong>相关命令</strong></p>
+<p><code>getfacl [file]</code>：打印某个文件的ACL规则</p>
+<p><code>setfacl -m u:[username]:[rwx] [file]</code>：为某个文件设置一条关于用户的ACL规则，权限为rwx</p>
+<hr>
+<p>上面提到的两种权限控制都属于<strong>自主访问控制</strong>（DAC），权限管理的主体是用户，只要用户拥有相应文件的权限，就可以访问该文件。</p>
+<p>在DAC中，他人一旦非法获得root权限，那么整个操作系统就可能会受到不可预估的后果。</p>
+<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><blockquote>
+<p>SELinux是一种强安全性的权限控制策略，它是<strong>强制访问控制</strong>（MAC）的一种典型形式。</p>
+</blockquote>
+<p>在SELinux的操作系统中，决定一个资源是否被访问的因素除了上述的<strong>读写执行权限</strong>外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-title-link" itemprop="url">评论</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:11:07" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>发现下载的资料里很多都是ziw文件，需要手动改成zip后才能进行解压。这里提供下批量改成zip后缀的代码。[呲牙]</p>
+<pre><code>public static void renameZip()  &#123;
+    String rootPath = &quot;E:\BaiduNetdiskDownload\在线教育--谷粒学院&quot;;
+    File root = new File(rootPath);
+    renameZip(root);
+&#125;
+</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">renameZip</span><span class="params">(File root)</span> </span>&#123;</span><br><span class="line">    File[] currentFiles = root.listFiles();</span><br><span class="line">	String fileName; <span class="comment">// 当前文件名</span></span><br><span class="line">	File dstFile;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span>(File file : currentFiles) &#123;</span><br><span class="line">    	<span class="comment">// 是目录则继续往下递归</span></span><br><span class="line">        <span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">            renameZip(file); </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((fileName = file.getName()).length() &gt;= <span class="number">3</span> &amp;&amp;</span><br><span class="line">                <span class="string">&quot;ziw&quot;</span>.equals(fileName.substring(fileName.length() - <span class="number">3</span>))) &#123;</span><br><span class="line">            <span class="comment">// 修改后缀 ziw -&gt; zip</span></span><br><span class="line">            String absolutePath = file.getAbsolutePath();</span><br><span class="line">            dstFile = <span class="keyword">new</span> File(absolutePath.substring(<span class="number">0</span>, absolutePath.length() - <span class="number">3</span>) + <span class="string">&quot;zip&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!dstFile.exists()) &#123;</span><br><span class="line">                <span class="keyword">boolean</span> successToRename = file.renameTo(dstFile);</span><br><span class="line">                <span class="keyword">if</span> (!successToRename) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;fail to rename file: &quot;</span> + file.getName());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/tmp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/TODO/tmp/" class="post-title-link" itemprop="url">记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:11:04" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-java-关于线程的一些操作，如wait，join，interrupt等"><a href="#1-java-关于线程的一些操作，如wait，join，interrupt等" class="headerlink" title="1.java 关于线程的一些操作，如wait，join，interrupt等"></a>1.java 关于线程的一些操作，如wait，join，interrupt等</h3><h3 id="2-wait、notify是什么，为什么只能在同步代码中用"><a href="#2-wait、notify是什么，为什么只能在同步代码中用" class="headerlink" title="2.wait、notify是什么，为什么只能在同步代码中用"></a>2.wait、notify是什么，为什么只能在同步代码中用</h3><p><strong>Redis</strong></p>
+<ul>
+<li><code>缓存雪崩</code>、<code>击穿</code>具体概念及解决方案</li>
+<li>常见5种数据类型</li>
+</ul>
+<p><strong>Java线程、多线程</strong></p>
+<ul>
+<li><code>threadlocal</code>是什么，怎么用</li>
+<li><code>join</code>方法</li>
+<li><code>FutureTask</code>是什么，怎么用</li>
+<li><code>cyclicbarrier</code>、<code>countdownlatch</code>底层实现</li>
+<li>CAS底层</li>
+<li>开线程数</li>
+<li>打印奇数、偶数</li>
+<li>start和run区别</li>
+</ul>
+<p><strong>JVM</strong></p>
+<ul>
+<li><code>类加载详解</code></li>
+<li><code>垃圾收集器详解</code></li>
+</ul>
+<p><strong>MySQL</strong></p>
+<ul>
+<li><code>explain</code>输出内容了解一下</li>
+<li>什么情况下会<code>索引失效</code></li>
+<li>查询优化</li>
+<li>视图</li>
+<li>三范式</li>
+</ul>
+<p><strong>算法</strong></p>
+<ul>
+<li>旋转数组，二分查找求最值</li>
+</ul>
+<p><strong>操作系统</strong></p>
+<ul>
+<li>进程、线程区别</li>
+<li>上下文切换</li>
+<li>进程通信方式：管道</li>
+<li>死锁：四个条件</li>
+</ul>
+<p><strong>计网</strong></p>
+<ul>
+<li>osi七层模型</li>
+</ul>
+<h2 id="My"><a href="#My" class="headerlink" title="My"></a>My</h2><p><strong>数据库：abcde字段</strong></p>
+<p><strong>原子类、CAS底层</strong></p>
+<p><strong>volatile</strong></p>
+<p>redis数据结构、排序相关的</p>
+<p>四种隔离级别有什么作用</p>
+<p>一致性哈希的理解，和普通哈希有什么区别。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/IO%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/TODO/IO%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">I/O模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-17 00:31:03" itemprop="dateModified" datetime="2021-08-17T00:31:03+08:00">2021-08-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/todolist/" itemprop="url" rel="index"><span itemprop="name">todolist</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1-传统IO模型"><a href="#1-传统IO模型" class="headerlink" title="1. 传统IO模型"></a>1. 传统IO模型</h4><p>是阻塞式的，服务器监听客户端的请求</p>
+<p>每来一个连接请求，服务器就创建一个线程去执行该请求</p>
+<p>当请求数量较大时，需要创建非常多的线程，资源耗费大</p>
+<p>而且它使用字节流的形式传输数据，效率不高</p>
+<h4 id="2-NIO模型"><a href="#2-NIO模型" class="headerlink" title="2. NIO模型"></a>2. NIO模型</h4><p>又叫做非阻塞式IO，由<strong>信道、选择器、缓冲区</strong>构成</p>
+<ul>
+<li>Channel</li>
+</ul>
+<p>是传统 IO Stream 流的升级版，支持双向传输</p>
+<ul>
+<li>Selector</li>
+</ul>
+<p>从线程池中选择线程，来执行多个注册在它上的信道。</p>
+<p>通过一定的选择机制，实现了IO多路复用</p>
+<ul>
+<li>Buffer</li>
+</ul>
+<p>缓冲可以看作一块内存区域，先写入，后读取</p>
+<h4 id="3-NIO的优势"><a href="#3-NIO的优势" class="headerlink" title="3. NIO的优势"></a>3. NIO的优势</h4><ol>
+<li>IO是面向流的，只能按字节读取数据，并且只能从一端读到另一端，不能前后移动流中的数据</li>
+</ol>
+<p>而NIO是面向缓冲区的，可以读取一块区域</p>
+<ol start="2">
+<li>IO是阻塞的，这意味着，当一个线程读取数据或写数据时，该线程被阻塞，直到有一些数据被读取，或数据完全写入，在此期间该线程不能干其他任何事情。而NIO是非阻塞的，不需要一直等待操作完成才能干其他事情，而是在等待的过程中可以同时去做别的事情，所以能最大限度地使用服务器的资源。</li>
+<li>NIO引入了IO多路复用器selector。selector是一个提供channel注册服务的线程，可以同时对接多个Channel，并在线程池中为channel适配、选择合适的线程来处理channel。由于NIO模型中线程数量大大降低，线程切换效率因此也大幅度提高。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Test/%E9%A1%B9%E7%9B%AE%E6%80%9D%E8%80%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Test/%E9%A1%B9%E7%9B%AE%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">思考</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:10:26" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Test/" itemprop="url" rel="index"><span itemprop="name">Test</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="技术类"><a href="#技术类" class="headerlink" title="技术类"></a>技术类</h2><ul>
+<li>用redis zset整个排行榜</li>
+</ul>
+<h3 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h3><ul>
+<li>预防缓存击穿（大量无效的key），添加布隆过滤器</li>
+<li>缓存持久化？</li>
+</ul>
+<h2 id="业务类"><a href="#业务类" class="headerlink" title="业务类"></a>业务类</h2><ul>
+<li>社交关系中，让好友双方都能看到并修改的设置（或是其他模块）</li>
+</ul>
+<h2 id="产品类"><a href="#产品类" class="headerlink" title="产品类"></a>产品类</h2><ul>
+<li><strong>游戏攻略类</strong><ul>
+<li><strong>描述</strong>：提供图鉴查询、流程介绍等内容帮助玩家快速上手</li>
+<li><strong>示例</strong>：剑盾图鉴<code>@微信小程序</code></li>
+</ul>
+</li>
+<li><strong>一体化宠物服务平台</strong><ul>
+<li><strong>描述</strong>：提供宠物分享、购买及宠物自身的各类服务，如清洗、保养、看病等。</li>
+<li><strong>示例</strong>：宠物家、它嗅宠物<code>@应用宝</code></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Test/%E6%88%91%E6%9C%89%E4%B8%80%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%A2%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Test/%E6%88%91%E6%9C%89%E4%B8%80%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%A2%A6/" class="post-title-link" itemprop="url">markdown内嵌html</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:15:22" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Test/" itemprop="url" rel="index"><span itemprop="name">Test</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote title="结束啦" style="padding:12px;border-left-color:#98bf21;background-color:rgb(249, 248, 250);">
+ <p style="font-weight: bold;">提示</p>
+ <p>到这里，kafka安装及环境搭建就告一段落 </p>
+</blockquote>
+
+
+
+
+<table border="1"style={{margin:200}}>
+    { {<tbody>
+        <tr>
+            <th colspan="2">我是占位符</th>
+            <th colspan="2">我是占位符</th>
+        </tr>
+        <tr>
+            <th rowspan="2">我是占位符</th>
+        	<th>我是占位符</th>
+            <th>我是占位符</th>
+            <th>我是占位符</th>
+        </tr>
+        <tr>
+            <th>我是占位符</th>
+            <th>我是占位符</th>
+            <th>我是占位符</th>
+        </tr>
+    </tbody>
+</table>} } 
+
+
+
+<p>发生了什么？</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">PART1——数据系统的基石</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-15 22:56:05" itemprop="dateModified" datetime="2021-09-15T22:56:05+08:00">2021-09-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">数据密集型应用系统设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Part1：数据系统的基石"><a href="#Part1：数据系统的基石" class="headerlink" title="Part1：数据系统的基石"></a>Part1：数据系统的基石</h1><h2 id="一、可靠性、可扩展性、可维护性"><a href="#一、可靠性、可扩展性、可维护性" class="headerlink" title="一、可靠性、可扩展性、可维护性"></a>一、可靠性、可扩展性、可维护性</h2><p>对一个系统来说，有三个特性值得我们去关注。</p>
+<ul>
+<li><strong>可靠性</strong><ul>
+<li>当遇到硬件故障、软件错误时，如何保证系统能够继续使用</li>
+</ul>
+</li>
+<li><strong>可扩展性</strong><ul>
+<li>怎样应对服务负载增加的情形</li>
+</ul>
+</li>
+<li><strong>可维护性</strong><ul>
+<li>在一个系统开发完毕之后，怎样让运维团队或工程师们轻松理解并维护系统</li>
+</ul>
+</li>
+</ul>
+<h2 id="二、数据模型与查询语言"><a href="#二、数据模型与查询语言" class="headerlink" title="二、数据模型与查询语言"></a>二、数据模型与查询语言</h2><p>数据组织的模型：关系模型与文档模型，它们的各自概念及特点</p>
+<p>查询语言：命令式和语义化的查询语言</p>
+<h2 id="三、存储与检索"><a href="#三、存储与检索" class="headerlink" title="三、存储与检索"></a>三、存储与检索</h2><h5 id="3-1抛出问题"><a href="#3-1抛出问题" class="headerlink" title="3.1抛出问题"></a>3.1抛出问题</h5><ol>
+<li>数据存储的方式、结构有哪些？分别是为了处理怎样的场景？有哪些特点？</li>
+</ol>
+<h5 id="3-2文章阅读"><a href="#3-2文章阅读" class="headerlink" title="3.2文章阅读"></a>3.2文章阅读</h5><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jinking01/article/details/105377370">最容易理解的LSM树–以示例讲解合并查找过程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f911cb9e42de">从B+树到LSM树，及LSM树在HBase中的应用</a></p>
+<h5 id="3-3总结"><a href="#3-3总结" class="headerlink" title="3.3总结"></a>3.3总结</h5><p><strong>数据库按应用场景可以分为以下两类：</strong></p>
+<p><strong>OLTP</strong>（在线事务处理）</p>
+<ul>
+<li><code>描述</code>：普通用户操作对数据库层带来的影响</li>
+<li><code>特点</code>：并发量大，每次请求处理的数据不多</li>
+<li><code>代表</code>：普通数据库</li>
+</ul>
+<p><strong>OLAP</strong>（在线分析处理）</p>
+<ul>
+<li><code>描述</code>：专业人员对海量数据进行分析，得到一定结果</li>
+<li><code>特点</code>：并发量小，但是每次请求都涉及大规模的数据</li>
+<li><code>代表</code>：数据仓库</li>
+</ul>
+<p><strong>从OLTP到OLAP的数据转化：</strong></p>
+<ol>
+<li>起初用户的各种行为会产生数据，记录在数据库中</li>
+<li>随着业务的慢慢发展，我们想要通过多维度的数据来分析用户群体特征，如偏好、各类趋势等</li>
+<li>因此需要用<code>数据仓库</code>来存储基于事实（或者说用户行为）的数据</li>
+<li>过程：抽取<code>-&gt;</code>转换<code>-&gt;</code>加载</li>
+</ol>
+<p><strong>OLTP数据库的探讨：</strong></p>
+<p><strong>主流学派</strong></p>
+<ul>
+<li>日志结构学派<ul>
+<li><code>描述</code>：采用类似追加日志的方式，进行数据更新</li>
+<li><code>特点</code>：写操作快，读操作慢</li>
+<li><code>典型</code>：SSTable、LSM树</li>
+</ul>
+</li>
+<li>就地更新学派<ul>
+<li><code>描述</code>：采用页面覆盖的方式更新数据</li>
+<li><code>特点</code>：读操作快，写操作慢</li>
+<li><code>典型</code>：B/B+树</li>
+</ul>
+</li>
+</ul>
+<h2 id="四、编码与演化"><a href="#四、编码与演化" class="headerlink" title="四、编码与演化"></a>四、编码与演化</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/" class="post-title-link" itemprop="url">索引及优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-16 23:15:27" itemprop="dateModified" datetime="2021-08-16T23:15:27+08:00">2021-08-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="一、索引数据结构类型"><a href="#一、索引数据结构类型" class="headerlink" title="一、索引数据结构类型"></a>一、索引数据结构类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>这是一类由<code>B-Tree</code>、<code>B+Tree</code>或<code>B*Tree</code>的数据结构来进行表数据存储的索引结构。</p>
+<p>至于这三者的区别，因为与索引优化无关，就不再这里介绍。</p>
+<p><strong>B+Tree结构</strong></p>
+<p>每个节点都可以看作是逻辑页，中间节点存储了指向下层逻辑页的指针，然后叶子节点存储了指向其他叶子节点的指针。</p>
+<p><strong>即中上部分是树，且最底层的叶子用双向链表相接</strong></p>
+<p>一般来说，B-Tree作为索引，可以支持多种方式的查询（这里指能用到索引的查询方式）</p>
+<ul>
+<li>全值匹配<ul>
+<li>查询条件和索引的所有列匹配</li>
+<li>例如以姓名和年龄建了索引，那么执行<code>SELECT * FRPM user WHERE name = &quot;zhangsan&quot; AND age = 18</code>就用到了全值匹配</li>
+</ul>
+</li>
+<li>最左前缀匹配<ul>
+<li>用索引的第一列查询</li>
+<li>例如只用<code>name</code>来查询，但是如果只用<code>age</code>查询，无法走索引查询，因为索引树在构建时，是先按name再按age的顺序来排的。</li>
+</ul>
+</li>
+<li>范围匹配<ul>
+<li>匹配索引第一列的某个范围</li>
+</ul>
+</li>
+</ul>
+<p><strong>使用B-Tree这类索引的限制</strong></p>
+<p>最左前缀原则，查找时必须匹配索引的第一列才行，不能跳过。</p>
+<h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>哈希索引是通过计算索引列的值得到哈希码，然后去哈希表中拿到对应数据的地址，最后获取数据的。</p>
+<p>例如<code>name</code>字段建立了哈希索引，那么在查询<code>name = &quot;zhangsan&quot;</code>时，会计算得到某个key，然后去哈希表中得到value。value表示的就是数据存放的地址。</p>
+<p>因此它不支持范围查找、部分索引列查找、排序等等。</p>
+<p>但是它也有优点，相对来说查询速度会更快。。</p>
+<blockquote>
+<p>这里提一句，InnoDB引擎实现了自适应哈希索引，即在B+Tree基础上，对于一些频繁使用的索引值，系统会对它们创建一个哈希索引。</p>
+<p>只能说InnoDB牛批！</p>
+</blockquote>
+<h3 id="空间索引R-Tree"><a href="#空间索引R-Tree" class="headerlink" title="空间索引R-Tree"></a>空间索引R-Tree</h3><p>MyISAM支持空间索引，它不需要前缀匹配，因为它会从所有维度来索引数据？？？</p>
+<p>但是MySQL的GIS支持不完善，不推荐使用…</p>
+<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>这是一种特殊的索引，它查找的是文本中的关键词，而不是直接比较索引值。    </p>
+<h2 id="二、索引优点"><a href="#二、索引优点" class="headerlink" title="二、索引优点"></a>二、索引优点</h2><ul>
+<li>减少服务器需要扫描的数据量</li>
+<li>避免排序和临时表</li>
+<li>将随机IO变为顺序IO</li>
+</ul>
+<h2 id="三、索引优化"><a href="#三、索引优化" class="headerlink" title="三、索引优化"></a>三、索引优化</h2><h3 id="使用独立的列"><a href="#使用独立的列" class="headerlink" title="使用独立的列"></a>使用独立的列</h3><p>假如age建立了索引，那么查询时要使用<code>age = 18</code>而不是<code>age + 1 = 19</code>这种形式。</p>
+<h3 id="模拟哈希索引"><a href="#模拟哈希索引" class="headerlink" title="模拟哈希索引"></a>模拟哈希索引</h3><p>假设表采用InnoDB引擎，如果查询条件包含url字符串，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> url <span class="keyword">WHERE</span> url <span class="operator">=</span> &quot;www.baidu.com&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>对<code>url</code>字段直接建索引，会使得索引的体积非常大，因为url本身是有一定长度的。</p>
+<p>这时我们可以采取伪哈希索引，即在表中新增一列<code>url_crc</code>，然后该列的值为对url字段进行哈希后的整型，对整型建索引和查找是比较高效的。</p>
+<p>这里有个注意点，因为哈希值可能会发生冲突（即重复），所以查询时还是要带上原url，如下所示</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> url <span class="keyword">WHERE</span> url <span class="operator">=</span> &quot;www.baidu.com&quot; <span class="keyword">AND</span> url_crc <span class="operator">=</span> CRC32(&quot;www.baidu.com&quot;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h3><p>另一种解决查询条件的字符串过长的方法，是建立前缀索引</p>
+<p>在前缀的长度和区分度上寻求一个平衡，使得既能提高查询效率，又不至于出现太多重复的索引值。</p>
+<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p>如之前提过的<code>name</code>和<code>age</code>，两者查询是交集的话，就可以建立以name和age共同构建的联合索引，而不是两个单列索引。</p>
+<p>如果两者查询是并集，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> &quot;zhangsan&quot; <span class="keyword">OR</span> age <span class="operator">=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这样可以建立两个单列索引，但是查询写法要改一下，用<code>union</code>使两个查询都能用到索引（虽然MySQL现在也会优化成联合的方式）</p>
+<p><strong>正确做法</strong></p>
+<ul>
+<li>建两个单列索引</li>
+<li>使用联合</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> &quot;zhangsan&quot;</span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">!=</span> &quot;zhangsan&quot; <span class="keyword">AND</span> age <span class="operator">=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h3><p>这是由存储引擎实现的，这里讨论的是InnoDB。</p>
+<p>聚簇索引就是在索引中把数据和索引值都放在一起，可以说，<strong>聚簇索引就是一张表</strong>，默认用主键来构建聚簇索引。</p>
+<p>在InnoDB的实现中，B+Tree的叶子节点存放了索引列的值和其他列的值（即所有数据），中间节点只存放了索引列的值</p>
+<p><strong>好处</strong></p>
+<p>查询和非聚簇索引相比更快，因为可以直接拿到数据，不用再去其他地方读</p>
+<p>聚簇索引中获取一个页中的相关数据会非常快，比如用户的所有邮箱数据都聚集在一个页中，那么可以快速获得</p>
+<p><strong>坏处</strong></p>
+<p>插入时：按照主键递增的顺序插入效率最高，如果主键不递增，那么插入到索引的中间位置，开销就会变大</p>
+<p>更新时：在聚簇索引中，想要在修改索引列的值，代价会非常高</p>
+<p><strong>二级索引</strong></p>
+<p>主键构成的索引就是聚簇索引，那么其他列构成的索引就是二级索引了。</p>
+<p>二级索引的叶子存储了对应记录的主键，思考一哈，为啥不存指向那行数据的指针呢？</p>
+<blockquote>
+<p>原因就是降低维护成本。如果二级索引的叶子节点存储数据的行指针，那么数据的位置发生变化（行移动或页分裂）时，就要增加二级索引的维护工作。</p>
+</blockquote>
+<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>查询时如果当前索引就包含了要查询的内容，不必再拿着主键去聚簇索引中查找，这种情况就被称为<code>覆盖索引</code></p>
+<p>使用覆盖索引查询，就减少了回表的次数，提高查询效率</p>
+<h3 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序"></a>索引排序</h3><p>两种方式可以得到有序的数据：排序和索引顺序扫描。</p>
+<p><strong>索引顺序扫描</strong></p>
+<p>在索引按顺序扫描时，如果每条记录都不能覆盖所需字段，它就得回表查询对应的数据行</p>
+<p>这样产生的IO开销，会导致索引顺序扫描的速度比顺序全表扫描还来的慢。</p>
+<h3 id="冗余和重复索引"><a href="#冗余和重复索引" class="headerlink" title="冗余和重复索引"></a>冗余和重复索引</h3><p><code>重复索引</code>是指索引列及其顺序都一致，这种重复情况应该避免。</p>
+<p>而<code>索引冗余</code>是指，某个索引包含了原有的索引，是其超集。</p>
+<p>例如现在已经建立<code>name</code>字段的索引，现在又新建了一个<code>name</code>和<code>age</code>字段的联合索引，这种情况就是冗余索引。</p>
+<p><strong>那我们可不可以扩展原先的<code>name</code>索引呢，这样不就可以避免索引冗余了</strong></p>
+<p>但是扩展<code>name</code>索引，给它加上age字段，会使原来的索引变大，从而影响其他使用原索引的查询速度</p>
+<p>索引冗余有个致命的缺陷，就是索引越多，增删改的性能就会越低。所以要根据具体情况来决定是否冗余索引。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-13 22:08:24" itemprop="dateModified" datetime="2021-10-13T22:08:24+08:00">2021-10-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-08 20:38:04" itemprop="dateModified" datetime="2021-11-08T20:38:04+08:00">2021-11-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-转账"><a href="#1-转账" class="headerlink" title="1.转账"></a>1.转账</h2><p><strong>场景：</strong>事务一般使用MVCC机制来避免并发执行时的数据问题。如果A读自己余额，为100；B向A转账100；A继续读余额，还是100。这样出现了钱少的问题，如何解决？</p>
+<p><strong>思路：</strong>读写都加共享锁？</p>
+<h2 id="2-幻读"><a href="#2-幻读" class="headerlink" title="2.幻读"></a>2.幻读</h2><h4 id="什么是幻读？"><a href="#什么是幻读？" class="headerlink" title="什么是幻读？"></a>什么是幻读？</h4><p>事务A读两次，在第二次读之前另一个事务插入数据并提交，导致A两次读的结果不一样。</p>
+<h4 id="RR下的mvcc是否解决了幻读？"><a href="#RR下的mvcc是否解决了幻读？" class="headerlink" title="RR下的mvcc是否解决了幻读？"></a>RR下的mvcc是否解决了幻读？</h4><p>这个要看情况讨论。</p>
+<ol>
+<li>如果一个事务中全部都是快照读，那么幻读是不会产生的。<code>@快照读的实现保证了这一点</code></li>
+<li>如果一个事务中全部使用当前读，那么也不会产生幻读。<code>@通过间隙锁解决</code></li>
+<li>如果两者都用到，则有可能产生幻读。<code>@如示例</code></li>
+</ol>
+<p><strong>幻读示例</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">事务A 读id范围<span class="number">5</span><span class="operator">~</span><span class="number">10</span>的记录   ## 只有记录<span class="number">7</span></span><br><span class="line"></span><br><span class="line">事务B 修改id7为<span class="number">8</span> 提交</span><br><span class="line"></span><br><span class="line">事务A 修改id为<span class="number">8</span>的记录      ## 触发当前读</span><br><span class="line">事务A 读id范围<span class="number">5</span><span class="operator">~</span><span class="number">10</span>的记录   ## 多了一条记录<span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
 }
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
 
-if (true) {
-  if (typeof Typed === 'function') {
-    subtitleType()
-  } else {
-    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
-  }
-} else {
-  subtitleType()
-}</script><script>if (document.getElementsByClassName('mermaid').length) {
-  if (window.mermaidJsLoad) mermaid.init()
-  else {
-    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
-      window.mermaidJsLoad = true
-      mermaid.initialize({
-        theme: 'default',
-      })
-      false && mermaid.init()
-    })
-  }
-}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
-POWERMODE.shake = false;
-POWERMODE.mobile = false;
-document.body.addEventListener('input', POWERMODE);
-</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

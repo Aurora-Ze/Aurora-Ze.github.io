@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="垃圾回收机制一、垃圾1.1 什么是垃圾在Java中，没有被任何一个对象引用的实例，就会被当作垃圾来回收 1.2 怎样判断垃圾有两种方式来判断 引用计数 每有一个对象引用该实例，它的值就加1 当值为0时，说明没有对象引用它，就可以确认为垃圾。  但是它存在一个缺陷，即无法判断循环引用的垃圾 因此，往往需要考虑许多额外的情况，才能让这个算法正确运行。 可达性分析算法 从GC Roots的根对象开始向下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三、垃圾回收机制">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="垃圾回收机制一、垃圾1.1 什么是垃圾在Java中，没有被任何一个对象引用的实例，就会被当作垃圾来回收 1.2 怎样判断垃圾有两种方式来判断 引用计数 每有一个对象引用该实例，它的值就加1 当值为0时，说明没有对象引用它，就可以确认为垃圾。  但是它存在一个缺陷，即无法判断循环引用的垃圾 因此，往往需要考虑许多额外的情况，才能让这个算法正确运行。 可达性分析算法 从GC Roots的根对象开始向下">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-13T12:06:09.537Z">
+<meta property="article:modified_time" content="2021-10-03T09:30:51.501Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>三、垃圾回收机制 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          三、垃圾回收机制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-03 17:30:51" itemprop="dateModified" datetime="2021-10-03T17:30:51+08:00">2021-10-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h1><h2 id="一、垃圾"><a href="#一、垃圾" class="headerlink" title="一、垃圾"></a>一、垃圾</h2><h3 id="1-1-什么是垃圾"><a href="#1-1-什么是垃圾" class="headerlink" title="1.1 什么是垃圾"></a>1.1 什么是垃圾</h3><p>在Java中，没有被任何一个对象引用的实例，就会被当作垃圾来回收</p>
+<h3 id="1-2-怎样判断垃圾"><a href="#1-2-怎样判断垃圾" class="headerlink" title="1.2 怎样判断垃圾"></a>1.2 怎样判断垃圾</h3><p>有两种方式来判断</p>
+<h4 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h4><blockquote>
+<p>每有一个对象引用该实例，它的值就加1</p>
+<p>当值为0时，说明没有对象引用它，就可以确认为垃圾。</p>
+</blockquote>
+<p>但是它存在一个缺陷，即无法判断<strong>循环引用</strong>的垃圾</p>
+<p>因此，往往需要考虑许多额外的情况，才能让这个算法正确运行。</p>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h4><blockquote>
+<p>从GC Roots的根对象开始向下搜索，如果某个实例没有和GC Roots相连，就表明它是垃圾</p>
+</blockquote>
+<p>在这种算法中，如何选择<code>GC Roots</code>就是很关键的一点。</p>
+<p>Java中固定可作为GC Roots的有以下几项：</p>
+<ol>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中常量、静态变量引用的对象</li>
+<li>本地方法栈中<code>native</code>方法引用的对象</li>
+<li>虚拟机内部的引用，包括基本数据类型的Class对象，常驻的异常对象等</li>
+<li>被同步锁持有的对象</li>
+</ol>
+<p>除了固定的<code>GC Roots</code>集合外，可以根据用户所选择的垃圾回收器及当前回收的区域不同，而”临时性”地加入一些其他对象。</p>
+<h4 id="再谈引用"><a href="#再谈引用" class="headerlink" title="再谈引用"></a>再谈引用</h4><p>在JDK1.2以前，引用是非常传统的定义，即</p>
+<blockquote>
+<p>reference类型的数据中存储的数值代表是另一块内存的地址，就称该reference是代表某块内存、某个对象的引用</p>
+</blockquote>
+<p>而这样简单的定义，又无法来表示那些<code>食之无味，弃之可惜</code>的对象</p>
+<p>因此，JDK1.2以后，Java的引用扩充成了4种，主要有：</p>
+<ul>
+<li>强引用</li>
+<li>软引用</li>
+<li>弱引用</li>
+<li>虚引用</li>
+</ul>
+<p>它们各自的表现如下</p>
+<table>
+<thead>
+<tr>
+<th align="center">引用名</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">强引用</td>
+<td align="center">符合传统定义</td>
+</tr>
+<tr>
+<td align="center">软引用</td>
+<td align="center">内存快溢出时，进行回收</td>
+</tr>
+<tr>
+<td align="center">弱引用</td>
+<td align="center">下一次垃圾回收时必定回收</td>
+</tr>
+<tr>
+<td align="center">虚引用</td>
+<td align="center">最弱，目的只是为了让这个对象在被回收时，能收到一个系统通知</td>
+</tr>
+</tbody></table>
+<h4 id="只有一次的复活甲"><a href="#只有一次的复活甲" class="headerlink" title="只有一次的复活甲"></a>只有一次的复活甲</h4><p>当一个对象被发现时没有与<code>GC Roots</code>相连，它就会被认定为是垃圾</p>
+<p>但是它还有一次复活的机会，那这个机会在哪里呢？让我们慢慢道来</p>
+<pre class="mermaid">graph LR
+  A[垃圾] --> B{执行过finalize};
+  B -->|Y| C[等死];
+  B -->|N| D[丢到队列中执行finalize];
+  D --> E{还没执行就被引用};
+  E -->|Y| F[直接复活];
+  E -->|N| G[继续等死];</pre>
+
+<h2 id="二、基本回收算法"><a href="#二、基本回收算法" class="headerlink" title="二、基本回收算法"></a>二、基本回收算法</h2><p>最基础的回收算法有三种，它们各有特色。</p>
+<h3 id="1-标记-清除"><a href="#1-标记-清除" class="headerlink" title="1. 标记-清除"></a>1. 标记-清除</h3><p>描述：标记垃圾，然后统一清除</p>
+<p>缺点：</p>
+<ol>
+<li>产生碎片</li>
+<li>标记清除的过程效率低</li>
+</ol>
+<h3 id="2-标记-复制"><a href="#2-标记-复制" class="headerlink" title="2. 标记-复制"></a>2. 标记-复制</h3><p>描述：内存分半，标记时把所有存活对象复制到另一半，然后直接清空当前这一半</p>
+<p>缺点：空间浪费</p>
+<p>特点：</p>
+<ol>
+<li><p>存活对象较少时，复制消耗少，运行高效</p>
+</li>
+<li><p>避免碎片化</p>
+</li>
+</ol>
+<p><strong>因为新生代存活对象较少，所以适合标记-复制算法。</strong></p>
+<h3 id="3-标记-整理"><a href="#3-标记-整理" class="headerlink" title="3. 标记-整理"></a>3. 标记-整理</h3><p>描述：标记时把存活对象移动到一起，然后统一清除剩余部分</p>
+<p>特点：</p>
+<ol>
+<li>性能较差</li>
+<li>避免碎片化</li>
+</ol>
+<h2 id="三、分代"><a href="#三、分代" class="headerlink" title="三、分代"></a>三、分代</h2><p><strong>为什么要分代？</strong></p>
+<p>因为对象有两类，有的存活时间长，有的存活时间短</p>
+<p>把他们分开来，用不同的回收算法来处理，就可以做到时间和空间的高效利用。</p>
+<p><strong>怎么分代呢？</strong></p>
+<p>首先把<code>堆空间</code>按1：2分为新生代和老年代</p>
+<p>新生代又基于<code>大部分对象都活的不久</code>的事实，按8：1：1分为伊甸区、两个存活区。</p>
+<p>其中新生代大部分都是要回收的垃圾</p>
+<h2 id="四、垃圾收集器"><a href="#四、垃圾收集器" class="headerlink" title="四、垃圾收集器"></a>四、垃圾收集器</h2><p>在分代时期，新生代和老年代各有3种垃圾收集器</p>
+<p>如果没有具体介绍回收算法，那么新生代统一使用<code>标记-复制</code>算法，老年代统一使用<code>标记-整理</code>算法。</p>
+<h3 id="新生代"><a href="#新生代" class="headerlink" title="新生代"></a>新生代</h3><h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>用单一线程来执行垃圾回收，且回收时用户线程必须暂停</p>
+<h4 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h4><p><code>Serial</code>的多线程版本，一般用来和<code>CMS</code>合作进行</p>
+<h4 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h4><p>也是多线程进行回收，但是它的关注点不同。</p>
+<p>其他的垃圾收集器关注用户线程的停顿时间，以保证用户交互的质量；</p>
+<p>而<code>Parallel Scavenge</code>更加关注吞吐量，即用户线程运行时间与总时间的比值，适合后台运算而非交互，</p>
+<h3 id="老年代"><a href="#老年代" class="headerlink" title="老年代"></a>老年代</h3><h4 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h4><p>老年代版的单线程回收方式。</p>
+<h4 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h4><p>老年代版的多线程回收。</p>
+<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>CMS全称为concurrent mark sweep，即并发标记清除，所以它是一种基于标记清除的算法，只不过实现得更加复杂。</p>
+<p>主要分为四个过程：</p>
+<ol>
+<li><p><strong>初始标记</strong></p>
+<p>暂停用户线程，由GC线程记录与GC Root相连的对象</p>
+</li>
+<li><p><strong>并发标记</strong></p>
+<p>用户线程和GC线程一起运行，GC线程从第一步发现的对象开始，往下搜索，记录可达对象</p>
+</li>
+<li><p><strong>重新标记</strong></p>
+<p>暂停用户线程，GC查看上一步标记过程中标记发生变化的区域，进行修正</p>
+</li>
+<li><p><strong>并发清除</strong></p>
+<p>开启用户线程，同时GC线程对未标记的区域进行清扫</p>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>因为是基于标记清除算法的，所以会有碎片</li>
+<li>并发操作时占用CPU资源</li>
+<li>清除时用户线程也在执行，所以需要预留空间，即提前进行回收。</li>
+</ol>
+<h2 id="五、G1收集器"><a href="#五、G1收集器" class="headerlink" title="五、G1收集器"></a>五、G1收集器</h2><p>自G1收集器开始，分代的概念越来越淡。</p>
+<p>它的主要思想是<strong>局部收集</strong>和<strong>独立分区</strong>。</p>
+<ul>
+<li><p><strong>局部收集</strong></p>
+<p>指进行垃圾回收时，选择性价比最高的一些区域进行回收</p>
+</li>
+<li><p><strong>独立分区</strong></p>
+<p>新生代和老年代不再是固定的了，它将堆内存分为多个大小相等的区域，然后每个区域根据需要，可以扮演原先分代中各区的角色。</p>
+</li>
+</ul>
+<p><strong>过程：</strong></p>
+<ol>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记</li>
+<li>筛选回收</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" title="三、垃圾回收机制">https://aurora-ze.github.io.git/2021/12/13/Java/Java虚拟机/3.垃圾回收/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" rel="next" title="Java内存模型">
+      Java内存模型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="nav-text">垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9E%83%E5%9C%BE"><span class="nav-text">一、垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9E%83%E5%9C%BE"><span class="nav-text">1.1 什么是垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%AD%E5%9E%83%E5%9C%BE"><span class="nav-text">1.2 怎样判断垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-text">引用计数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95"><span class="nav-text">可达性分析算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%8D%E8%B0%88%E5%BC%95%E7%94%A8"><span class="nav-text">再谈引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AA%E6%9C%89%E4%B8%80%E6%AC%A1%E7%9A%84%E5%A4%8D%E6%B4%BB%E7%94%B2"><span class="nav-text">只有一次的复活甲</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%9F%BA%E6%9C%AC%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="nav-text">二、基本回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A0%87%E8%AE%B0-%E6%B8%85%E9%99%A4"><span class="nav-text">1. 标记-清除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A0%87%E8%AE%B0-%E5%A4%8D%E5%88%B6"><span class="nav-text">2. 标记-复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%A0%87%E8%AE%B0-%E6%95%B4%E7%90%86"><span class="nav-text">3. 标记-整理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%88%86%E4%BB%A3"><span class="nav-text">三、分代</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-text">四、垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E7%94%9F%E4%BB%A3"><span class="nav-text">新生代</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial"><span class="nav-text">Serial</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ParNew"><span class="nav-text">ParNew</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Scavenge"><span class="nav-text">Parallel Scavenge</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%81%E5%B9%B4%E4%BB%A3"><span class="nav-text">老年代</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial-Old"><span class="nav-text">Serial Old</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Old"><span class="nav-text">Parallel Old</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMS"><span class="nav-text">CMS</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81G1%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-text">五、G1收集器</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="文档链接protocol-buffers官网 proto3教程 高效的数据压缩编码方式 Protobuf  protocol buffers什么是protocol buffers官方文档  Protocol buffers are Google’s language-neutral, platform-neutral, extensible mechanism for serializing st">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Protobuf入门">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="文档链接protocol-buffers官网 proto3教程 高效的数据压缩编码方式 Protobuf  protocol buffers什么是protocol buffers官方文档  Protocol buffers are Google’s language-neutral, platform-neutral, extensible mechanism for serializing st">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210701200434.png">
+<meta property="article:published_time" content="2021-12-13T12:06:09.672Z">
+<meta property="article:modified_time" content="2021-08-29T04:31:16.166Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210701200434.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Protobuf入门 | Aurora</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Protobuf入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-29 12:31:16" itemprop="dateModified" datetime="2021-08-29T12:31:16+08:00">2021-08-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="文档链接"><a href="#文档链接" class="headerlink" title="文档链接"></a>文档链接</h1><p><a target="_blank" rel="noopener" href="https://developers.google.com/protocol-buffers">protocol-buffers官网</a></p>
+<p><a target="_blank" rel="noopener" href="https://developers.google.com/protocol-buffers/docs/proto3">proto3教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://halfrost.com/protobuf_encode/#toc-0">高效的数据压缩编码方式 Protobuf </a></p>
+<h1 id="protocol-buffers"><a href="#protocol-buffers" class="headerlink" title="protocol buffers"></a>protocol buffers</h1><h3 id="什么是protocol-buffers"><a href="#什么是protocol-buffers" class="headerlink" title="什么是protocol buffers"></a>什么是protocol buffers</h3><p><strong>官方文档</strong></p>
+<blockquote>
+<p>Protocol buffers are Google’s language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler. You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages.</p>
+</blockquote>
+<p><strong>翻译</strong></p>
+<blockquote>
+<p>protocol buffers是Google开源的一种对结构化数据进行序列化的方式。它具有语言无关、平台无关和可扩展性；和xml相比，它更小，更快并且更加简单。</p>
+<p>用户只需要定义一次所需的结构化数据， 就可以利用生成的各种语言的代码从数据流中读写数据</p>
+</blockquote>
+<h3 id="选择语言进行安装"><a href="#选择语言进行安装" class="headerlink" title="选择语言进行安装"></a>选择语言进行安装</h3><p><a target="_blank" rel="noopener" href="https://github.com/protocolbuffers/protobuf/releases">Releases · protocolbuffers/protobuf (github.com)</a></p>
+<h1 id="一、定义Message"><a href="#一、定义Message" class="headerlink" title="一、定义Message"></a>一、定义Message</h1><p>示例：在<code>.proto</code>文件中定义一个名叫<code>SearchRequest</code>的消息格式，用来表示搜索的请求</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;./mvp&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginReq</span> </span>&#123;</span><br><span class="line">        <span class="built_in">string</span> UserName = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">string</span> Password = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginRsp</span> </span>&#123;</span><br><span class="line">        <span class="built_in">bool</span> IsLogin = <span class="number">1</span>;</span><br><span class="line">        User UserInfo = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一行<code>syntax = &quot;proto3&quot;</code>表示使用proto3的语法，要放在正文（非空行和非注释行）中的第一行，如果没有这一行，则表示使用proto2语法</li>
+<li><code>go_package</code>指定生成目标代码的目录</li>
+<li>消息体<code>UserLoginReq</code>由2个字段构成，每个字段包含类型、名称和值。</li>
+</ul>
+<h3 id="1-1-指定字段类型"><a href="#1-1-指定字段类型" class="headerlink" title="1.1 指定字段类型"></a>1.1 指定字段类型</h3><p>如示例中的<code>UserName</code>字段，类型为<code>string</code>；</p>
+<p>类型既可以是数值类型，也可以是复合类型（枚举、其他消息体）</p>
+<h3 id="1-2-设定字段值"><a href="#1-2-设定字段值" class="headerlink" title="1.2 设定字段值"></a>1.2 设定字段值</h3><p>字段值是唯一的，被用来标识该字段在消息的二进制格式</p>
+<p><strong>字段值从1到15使用一个字节来编码，16到2047使用两个字节来编码，因此对于频繁出现的字段，它的值应该设成1到15之间。</strong></p>
+<p>关于更多，可以先去了解下<code>protocol buffer</code>的编码</p>
+<h3 id="1-3-指定字段规则"><a href="#1-3-指定字段规则" class="headerlink" title="1.3 指定字段规则"></a>1.3 指定字段规则</h3><ul>
+<li><p><strong>singular</strong></p>
+<p>  表示该字段出现次数不多于1（0个或者1个）</p>
+<p>  proto3默认使用这种规则</p>
+</li>
+<li><p><strong>repeated</strong></p>
+<p>  表示字段可以出现任意次，可以理解成数组</p>
+</li>
+</ul>
+<h1 id="二、定义Service"><a href="#二、定义Service" class="headerlink" title="二、定义Service"></a>二、定义Service</h1><p>如果想要将上面定义的<code>Message</code>类型用于<code>rpc调用</code>，就要定义一个服务，服务中可以声明多个接口。</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">LoginService</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">rpc</span> Login(UserLoginReq) <span class="keyword">returns</span> (UserLoginRsp)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-完整示例"><a href="#2-1-完整示例" class="headerlink" title="2.1 完整示例"></a>2.1 完整示例</h3><figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;./mvp&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">LoginService</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">rpc</span> Login(UserLoginReq) <span class="keyword">returns</span> (UserLoginRsp)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义用户登陆请求</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginReq</span> </span>&#123;</span><br><span class="line">        <span class="built_in">string</span> UserName = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">string</span> Password = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义用户登陆响应</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginRsp</span> </span>&#123;</span><br><span class="line">        <span class="built_in">bool</span> IsLogin = <span class="number">1</span>;</span><br><span class="line">        User UserInfo = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义用户消息格式</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">        <span class="built_in">uint64</span> UserID = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">string</span> NickName = <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">uint64</span> Age = <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">repeated</span> <span class="built_in">string</span> ImgURL = <span class="number">4</span>;</span><br><span class="line">        UserType UserType = <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义枚举类型：用户权限类型</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">UserType</span> </span>&#123;</span><br><span class="line">        UT_Nil = <span class="number">0</span>;</span><br><span class="line">        UT_Visit = <span class="number">1</span>;</span><br><span class="line">        UT_Normal = <span class="number">2</span>;</span><br><span class="line">        UT_Admin = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="三、生成Go代码"><a href="#三、生成Go代码" class="headerlink" title="三、生成Go代码"></a>三、生成Go代码</h1><h3 id="3-1-下载插件"><a href="#3-1-下载插件" class="headerlink" title="3.1 下载插件"></a>3.1 下载插件</h3><p><code>protocol buffer complier</code>需要一个插件才能生成Go代码，因此先下载插件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest</span><br></pre></td></tr></table></figure>
+
+<p>下载完毕后在<code>$GOPATH/bin</code>路径下会生成<code>protoc-gen-go</code></p>
+<h3 id="3-2-利用插件生成代码"><a href="#3-2-利用插件生成代码" class="headerlink" title="3.2 利用插件生成代码"></a>3.2 利用插件生成代码</h3><p>在项目的根目录下用终端（或cmd）输入以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --go_out=. <span class="variable">$SRC_DIR</span>/addressbook.proto</span><br></pre></td></tr></table></figure>
+
+<p>参数说明</p>
+<ul>
+<li><p><code>go_out</code>：表示生成go代码</p>
+</li>
+<li><p><code>$SRC_DIR/addressbook.proto</code>：表示协议所在位置</p>
+</li>
+<li><p>如果想要指定代码生成的位置，则在协议文件中添加</p>
+  <figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;yourpath&quot;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="四、demo"><a href="#四、demo" class="headerlink" title="四、demo"></a>四、demo</h1><h3 id="4-1-编码并写入文件"><a href="#4-1-编码并写入文件" class="headerlink" title="4.1 编码并写入文件"></a>4.1 编码并写入文件</h3><p>主要使用<code>Marshal()</code>进行编码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestProtoWrite 测试把消息写入指定文件中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestProtoWrite</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    login := &amp;mvp.UserLoginReq &#123;</span><br><span class="line">        UserName: <span class="string">&quot;zhangsan&quot;</span>,</span><br><span class="line">        Password: <span class="string">&quot;123&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    out, err := proto.Marshal(login)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to encode message login:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> err = ioutil.WriteFile(FilePath, out, fs.FileMode(<span class="number">777</span>)); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to write file:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-2-读取消息并解码"><a href="#4-2-读取消息并解码" class="headerlink" title="4.2 读取消息并解码"></a>4.2 读取消息并解码</h3><p>使用<code>Unmarshal()</code>进行解码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestProtoRead 测试从指定文件中读取消息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestProtoRead</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    in, err := ioutil.ReadFile(FilePath)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to read file:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    login := &amp;mvp.UserLoginReq&#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> err = proto.Unmarshal(in, login); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to decode message login:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(login)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="五、编码详解"><a href="#五、编码详解" class="headerlink" title="五、编码详解"></a>五、编码详解</h1><h3 id="5-1-Base-128-Varints"><a href="#5-1-Base-128-Varints" class="headerlink" title="5.1 Base 128 Varints"></a>5.1 Base 128 Varints</h3><h5 id="官方文档说明"><a href="#官方文档说明" class="headerlink" title="官方文档说明"></a>官方文档说明</h5><blockquote>
+<p>To understand your simple protocol buffer encoding, you first need to understand <em>varints</em>. Varints are a method of serializing integers using one or more bytes. Smaller numbers take a smaller number of bytes.</p>
+<p>Each byte in a varint, except the last byte, has the <em>most significant bit</em> (msb) set – this indicates that there are further bytes to come. The lower 7 bits of each byte are used to store the two’s complement representation of the number in groups of 7 bits, <strong>least significant group first</strong>.</p>
+</blockquote>
+<h5 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h5><blockquote>
+<p>为了帮助你理解<code>protocol buffer</code>的编码方式，你需要先了解一下<code>varints</code>。<code>varints</code>是一种将整数类型序列化成一个或多个字节的方法。越小的数字序列化后产生的字节数就越少。</p>
+<p>varints中除了最后一个字节，其他字节的最高有效位都置为1，用来表示接下来还有字节；剩余的低7位则是对每7位为一组的二进制数据的补码表示。</p>
+</blockquote>
+<h5 id="编码示例"><a href="#编码示例" class="headerlink" title="编码示例"></a>编码示例</h5><p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210701200434.png"></p>
+<p>解码过程就是上述编码的逆过程，这里就不再赘述。</p>
+<h3 id="5-2-消息类型编码"><a href="#5-2-消息类型编码" class="headerlink" title="5.2 消息类型编码"></a>5.2 消息类型编码</h3><blockquote>
+<p>从之前的消息示例中我们可以看出，消息是由一系列的键值对组成的。</p>
+</blockquote>
+<h5 id="键值对介绍"><a href="#键值对介绍" class="headerlink" title="键值对介绍"></a>键值对介绍</h5><p>键被称为<code>tag</code>，由<code>field number</code>和<code>wire type</code>构成，前者表示设定的字段号，后者可以查表得。</p>
+<p>值就是该字段被赋予的数值。</p>
+<p><code>tag</code>的计算方式为：<br>$$<br>tag = (field number &lt;&lt; 3)  | wire type<br>$$<br>表格如下，其中3，4已被废弃，就是说<code>wire type</code>取值应该只有0，1，2，5，因此用三比特即可表示<code>wire type</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">Meaning</th>
+<th align="left">Used For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">Varint</td>
+<td align="left">int32, int64, uint32, uint64, sint32, sint64, bool, enum</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">64-bit</td>
+<td align="left">fixed64, sfixed64, double</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">Length-delimited</td>
+<td align="left">string, bytes, embedded messages, packed repeated fields</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">Start group</td>
+<td align="left">groups (deprecated)</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">End group</td>
+<td align="left">groups (deprecated)</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">32-bit</td>
+<td align="left">fixed32, sfixed32, float</td>
+</tr>
+</tbody></table>
+<h5 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h5><p>现有以下消息，假设传入消息，a的值是150</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Test1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">int32</span> a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个消息体编码后得到的结果是<code>08 96 01</code>（16进制）</p>
+<ul>
+<li><p>计算tag</p>
+<p>  0001 ++ 000，得到<code>0001000</code>，即<strong>08</strong></p>
+</li>
+<li><p>对150进行编码，采取上述<code>varints</code>方式</p>
+<ul>
+<li>10010110</li>
+<li>1，0010110</li>
+<li>00000001，10010110</li>
+<li>得到编码<code>10010110，00000001</code></li>
+<li>用16进制表示，即<strong>96 01</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="5-3-字符串编码"><a href="#5-3-字符串编码" class="headerlink" title="5.3 字符串编码"></a>5.3 字符串编码</h3><p>和普通的整型相比，字符串在消息体中的编码方式多了一个length，表示字符串编码后的长度。</p>
+<p>形式为<code>key length content</code>。</p>
+<h5 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h5><p>b赋值为testing</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Test2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> b = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编码后的结果是<code>12 07 74 65 73 74 69 6e 67</code></p>
+<p>其中<strong>07</strong>表示长度，后面的7个16进制就是testing的utf8编码</p>
+<p>最开始的<strong>12</strong>就是key，由0010010转换成16进制得到。</p>
+<h2 id="六、"><a href="#六、" class="headerlink" title="六、"></a>六、</h2>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>aurora
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/" title="Protobuf入门">https://aurora-ze.github.io.git/2021/12/13/工具/protocol buffers/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E5%B7%A5%E5%85%B7/maven%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/" rel="prev" title="Maven问题和解决方案记录">
+      <i class="fa fa-chevron-left"></i> Maven问题和解决方案记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/%E5%B7%A5%E5%85%B7/%E4%B9%A6%E5%8D%95/" rel="next" title="书单">
+      书单 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5"><span class="nav-text">文档链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#protocol-buffers"><span class="nav-text">protocol buffers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFprotocol-buffers"><span class="nav-text">什么是protocol buffers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E8%AF%AD%E8%A8%80%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85"><span class="nav-text">选择语言进行安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%9A%E4%B9%89Message"><span class="nav-text">一、定义Message</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B"><span class="nav-text">1.1 指定字段类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E8%AE%BE%E5%AE%9A%E5%AD%97%E6%AE%B5%E5%80%BC"><span class="nav-text">1.2 设定字段值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E8%A7%84%E5%88%99"><span class="nav-text">1.3 指定字段规则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%9A%E4%B9%89Service"><span class="nav-text">二、定义Service</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-text">2.1 完整示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%9F%E6%88%90Go%E4%BB%A3%E7%A0%81"><span class="nav-text">三、生成Go代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%B8%8B%E8%BD%BD%E6%8F%92%E4%BB%B6"><span class="nav-text">3.1 下载插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%88%A9%E7%94%A8%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81"><span class="nav-text">3.2 利用插件生成代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81demo"><span class="nav-text">四、demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E7%BC%96%E7%A0%81%E5%B9%B6%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-text">4.1 编码并写入文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%AF%BB%E5%8F%96%E6%B6%88%E6%81%AF%E5%B9%B6%E8%A7%A3%E7%A0%81"><span class="nav-text">4.2 读取消息并解码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%BC%96%E7%A0%81%E8%AF%A6%E8%A7%A3"><span class="nav-text">五、编码详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Base-128-Varints"><span class="nav-text">5.1 Base 128 Varints</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E8%AF%B4%E6%98%8E"><span class="nav-text">官方文档说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BF%BB%E8%AF%91"><span class="nav-text">翻译</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-text">编码示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B%E7%BC%96%E7%A0%81"><span class="nav-text">5.2 消息类型编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%94%AE%E5%80%BC%E5%AF%B9%E4%BB%8B%E7%BB%8D"><span class="nav-text">键值对介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-text">示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BC%96%E7%A0%81"><span class="nav-text">5.3 字符串编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="nav-text">示例</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81"><span class="nav-text">六、</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <span class="post-count">| 博客共95.3k字</span>
+  </div>-->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

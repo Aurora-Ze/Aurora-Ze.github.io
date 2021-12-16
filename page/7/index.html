@@ -205,227 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 19:54:29" itemprop="dateModified" datetime="2021-11-09T19:54:29+08:00">2021-11-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="单例模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>确保类只有一个实例</p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/eca1f422-8381-409b-ad04-98ef39ae38ba.png" alt="img"></p>
-<h3 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h3><p>把构造方法变为私有，通过静态方法来获取静态对象实例。</p>
-<p>只有在用到对象时，才进行创建，节省了资源。</p>
-<p><strong>但是，多个线程同时进入判断后，会实例化多个对象，所以线程不安全。</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getUniqueInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            uniqueInstance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><p>直接把对象实例化，但这样丢失了节省资源的好处。</p>
-<p>这样不会有线程不安全的风险。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton uniqueInstance = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="title">Singleton</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="function"><span class="title">getUniqueInstance</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="双重校验锁"><a href="#双重校验锁" class="headerlink" title="双重校验锁"></a>双重校验锁</h3><p>我们可以只对判断语句内部加锁，这样只有对象还没被实例化过，才会进行加锁并创建对象。</p>
-<p>如果对象被实例化过，其他线程就不会阻塞，直接得到对象。</p>
-<p><strong>注意</strong></p>
-<p><strong>1.这里要用到两个if判断，如果只有外层一个判断，仍然会有多个线程进入判断内部，依次执行实例化操作</strong></p>
-<p><strong>2.uniqueInstance使用volatile修饰，防止指令重排序</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getUniqueInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        	<span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">        		<span class="keyword">if</span> (uniqueInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        			uniqueInstance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        		&#125;</span><br><span class="line">    		&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><p>加载外部类时，内部类并不会被加载到内存中。</p>
-<p>只有调用<code>getUniqueInstance()</code>，触发了<code>SingletonHolder.INSTANCE</code>后，才会加载内部类，并实例化对象。</p>
-<p>这种实现不仅具有延迟初始化，还利用了JVM提供对线程安全的支持。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getUniqueInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="枚举类"><a href="#枚举类" class="headerlink" title="枚举类"></a>枚举类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	Singleton firstSingleton = Singleton.INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 21:49:07" itemprop="dateModified" datetime="2021-11-09T21:49:07+08:00">2021-11-09</time>
-              </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>常见的原则有7个，如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">原则</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">单一职责</td>
-<td align="center">一个类、模块应该负责<strong>一项职责</strong></td>
-</tr>
-<tr>
-<td align="center">里氏替换原则</td>
-<td align="center">父类的引用可以被子类替换，这样说明子类只是<strong>对父类的扩展</strong>，尽量不要替换父类的功能</td>
-</tr>
-<tr>
-<td align="center">依赖倒置原则</td>
-<td align="center">上层模块不依赖于底层模块，两者都应该依赖于抽象；抽象不依赖于细节，细节应该依赖抽象；它的实质就是<strong>针对接口编程</strong></td>
-</tr>
-<tr>
-<td align="center">接口隔离原则</td>
-<td align="center">接口应该尽量细化，不能过于臃肿，防止强迫客户使用某些接口</td>
-</tr>
-<tr>
-<td align="center">迪米特法则</td>
-<td align="center">一个对象应该对其他对象尽可能少的了解，减少类之间的耦合</td>
-</tr>
-<tr>
-<td align="center">开放-封闭原则</td>
-<td align="center">模块对扩展开放，对修改封闭</td>
-</tr>
-<tr>
-<td align="center">组合/聚合原则</td>
-<td align="center">多使用组合/聚合的方式来完成某些行为、动作，而不是继承的方式</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%80%82%E9%85%8D%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1165,6 +944,528 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E9%9D%A2%E8%AF%95%E9%A2%98%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E9%9D%A2%E8%AF%95%E9%A2%98%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">面试题记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-26 22:26:06" itemprop="dateModified" datetime="2021-09-26T22:26:06+08:00">2021-09-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E9%9D%A2%E8%AF%95%E9%A2%98%E8%AE%B0%E5%BD%95/" class="post-meta-item leancloud_visitors" data-flag-title="面试题记录" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="计网"><a href="#计网" class="headerlink" title="计网"></a>计网</h1><h4 id="一、TCP三次握手的过程"><a href="#一、TCP三次握手的过程" class="headerlink" title="一、TCP三次握手的过程"></a>一、TCP三次握手的过程</h4><h6 id="1-符号说明"><a href="#1-符号说明" class="headerlink" title="1.符号说明"></a>1.符号说明</h6><ul>
+<li>ACK：确认标志，请求连接时为0，连接建立后所有发送的报文的ACK必须为1</li>
+<li>SYN：同步序列号，只在三次握手建立连接时有效，值为1</li>
+<li>ISN ：初始序列号，由生成器生成一个32位的ISN，生成器用32位长的时钟，每隔一段时间增长一次，大约<strong>5小时</strong>会重新循环。而数据包的默认最大寿命<strong>MSL</strong>为<strong>2分钟</strong>，所以可以认为初始序列号是唯一的</li>
+</ul>
+<h6 id="2-过程"><a href="#2-过程" class="headerlink" title="2.过程"></a>2.过程</h6><p>假设客户端和服务器的初始序列号分别为X，Y</p>
+<ol>
+<li><p>客户端发送建立连接请求，<code>SYN = 1，seq = X</code></p>
+</li>
+<li><p>服务器收到请求并回复，<code>SYN = 1，ack = X + 1，seq= Y</code></p>
+</li>
+<li><p>客户端收到回复，并告诉服务器我收到了 <code>SYN = 0，ack = Y + 1，seq = X + 1，</code></p>
+</li>
+</ol>
+<p>三次握手可以理解为</p>
+<ol>
+<li>客户端 - &gt; 服务器  SYN，my ISN is X</li>
+<li>服务器 - &gt; 客户端  ACK，your ISN is X</li>
+<li>服务器 - &gt; 客户端  SYN，my ISN is Y</li>
+<li>客户端 - &gt; 服务器  ACK，your ISN is Y</li>
+</ol>
+<p>其中2，3 可以合并</p>
+<h4 id="二、为什么要进行三次握手，而不用两次或四次？"><a href="#二、为什么要进行三次握手，而不用两次或四次？" class="headerlink" title="二、为什么要进行三次握手，而不用两次或四次？"></a>二、为什么要进行三次握手，而不用两次或四次？</h4><p>目的是建立可靠的通信信道，同时避免资源浪费。</p>
+<p>如果是采用两次握手的话，只保证了客户端的发送和接受，而服务器不知道它发出的报文是否被客户端接受到。</p>
+<p>而三次握手则保证了服务器和客户端的发送接收都没有问题。</p>
+<p>四次握手的话会浪费更多的网络资源</p>
+<h4 id="三、第二次握手为什么要传回SYN？"><a href="#三、第二次握手为什么要传回SYN？" class="headerlink" title="三、第二次握手为什么要传回SYN？"></a>三、第二次握手为什么要传回SYN？</h4><p>第二次握手既传了ACK，又传了SYN。</p>
+<p>传ACK是为了告诉发送方，我收到了你发送的信息，这表明客户端到服务器的通信是正常的。</p>
+<p>而回传SYN则是为了建立并确认服务端到客户端的通信。</p>
+<h4 id="四、四次挥手的过程"><a href="#四、四次挥手的过程" class="headerlink" title="四、四次挥手的过程"></a>四、四次挥手的过程</h4><ol>
+<li>客户端向服务器发起<code>FIN请求</code></li>
+<li>服务器收到断开连接请求后，并没有立即关闭，而是先发送<code>ACK应答报文</code>，通知客户端，它已经收到请求</li>
+<li>服务器等待资源发送完毕，再发出<code>FIN报文</code></li>
+<li>客户端收到服务器的FIN报文后，发出<code>ACK确认报文</code>给服务器，并开始计时，在<strong>2MSL（max segment lifetime）</strong>后关闭连接</li>
+</ol>
+<h4 id="五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？"><a href="#五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？" class="headerlink" title="五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？"></a>五、为什么连接的时候是三次握手，关闭的时候却是四次挥手？</h4><p>因为在三次握手的时候，服务器接收到客户端的连接请求时，可以立即发出ACK应答报文并请求建立连接</p>
+<p>而在四次挥手过程中，服务器接收到客户端的FIN请求，它可能还有数据包还没发送完，只能先返回ACK报文来应答，等数据包发送完之后，才能返回FIN请求给客户端。</p>
+<h4 id="六、TIME-WAIT状态为什么要定义为2MSL？"><a href="#六、TIME-WAIT状态为什么要定义为2MSL？" class="headerlink" title="六、TIME_WAIT状态为什么要定义为2MSL？"></a>六、TIME_WAIT状态为什么要定义为2MSL？</h4><ol>
+<li><p>尽可能能的确保最后的ACK报文顺利到达服务器</p>
+<p> 第四次握手时，客户端向服务器发送的ACK报文可能会丢失，服务器收不到ACK报文，就会进行超时重传FIN</p>
+<p> <strong>补充：</strong>那么为什么不把时间设置成<strong>RTT（报文从发送到接受再到确认的一次往返时间）</strong></p>
+<p> <strong>答：</strong>即第二点理由</p>
+</li>
+<li><p>为了确保老的重复的报文段消失在网络中</p>
+</li>
+<li><p>一些路由器会缓存数据包，TIME_WAIT可以有效地应对这种情况</p>
+</li>
+</ol>
+<h4 id="七、TCP三次握手可以传递数据吗？"><a href="#七、TCP三次握手可以传递数据吗？" class="headerlink" title="七、TCP三次握手可以传递数据吗？"></a>七、TCP三次握手可以传递数据吗？</h4><p>前两次不可以，因为此时连接还没建立。</p>
+<p>第三次可以，因为客户端收到服务器传来的ACK报文后，处于建立连接的状态，并且知道服务器接收和发送能力是正常的，所以可以传递数据。</p>
+<h4 id="八、TCP如果没有完成第四次挥手会发生什么？"><a href="#八、TCP如果没有完成第四次挥手会发生什么？" class="headerlink" title="八、TCP如果没有完成第四次挥手会发生什么？"></a>八、TCP如果没有完成第四次挥手会发生什么？</h4><p>服务器端的重传计时器达到规定时间片，依旧没有收到来自客户端的ACK报文，就开始进行超时重传，重新发送FIN报文给客户端。</p>
+<h4 id="九、计网五层模型和七层模型（应用层协议有哪些）"><a href="#九、计网五层模型和七层模型（应用层协议有哪些）" class="headerlink" title="九、计网五层模型和七层模型（应用层协议有哪些）"></a>九、计网五层模型和七层模型（应用层协议有哪些）</h4><p>五层模型，从上到下：</p>
+<ul>
+<li><strong>应用层</strong>——<strong>DNS、HTTP</strong>、SMTP、FTP、telnet</li>
+</ul>
+<p>提供应用进程间的服务</p>
+<ul>
+<li><strong>传输层</strong>——<strong>TCP、UDP</strong></li>
+</ul>
+<p>提供端到端的通信</p>
+<p>即数据传输路径中最两端的两台网络设备之间的通信</p>
+<ul>
+<li><strong>网络层</strong>——<strong>IP</strong>、ARP、ICMP、IGMP</li>
+</ul>
+<p>路由、寻址，把数据包传送到目的地</p>
+<ul>
+<li><strong>数据链路层</strong>——PPP、CSMA/CD</li>
+</ul>
+<ul>
+<li><strong>物理层</strong>——电路交换、分组交换</li>
+</ul>
+<p><strong>透明</strong>地传输比特流，<strong>透明</strong>即让上层感受不到传输介质、接口光纤不同所带来的变化</p>
+<p>七层模型：多了两层，表示层和会话层</p>
+<h4 id="十、浏览器输入URL后发生了什么？（使用了哪些协议）"><a href="#十、浏览器输入URL后发生了什么？（使用了哪些协议）" class="headerlink" title="十、浏览器输入URL后发生了什么？（使用了哪些协议）"></a>十、浏览器输入URL后发生了什么？（使用了哪些协议）</h4><ol>
+<li><strong>DNS解析</strong></li>
+</ol>
+<p>根据域名，在<strong>浏览器缓存、系统缓存、路由器缓存</strong>等依次向上查找。</p>
+<p>另外，<strong>DNS重定向/负载均衡</strong></p>
+<ol start="2">
+<li><strong>建立TCP连接</strong></li>
+</ol>
+<p>三次握手</p>
+<ol start="3">
+<li><strong>发送HTTP请求</strong></li>
+</ol>
+<p>因为HTTP请求是明文，存在信息泄露的风险。</p>
+<p>所以采用HTTPS协议进行加密（HTTP + SSL）</p>
+<ol start="4">
+<li><p><strong>服务器处理请求并返回HTTP报文</strong></p>
+</li>
+<li><p><strong>浏览器解析渲染页面</strong></p>
+</li>
+</ol>
+<p>浏览器边解析边渲染</p>
+<p>解析HTML和CSS文件，得到DOM树和渲染树</p>
+<p>然后布局渲染树，并把它绘制到屏幕上</p>
+<h6 id="协议："><a href="#协议：" class="headerlink" title="协议："></a>协议：</h6><p>1.DNS    解析域名，获得ip地址</p>
+<p>2.TCP     与服务器建立连接</p>
+<p>3.IP        使用TCP建立连接时，网络层用到了IP协议</p>
+<p>4.OSPF  进行路由选择</p>
+<p>5.ARP     路由器与服务器通信时，根据ip地址得到MAC地址</p>
+<p>6.HTTP   发送网页数据的请求</p>
+<h4 id="十一、TCP和UDP的区别"><a href="#十一、TCP和UDP的区别" class="headerlink" title="十一、TCP和UDP的区别"></a>十一、TCP和UDP的区别</h4><p>TCP：可靠、需要建立连接、消耗资源较多</p>
+<p>UDP：不保证数据的正确，无连接，消耗资源少，程序结构简单</p>
+<h4 id="十二、TCP的可靠传输"><a href="#十二、TCP的可靠传输" class="headerlink" title="十二、TCP的可靠传输"></a>十二、TCP的可靠传输</h4><h5 id="（一）如何确保可靠性传输："><a href="#（一）如何确保可靠性传输：" class="headerlink" title="（一）如何确保可靠性传输："></a>（一）如何确保可靠性传输：</h5><p>使用超时重传来实现可靠传输，如果一个已经发送的报文段在超时时间内没有收到确认，那么就重传这个报文段。</p>
+<h5 id="（二）拥塞控制："><a href="#（二）拥塞控制：" class="headerlink" title="（二）拥塞控制："></a>（二）拥塞控制：</h5><blockquote>
+<p>发送方维护变量<strong>拥塞窗口（cwnd）</strong>，出现拥塞时，控制发送方的发送速率，算法如下：</p>
+</blockquote>
+<p><strong>1.慢开始</strong> 从发送1个报文段开始，如果该报文段被接受，就把数量*2</p>
+<p>**2.拥塞避免 **慢开始会增长地很快，当cwnd大于门限时，每次只增1</p>
+<p>如果出现了超时，就将门限设置为cwnd / 2，然后cwnd = 1，重新执行满开始</p>
+<p><strong>3.快重传与快恢复</strong></p>
+<blockquote>
+<p>接收方收到的报文段应该是有序的，例如M1，M2收到，又来了个M4，这时候接收方发送对M2的确认</p>
+</blockquote>
+<p>一旦发送方收到三个重复的确认，就可以判定下一个报文段丢失，立刻重传</p>
+<p>出现快重传后，网络并没有拥塞，只是丢失了个别报文段，因此执行快恢复。</p>
+<p>即把cwnd的值设置的大一些，具体操作为：</p>
+<p>门限 / 2，cwnd = 门限，这表示直接进入拥塞避免状态。</p>
+<h5 id="（三）TCP传输时，客户端突然断开连接，服务器如何判定？"><a href="#（三）TCP传输时，客户端突然断开连接，服务器如何判定？" class="headerlink" title="（三）TCP传输时，客户端突然断开连接，服务器如何判定？"></a>（三）TCP传输时，客户端突然断开连接，服务器如何判定？</h5><p>利用TCP协议层提供的保活探测方法来判定</p>
+<h5 id="（四）TCP的端口是为了区分什么？"><a href="#（四）TCP的端口是为了区分什么？" class="headerlink" title="（四）TCP的端口是为了区分什么？"></a>（四）TCP的端口是为了区分什么？</h5><p>区分一台设备中的不同应用进程</p>
+<h4 id="十三、常见的HTTP状态码"><a href="#十三、常见的HTTP状态码" class="headerlink" title="十三、常见的HTTP状态码"></a>十三、常见的HTTP状态码</h4><p>200，204（没有实体内容），206（部分内容）</p>
+<p>301（永久重定向），302（临时），303（临时，必须用GET请求），304（客户端发送附带条件，条件满足后的返回内容），307（临时）</p>
+<p>400（请求报文错误），401（需要HTTP认证），403（没有访问服务器的权限），404（没找到资源）</p>
+<p>500（服务器出错），503（服务器处于维护或超负载状态）</p>
+<h4 id="十四、HTTP报文"><a href="#十四、HTTP报文" class="headerlink" title="十四、HTTP报文"></a>十四、HTTP报文</h4><h5 id="（一）请求报文和响应报文的组成"><a href="#（一）请求报文和响应报文的组成" class="headerlink" title="（一）请求报文和响应报文的组成"></a>（一）请求报文和响应报文的组成</h5><p>请求报文由<strong>请求行、请求首部、请求实体</strong>组成</p>
+<p>响应报文由<strong>状态行、响应首部、响应实体</strong>组成</p>
+<h5 id="（二）HTTP请求报文包含哪些方法，GET和POST的区别"><a href="#（二）HTTP请求报文包含哪些方法，GET和POST的区别" class="headerlink" title="（二）HTTP请求报文包含哪些方法，GET和POST的区别"></a>（二）HTTP请求报文包含哪些方法，GET和POST的区别</h5><p><strong>方法</strong>有get，post，head，put，delete，options，trace，connect</p>
+<p><strong>区别：</strong></p>
+<p>1.GET用来获取资源，不会修改服务器的数据</p>
+<p>而POST用来传输实体，可能会修改数据</p>
+<p>2.GET的请求参数会附在URL之后，参数大小有限制</p>
+<p>而POST参数是放在请求实体中</p>
+<h4 id="十五、HTTP和HTTPS的区别"><a href="#十五、HTTP和HTTPS的区别" class="headerlink" title="十五、HTTP和HTTPS的区别"></a>十五、HTTP和HTTPS的区别</h4><p><strong>区别：</strong></p>
+<ol>
+<li>明文，安全性</li>
+<li>需要证书，费用不同</li>
+<li>连接方式不同</li>
+</ol>
+<p><strong>补充：</strong></p>
+<ul>
+<li>HTTPS使用混合加密机制</li>
+</ul>
+<blockquote>
+<p>服务器持有公钥 A 和私钥 A’</p>
+<p>客户端发起连接，服务器把 A 发送给客户端</p>
+<p>客户端接收 A ，本地再生成一个对称密钥 X ，用 A 加密 X ，发送给服务器</p>
+<p>服务器用 A‘ 解密，得到对称密钥 X</p>
+<p>然后双方用 X 加密报文进行通信</p>
+</blockquote>
+<ul>
+<li>数字证书</li>
+</ul>
+<blockquote>
+<p>混合加密机制也有漏洞。</p>
+<p>如果遇到“中间人攻击”，即中间人劫持服务器发送的公钥，换成自己的</p>
+<p>所以需要让客户端判断它收到的公钥是否是服务器的，而不是中间人篡改后的</p>
+<p>于是CA机构就出现了，网站向该机构申请数字证书，把公钥写入证书中，把证书传给客户端就可以了。</p>
+</blockquote>
+<ul>
+<li>数字签名</li>
+</ul>
+<blockquote>
+<p>证书也可能被篡改，所以就需要签名来判断证书是否为真。</p>
+<p>签名制作：（CA持有一对非对称密钥）</p>
+<ol>
+<li><p>CA对证书明文进行hash</p>
+</li>
+<li><p>hash后的值进行私钥加密，得到签名</p>
+</li>
+</ol>
+<p>浏览器判定：（浏览器持有CA公钥）</p>
+<ol>
+<li>用公钥解密签名</li>
+<li>根据证书说明的hash算法对明文hash</li>
+<li>比较前两者的值是否相等</li>
+</ol>
+</blockquote>
+<h4 id="十六、HTTP1-0、1-1和2-0的区别"><a href="#十六、HTTP1-0、1-1和2-0的区别" class="headerlink" title="十六、HTTP1.0、1.1和2.0的区别"></a>十六、HTTP1.0、1.1和2.0的区别</h4><p><strong>1.0与1.1：</strong>1.1默认使用长连接，支持流水线的请求</p>
+<p><strong>2.0和1.x相比：</strong></p>
+<ul>
+<li>支持多路复用</li>
+</ul>
+<blockquote>
+<p>能够在一个连接中并发处理多个请求</p>
+</blockquote>
+<ul>
+<li>头部数据压缩（开始行 + 首部。主体一般都是压缩的）</li>
+</ul>
+<blockquote>
+<p>客户端和服务器同时维护一个缓存表，避免重复传输</p>
+<p>此外，利用哈夫曼编码压缩首部字段</p>
+</blockquote>
+<ul>
+<li>服务端推送</li>
+</ul>
+<blockquote>
+<p>客户端请求资源时，会把相关资源（JS，CSS等）一起发送给客户端</p>
+</blockquote>
+<ul>
+<li>二进制、分帧层</li>
+</ul>
+<blockquote>
+<p>1.x是用文本协议的格式解析的，2.0采用二进制解析</p>
+<p>把报文分成headers和data帧</p>
+</blockquote>
+<ul>
+<li>总结</li>
+</ul>
+<p>数据流共用一个连接，提高了TCP的利用率，同时也降低了延迟。</p>
+<h4 id="十七、HTTP的缓存机制"><a href="#十七、HTTP的缓存机制" class="headerlink" title="十七、HTTP的缓存机制"></a>十七、HTTP的缓存机制</h4><p>介绍：</p>
+<p>①Expires：过期时间</p>
+<p>②Cache-Control：public，private，max-age，no-cache（不建议缓存，但还是有，相当于最大存活时间为0），no-store（不缓存），会覆盖①</p>
+<p>③Last-Modified / If-Modified-Since：最后修改时间</p>
+<p>④Etag / If-None-Match：唯一标识，如果修改了就会变化，优先级大于③</p>
+<ul>
+<li>存储策略</li>
+</ul>
+<blockquote>
+<p>服务器响应客户端的第一次请求时，缓存协商。</p>
+<p>可以是1234的任意一个（甚至多个）</p>
+</blockquote>
+<ul>
+<li>过期策略</li>
+</ul>
+<blockquote>
+<p>客户端想要请求资源时，判断有无缓存，有缓存的话是否过期。</p>
+</blockquote>
+<ul>
+<li>对比策略</li>
+</ul>
+<blockquote>
+<p>如果请求头里有If-Modified-Since，就比较修改时间</p>
+<p>如果请求头里有If-None-Match，就查找是否有Etag等于该值的数据</p>
+<p>缓存没有过期的话，返回304；过期的话，重新进行缓存协商，并返回200和新的数据</p>
+</blockquote>
+<h4 id="十八、什么是cookie和session，区别是什么，禁用cookie怎么办？"><a href="#十八、什么是cookie和session，区别是什么，禁用cookie怎么办？" class="headerlink" title="十八、什么是cookie和session，区别是什么，禁用cookie怎么办？"></a>十八、什么是cookie和session，区别是什么，禁用cookie怎么办？</h4><p>cookie和session都是会话跟踪的技术</p>
+<p>cookie是保存在客户端的，在发送请求时携带cookie，服务器可以根据cookie跟踪会话</p>
+<p>session是保存在服务端的。客户端第一次请求时，在服务器生成的一小块区域，然后服务器把session_id发给客户端，接下来的请求都带上session_id</p>
+<p>区别：</p>
+<ol>
+<li>存放的位置不同</li>
+<li>请求过多时，session会影响服务器性能</li>
+<li>单个cookie保存的数据有大小限制，浏览器一般也有数量限制</li>
+</ol>
+<h4 id="十九、页面加载不出来的原因"><a href="#十九、页面加载不出来的原因" class="headerlink" title="十九、页面加载不出来的原因"></a>十九、页面加载不出来的原因</h4>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91%E4%B9%8B%E9%93%BE%E8%B7%AF%E5%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91%E4%B9%8B%E9%93%BE%E8%B7%AF%E5%B1%82/" class="post-title-link" itemprop="url">计网——链路层</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-14 00:11:34" itemprop="dateModified" datetime="2021-12-14T00:11:34+08:00">2021-12-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%BD%91%E4%B9%8B%E9%93%BE%E8%B7%AF%E5%B1%82/" class="post-meta-item leancloud_visitors" data-flag-title="计网——链路层" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>结点：主机、路由器</p>
+<p>链路：两个结点之间的物理通道</p>
+<p>数据链路：逻辑通道，链路加上硬件软件</p>
+<p>帧：链路层的协议数据单元，封装了网络层数据包</p>
+<h2 id="一、封装成帧"><a href="#一、封装成帧" class="headerlink" title="一、封装成帧"></a>一、封装成帧</h2><h3 id="1-描述"><a href="#1-描述" class="headerlink" title="1. 描述"></a>1. 描述</h3><blockquote>
+<p>在一段数据的前后添加首部和尾部，形成帧</p>
+<p>接收方收到物理层的比特流后，可以根据首部尾部的标记，识别出帧的开始和结束位置</p>
+</blockquote>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/12844.png" alt="12844"></p>
+<h3 id="2-区分帧的几种方法"><a href="#2-区分帧的几种方法" class="headerlink" title="2. 区分帧的几种方法"></a>2. 区分帧的几种方法</h3><ul>
+<li><p><strong>字符计数法</strong></p>
+<p>帧首部用第一个字节表示这个帧的长度</p>
+<p>发生错误后影响之后所有的帧</p>
+</li>
+<li><p><strong>字符填充法</strong></p>
+<p>特定的首部尾部来作为界限，中间如果遇到同名的，填充字节来转义</p>
+</li>
+<li><p><strong>零比特填充法</strong></p>
+<p>发送方根据规则填充0，然后接收方去掉首部尾部后，对数据按规则删除0</p>
+</li>
+<li><p><strong>违规编码法</strong></p>
+<p>用独特的电压来表示首部尾部</p>
+</li>
+</ul>
+<h2 id="二、差错检验"><a href="#二、差错检验" class="headerlink" title="二、差错检验"></a>二、差错检验</h2><h3 id="1-错误有哪些？"><a href="#1-错误有哪些？" class="headerlink" title="1. 错误有哪些？"></a>1. 错误有哪些？</h3><ul>
+<li>位错，比特位发生变动</li>
+<li>帧错，帧丢失、重复、乱序等</li>
+</ul>
+<p>错误来源于外界的冲击噪声或者随机噪声（热噪声）。</p>
+<h3 id="2-差错控制方法"><a href="#2-差错控制方法" class="headerlink" title="2. 差错控制方法"></a>2. 差错控制方法</h3><p>这里主要针对比特错，即位错。</p>
+<p>相应的解决方法有两类，<strong>检错编码</strong>和<strong>纠错编码</strong>，顾名思义，一个是检查错误，一个是纠正错误。</p>
+<h3 id="3-检错编码"><a href="#3-检错编码" class="headerlink" title="3. 检错编码"></a>3. 检错编码</h3><p>这里都用到了<code>冗余编码</code>的思想，即发送时在数据前面加上一段比特，接收方根据它来判断数据是否变化</p>
+<p><strong>『奇偶校验码』</strong></p>
+<p>冗余码：只使用1位，取0或1</p>
+<p>冗余码取值：满足<code>数据+冗余码</code>中<code>1</code>的个数是奇数还是偶数（奇校验还是偶校验）</p>
+<p>思想：约定奇或偶校验，然后发生方设置冗余码并满足校验，接收方收到后判断1的个数是否和约定的校验方式相符。</p>
+<p>例如，现有数据编码<code>1100101</code>，采用偶校验的话，要保证添加冗余码后有偶数个1，所以冗余码选择0就可以，编码后为<code>01100101</code></p>
+<p><strong>特点：只能检测出奇数位发生错误的情况</strong></p>
+<p><strong>『循环冗余码CRC』</strong></p>
+<p>冗余码：有多位，根据计算得到。</p>
+<p>思想：</p>
+<ol>
+<li>约定一个多项式</li>
+<li>数据比特在末尾添<code>阶数</code>个0</li>
+<li>添零后的数据与多项式进行模2除法，得到冗余码并填充在末尾的0中</li>
+<li>接收方让数据除以约定的多项式，除尽了说明没错</li>
+</ol>
+<p>图片描述</p>
+<p>发送方计算冗余码</p>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-29_22-11-00.png" alt="Snipaste_2021-04-29_22-11-00"></p>
+<p>接收方校验</p>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/20210429230102.png"></p>
+<h3 id="4-纠错编码"><a href="#4-纠错编码" class="headerlink" title="4. 纠错编码"></a>4. 纠错编码</h3><p>纠错编码介绍一个叫做<code>海明码</code>的方法。</p>
+<blockquote>
+<p>海明码是广泛用于内存和磁盘纠错的编码。</p>
+</blockquote>
+<ol>
+<li><p><strong>首先先要知道冗余码的位数</strong></p>
+<p>通过<code>海明不等式</code>来确定</p>
+<p>根据  $n + r \leq\ 2^r - 1$计算得到，其中n表示数据位数，r表示冗余码位数。</p>
+</li>
+<li><p><strong>确定校验码和数据的位置</strong></p>
+<p>把校验码依次放在$2^i$的位置，然后数据依次填充。</p>
+</li>
+<li><p><strong>计算冗余码的值</strong></p>
+<p>需要分组，按<code>XXX1</code>、<code>XX1X</code>、<code>X1XX</code>、<code>1XXX</code>来分组</p>
+<p>然后冗余位的取值要满足该组的1的个数为偶数</p>
+<p>PS：冗余位取值，可以用<code>异或后结果为0</code>来计算</p>
+</li>
+<li><p><strong>接收方判断</strong></p>
+<p>收到数据后，进行分组并重新计算每组的异或值</p>
+<p>将值<code>倒序</code>排列，得到的十进制即出错的位置。</p>
+</li>
+</ol>
+<h2 id="三、流量控制"><a href="#三、流量控制" class="headerlink" title="三、流量控制"></a>三、流量控制</h2><blockquote>
+<p>思想：当发送方发送的帧太多，以致接收方来不及处理的时候，接收方就不进行回复确认，来达到<strong>控制发送方速率</strong>的目的</p>
+</blockquote>
+<h3 id="流量控制的方法"><a href="#流量控制的方法" class="headerlink" title="流量控制的方法"></a>流量控制的方法</h3><p>主要思想是<code>滑动窗口</code>，发送方维持一个<code>固定</code>的窗口，发送帧之后，接收方回复确认，发送方收到确认消息后，更新窗口中的帧。</p>
+<p>与流量控制相关的协助主要有3种，分别是<strong>停止-等待协议</strong>、<strong>后退N帧协议</strong>和<strong>选择重传协议</strong>。</p>
+<p>下面就依次介绍一下。</p>
+<h3 id="停等协议"><a href="#停等协议" class="headerlink" title="停等协议"></a>停等协议</h3><p>在<code>停止-等待协议</code>中，发送方发送一个帧，就会停下来等待确认消息，收到确认后再发送下一个帧。</p>
+<p>如果在超时时间内没有收到确认消息，就进行重传。</p>
+<p>懂得都懂，这样做发送方大部分时间都在等待，信道利用率比较低！</p>
+<h4 id="优化思想"><a href="#优化思想" class="headerlink" title="优化思想"></a>优化思想</h4><blockquote>
+<p>思考：为什么要一帧一帧地发送？可以发送多个帧吗？多个帧发送，又会涉及到顺序的问题</p>
+</blockquote>
+<p>针对以上思考，我们提出两种优化思路：</p>
+<ol>
+<li>为帧添加序号</li>
+<li>多个帧一起发送</li>
+</ol>
+<p>后面介绍的两种协议就采用了这些思路。</p>
+<h3 id="后退N帧协议（GBN）"><a href="#后退N帧协议（GBN）" class="headerlink" title="后退N帧协议（GBN）"></a>后退N帧协议（GBN）</h3><p><strong>主要思想：发送方维持一个大于1的滑动窗口，每收到一个ACK，移动窗口；接收方维持大小为1的窗口，逐个接收</strong></p>
+<p><strong>特点：</strong></p>
+<ul>
+<li><p>累计确认</p>
+<p>一旦确认某个帧被接收，那么该帧的前面所有帧也都是确定被接收方收到的</p>
+</li>
+<li><p>超时重传机制</p>
+<p>超时时发送方发送所有未确认的帧</p>
+</li>
+</ul>
+<p><strong>例子：</strong>假设有编号为0~7的帧，现在发送方收到了0，2，3帧的ACK，如果这时产生了超时，要重新发送些帧</p>
+<p><strong>答案：</strong>4，5，6，7</p>
+<p><strong>缺点：</strong>重传时，要把未确认的帧全都重新传一遍，没有必要</p>
+<p>下一个协议就避免了这一缺点。</p>
+<h3 id="选择重传协议（SR）"><a href="#选择重传协议（SR）" class="headerlink" title="选择重传协议（SR）"></a>选择重传协议（SR）</h3><p><strong>主要思想：发送方维持一个大于1的滑动窗口，每收到一个ACK，移动窗口；接收方维持同样大小的窗口，缓存接收</strong></p>
+<p>注意，因为SR协议接收方窗口大小不为1，所以遇到不连续的数据，它是可以先缓存接收的；等到前面的数据也收到后，就形成连续的帧号，窗口就可以移动了。这和GBN只能接收当前一个帧，不连续就丢弃的情况不同。</p>
+<h2 id="四、其他协议"><a href="#四、其他协议" class="headerlink" title="四、其他协议"></a>四、其他协议</h2><h3 id="1-ALOHA"><a href="#1-ALOHA" class="headerlink" title="1.ALOHA"></a>1.ALOHA</h3><p>想发数据就发</p>
+<h3 id="2-CSMA"><a href="#2-CSMA" class="headerlink" title="2.CSMA"></a>2.CSMA</h3><p>先监听信道，看看拥不拥挤再发</p>
+<h3 id="3-CSMA-CD"><a href="#3-CSMA-CD" class="headerlink" title="3.CSMA/CD"></a>3.CSMA/CD</h3><p>一边监听一边发，如果拥挤了就停下来</p>
+<h3 id="4-CSMA-CA"><a href="#4-CSMA-CA" class="headerlink" title="4.CSMA/CA"></a>4.CSMA/CA</h3><p>先听后发，适用于传输介质为无线局域网的，所以更常用。</p>
+<h3 id="广域网"><a href="#广域网" class="headerlink" title="广域网"></a>广域网</h3><p>覆盖范围从几十公里到几千公里的网络，它是通过<code>交换机</code>来交换分组的。</p>
+<p>顺便一提，路由器是网络层的设备，也是用来进行分组交换的，两者的区别在于交换机只能在单个网络中转发分组，而路由器能在多个网络中转发分组。</p>
+<h3 id="5-PPP协议（点对点协议）"><a href="#5-PPP协议（点对点协议）" class="headerlink" title="5.PPP协议（点对点协议）"></a>5.PPP协议（点对点协议）</h3><p>面向字节</p>
+<p>用户使用拨号电路接入因特网时，一般使用PPP协议。</p>
+<h3 id="6-HDLC协议"><a href="#6-HDLC协议" class="headerlink" title="6.HDLC协议"></a>6.HDLC协议</h3><p>在同步网上传输数据，面向比特的数据链路层协议</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1330,92 +1631,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

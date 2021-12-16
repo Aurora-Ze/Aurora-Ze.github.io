@@ -205,349 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-title-link" itemprop="url">Redis持久化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:50" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-meta-item leancloud_visitors" data-flag-title="Redis持久化" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p><code>Redis</code>是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。</p>
-<p>因此<code>Redis</code>用到了两种持久化策略，分别是<code>RDB</code>和<code>AOF</code></p>
-</blockquote>
-<h2 id="RDB-快照"><a href="#RDB-快照" class="headerlink" title="RDB(快照)"></a>RDB(快照)</h2><p>对于一种持久化方式，我们可能会有以下一些疑惑：</p>
-<ol>
-<li>它持久化了什么</li>
-<li>持久化是怎样进行的</li>
-<li>如何恢复数据</li>
-<li>特点</li>
-</ol>
-<p>下面我们会围绕这些问题进行介绍。</p>
-<h3 id="一、RDB介绍"><a href="#一、RDB介绍" class="headerlink" title="一、RDB介绍"></a>一、RDB介绍</h3><p>RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻的<strong>所有数据</strong>，即<strong>快照</strong></p>
-<p>它的文件结构大致如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">REDIS</th>
-<th align="center">db_version</th>
-<th align="center">databases</th>
-<th align="center">EOF</th>
-<th align="center">checksum</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">魔数</td>
-<td align="center">rdb版本</td>
-<td align="center">多个数据库数据</td>
-<td align="center">标志结束</td>
-<td align="center">校验和</td>
-</tr>
-</tbody></table>
-<h3 id="二、RDB文件的生成与载入"><a href="#二、RDB文件的生成与载入" class="headerlink" title="二、RDB文件的生成与载入"></a>二、RDB文件的生成与载入</h3><h5 id="2-1RDB相关命令"><a href="#2-1RDB相关命令" class="headerlink" title="2.1RDB相关命令"></a>2.1RDB相关命令</h5><p>生成RDB文件的相关命令有两个，分别是<code>save</code>和<code>bgsave</code></p>
-<ul>
-<li><code>save</code>：会阻塞服务器进程</li>
-<li><code>bgsave</code>：创建子进程进行持久化，不阻塞</li>
-</ul>
-<h5 id="2-2生成情况：手动or自动"><a href="#2-2生成情况：手动or自动" class="headerlink" title="2.2生成情况：手动or自动"></a>2.2生成情况：手动or自动</h5><p>Redis客户端可以通过上述的<code>save</code>或<code>bgsave</code>命令手动进行持久化。</p>
-<p>此外，服务端也支持配置，在满足配置条件时自动执行RDB持久。</p>
-<p>例如<code>save 900 1</code>配置表示在900秒内修改1次，就会启动RDB。</p>
-<h5 id="2-3加载RDB文件"><a href="#2-3加载RDB文件" class="headerlink" title="2.3加载RDB文件"></a>2.3加载RDB文件</h5><p>如果没有开启AOF，服务器会在启动时寻找RDB文件并进行加载。</p>
-<h3 id="三、相关配置"><a href="#三、相关配置" class="headerlink" title="三、相关配置"></a>三、相关配置</h3><p><strong>RDB的默认配置</strong></p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">save</span> <span class="number">900</span> <span class="number">1</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">300</span> <span class="number">10</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">60</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>关闭RDB持久化</strong></p>
-<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">save</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="AOF-追加"><a href="#AOF-追加" class="headerlink" title="AOF(追加)"></a>AOF(追加)</h2><h3 id="一、AOF介绍"><a href="#一、AOF介绍" class="headerlink" title="一、AOF介绍"></a>一、AOF介绍</h3><p>AOF持久化通过记录Redis服务器的<strong>写操作</strong>来实现持久化。</p>
-<h3 id="二、AOF文件的生成与载入"><a href="#二、AOF文件的生成与载入" class="headerlink" title="二、AOF文件的生成与载入"></a>二、AOF文件的生成与载入</h3><h5 id="2-1实现AOF文件"><a href="#2-1实现AOF文件" class="headerlink" title="2.1实现AOF文件"></a>2.1实现AOF文件</h5><p>实现AOF持久化的过程可以分为3步：<strong>命令追加</strong>、<strong>文件写入</strong>和<strong>文件同步</strong>。</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png" alt="image-20211025123206155"></p>
-<ul>
-<li>命令追加<ul>
-<li>redis在处理命令请求时，用AOF缓冲区记录执行过的一些写操作</li>
-</ul>
-</li>
-<li>文件写入<ul>
-<li>redis处理完请求后，会将AOF缓冲区的内容写入到AOF文件中</li>
-</ul>
-</li>
-<li>文件同步<ul>
-<li>由于操作系统缓冲的存在，就会产生怎样写的情况</li>
-<li>文件同步通过一个<code>appendfsync</code>参数来配置。</li>
-</ul>
-</li>
-</ul>
-<p><strong>appendfsync参数配置</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">取值</th>
-<th align="center">对应策略</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">always</td>
-<td align="center">每次文件写入时都进行同步</td>
-</tr>
-<tr>
-<td align="center">everysec（默认）</td>
-<td align="center">正常写（会经过OS缓冲），后台线程判断超过一秒钟时进行同步操作</td>
-</tr>
-<tr>
-<td align="center">no</td>
-<td align="center">正常写，由操作系统决定啥时候同步</td>
-</tr>
-</tbody></table>
-<p><strong>代码示例</strong></p>
-<p>写入文件时直接刷新到磁盘上，有两种方式可以做到。</p>
-<p>第一种：打开文件时使用<code>O_SYNC</code>标志位</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 同步打开</span></span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR|O_SYNC);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        </span><br><span class="line">    	close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种，写完文件后调用<code>fsync</code>、<code>fdatasync</code>等系统调用进行同步</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        fsync(fd);</span><br><span class="line">    </span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="2-2加载AOF文件"><a href="#2-2加载AOF文件" class="headerlink" title="2.2加载AOF文件"></a>2.2加载AOF文件</h5><p>服务器启动时，如果开启了AOF持久化，则redis会开启一个伪客户端，把分析得到的命令交给伪客户端执行。</p>
-<h3 id="三、AOF重写"><a href="#三、AOF重写" class="headerlink" title="三、AOF重写"></a>三、AOF重写</h3><h5 id="3-1为什么要重写AOF文件？"><a href="#3-1为什么要重写AOF文件？" class="headerlink" title="3.1为什么要重写AOF文件？"></a>3.1为什么要重写AOF文件？</h5><p>AOF文件记录的是写操作，容易发生文件体积膨胀的问题。</p>
-<p>此外加载AOF文件时，执行效率也会降低。</p>
-<h5 id="3-2怎样重写AOF文件"><a href="#3-2怎样重写AOF文件" class="headerlink" title="3.2怎样重写AOF文件"></a>3.2怎样重写AOF文件</h5><p>redis开启子进程，在后台利用当前数据库的数据来重新生成AOF文件并覆盖原文件。</p>
-<p>使用<code>BGREWRITEAOF</code>命令可以手动开启重写。</p>
-<p><strong>特点：</strong></p>
-<ol>
-<li>使用子进程而不是当前进程：防止服务器阻塞</li>
-<li>没有使用原AOF文件的方式：</li>
-</ol>
-<p><strong>问题：子进程在后台生成AOF文件时，当前数据库的数据可能会发生变化，导致持久化的数据与实际数据不一致的情况</strong></p>
-<p>解决：重写AOF时，服务器把写操作记录到AOF缓冲和AOF重写缓冲中。</p>
-<p>解释：前者是为了AOF持久化的正常工作，后者是将AOF重写过程中的数据变化记录下来，等子进程重写完毕后把这一部分发送给它。</p>
-<h3 id="四、相关配置"><a href="#四、相关配置" class="headerlink" title="四、相关配置"></a>四、相关配置</h3><p><strong>AOF默认为关闭，如果要开启，改为yes</strong></p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">appendonly</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>文件同步策略</strong></p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta"># appendfsync no</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>自动重写AOF</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AOF文件大小为上次重写后AOF文件大小时，开始重写</span></span><br><span class="line">auto-aof-rewrite-percentage 100 </span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动进行AOF文件重写的最小大小</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结一下RDB与AOF的特点，从持久化速度、加载速度、文件大小、数据安全性等多个维度进行讨论。</p>
-<table>
-<thead>
-<tr>
-<th align="center">场景</th>
-<th align="center">RDB</th>
-<th align="center">AOF</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">持久化速度</td>
-<td align="center">不支持秒级，慢</td>
-<td align="center">支持秒级</td>
-</tr>
-<tr>
-<td align="center">加载速度</td>
-<td align="center">很快</td>
-<td align="center">执行写操作，慢</td>
-</tr>
-<tr>
-<td align="center">文件大小</td>
-<td align="center">压缩后小</td>
-<td align="center">文件较大</td>
-</tr>
-<tr>
-<td align="center">数据安全性</td>
-<td align="center">距离上次持久化后的数据都可能会丢</td>
-<td align="center">默认配置下最多丢1秒的数据</td>
-</tr>
-<tr>
-<td align="center">开销</td>
-<td align="center">每次持久化都会fork一个子进程</td>
-<td align="center">处理事件后需要写缓冲</td>
-</tr>
-</tbody></table>
-<h2 id="RDB与AOF的混合使用"><a href="#RDB与AOF的混合使用" class="headerlink" title="RDB与AOF的混合使用"></a>RDB与AOF的混合使用</h2><p>redis4.0提出了两种持久化方式混合使用的方案：</p>
-<p>RDB以一定的频率运行，然后在两次RDB间使用AOF记录写操作。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Redis客户端与服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:32" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Redis客户端与服务器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><h3 id="一、客户端属性"><a href="#一、客户端属性" class="headerlink" title="一、客户端属性"></a>一、客户端属性</h3><p>服务器通过一个<code>clients</code>链表维护连接的客户端</p>
-<p>涉及的客户端信息有：描述符、名称、输入输出缓冲区、状态等等。</p>
-<h3 id="二、客户端类型"><a href="#二、客户端类型" class="headerlink" title="二、客户端类型"></a>二、客户端类型</h3><p>客户端的类型有：通过网络连接的客户端、加载AOF文件的伪客户端以及执行Lua脚本的伪客户端。</p>
-<p>不同的类型创建和关闭的方式不太一样。</p>
-<ol>
-<li>网络连接的客户端<ul>
-<li>创建：用<code>clients</code>链表相连</li>
-<li>关闭：正常关闭，或空转时间、缓冲区溢出等原因造成关闭</li>
-</ul>
-</li>
-<li>加载AOF文件的伪客户端<ul>
-<li>创建：单独创建</li>
-<li>关闭：加载完毕后关闭</li>
-</ul>
-</li>
-<li>执行Lua脚本的伪客户端<ul>
-<li>创建：用<code>lua_client</code>记录</li>
-<li>关闭：随服务器运行</li>
-</ul>
-</li>
-</ol>
-<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><h3 id="一、命令执行的过程"><a href="#一、命令执行的过程" class="headerlink" title="一、命令执行的过程"></a>一、命令执行的过程</h3><h5 id="1-1简化的过程"><a href="#1-1简化的过程" class="headerlink" title="1.1简化的过程"></a>1.1简化的过程</h5><ol>
-<li>客户端发送命令请求</li>
-<li>服务器接收请求并处理</li>
-<li>服务器返回结果</li>
-</ol>
-<p>其中1、3步其实涉及了Redis使用的<strong>协议格式</strong>，因为在通信时命令请求是被封装成某个协议格式进行发送的。</p>
-<p>第二步涉及Redis如何解析命令请求。</p>
-<h5 id="1-2服务器处理命令请求"><a href="#1-2服务器处理命令请求" class="headerlink" title="1.2服务器处理命令请求"></a>1.2服务器处理命令请求</h5><ol>
-<li>按协议格式解析命令请求</li>
-<li>命令执行器执行命令<ul>
-<li>预处理</li>
-<li>执行</li>
-<li>后续工作</li>
-</ul>
-</li>
-</ol>
-<p>Redis服务器维护了一个<code>命令表</code>的字典，可以根据命令的名称找到具体的执行函数。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1706,6 +1363,226 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">项目介绍</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：19:57:21" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/" itemprop="url" rel="index"><span itemprop="name">谷粒学苑</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" class="post-meta-item leancloud_visitors" data-flag-title="项目介绍" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p><code>在线教育</code>：以网络为媒介的教学方式</p>
+<p>谷粒学苑是一个在线教育平台，为学员和教师提供了一个学习与授课的平台。它借助互联网打破了时间与空间的限制，使得工作繁忙或是学习时间不固定的群体都能借此来充能。</p>
+<h2 id="项目模块"><a href="#项目模块" class="headerlink" title="项目模块"></a>项目模块</h2><p>项目用户分为两类，管理员和普通用户。</p>
+<p><strong>对于管理员来说，模块有：</strong></p>
+<ol>
+<li>讲师管理</li>
+<li>课程分类管理</li>
+<li>课程管理</li>
+<li>统计分析</li>
+<li>订单管理</li>
+<li>banner</li>
+<li>权限管理</li>
+</ol>
+<p><strong>对于普通用户来说，模块有：</strong></p>
+<ol>
+<li>首页数据展示</li>
+<li>讲师列表和详情</li>
+<li>课程列表和详情<ul>
+<li>视频播放</li>
+</ul>
+</li>
+<li>登录和注册</li>
+<li><code>微信扫码登录</code></li>
+<li><code>微信扫码支付</code></li>
+</ol>
+<h2 id="项目使用技术"><a href="#项目使用技术" class="headerlink" title="项目使用技术"></a>项目使用技术</h2><p><strong>后端</strong></p>
+<ul>
+<li>springboot</li>
+<li>springcloud</li>
+<li>mybatisplus</li>
+<li>springsecurity</li>
+</ul>
+<p><strong>前端</strong></p>
+<ul>
+<li>vue+element-ui+axios+nodejs</li>
+</ul>
+<p><strong>其他</strong></p>
+<ul>
+<li>阿里云oss</li>
+<li>阿里云视频点播服务</li>
+<li>阿里云短信服务</li>
+<li>微信支付</li>
+<li>docker</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">Vue指令学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：19:59:49" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/" class="post-meta-item leancloud_visitors" data-flag-title="Vue指令学习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Vue指令"><a href="#Vue指令" class="headerlink" title="Vue指令"></a>Vue指令</h3><blockquote>
+<p>代码部分只展示了关键部分</p>
+</blockquote>
+<h5 id="v-text"><a href="#v-text" class="headerlink" title="v-text"></a>v-text</h5><p>通过参数来设置标签内的值</p>
+<p>注意，会覆盖标签内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo&#39; v-text&#x3D;&#39;para&#39;&gt;被覆盖啦呀，真惨&lt;&#x2F;div&gt; </span><br></pre></td></tr></table></figure>
+
+<h5 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h5><p>和 <code>v-text</code> 类似，区别在于 <code>v-html</code> 能解析成HTML，进行赋值</p>
+<h5 id="v-on"><a href="#v-on" class="headerlink" title="v-on"></a>v-on</h5><p>绑定方法，<strong>简写形式如下</strong></p>
+<p>另外，绑定方法可以具体化，如@keyup.enter表示键盘键入回车键后，调用某方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input id&#x3D;&#39;demo&#39; @click&#x3D;&#39;method&#39; type&#x3D;&quot;button&quot; value&#x3D;&quot;按钮&quot;&gt;&lt;&#x2F;input&gt; </span><br></pre></td></tr></table></figure>
+
+<h5 id="v-show"><a href="#v-show" class="headerlink" title="v-show"></a>v-show</h5><p>用来改变元素的属性值，来使它隐藏或出现</p>
+<p>注意，是通过修改属性的方式实现的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo2&#39;&gt;</span><br><span class="line">       &lt;input type&#x3D;&quot;button&quot; value&#x3D;&quot;点击改变&quot; @click&#x3D;&#39;click_it&#39;&gt; </span><br><span class="line">       &lt;p v-show&#x3D;&quot;flag&quot;&gt;嘿嘿，会员内容哦&lt;&#x2F;p&gt;   </span><br><span class="line">   &lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h2><h5 id="v-bind-单向绑定"><a href="#v-bind-单向绑定" class="headerlink" title="v-bind(单向绑定)"></a>v-bind(单向绑定)</h5><p>设置元素的内部属性，如src、<strong>class</strong></p>
+<p><strong>简写形式如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo&#39; &gt;</span><br><span class="line">        &lt;img v-bind:src&#x3D;&quot;para&quot;&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 下面的改变class属性比较重要 --&gt;</span><br><span class="line">&lt;div id&#x3D;&#39;demo&#39; &gt;</span><br><span class="line">        &lt;img :class&#x3D;&quot;&#123;clazz_type:isNeedToChange&#125;&quot;  v-bind:src&#x3D;&quot;para&quot;&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">&lt;!-- 一些参数 --&gt;</span><br><span class="line">isNeedToChange: true</span><br><span class="line">.clazz_type &#123; border: 1px solid red; &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="v-model-双向绑定"><a href="#v-model-双向绑定" class="headerlink" title="v-model(双向绑定)"></a>v-model(双向绑定)</h5><p>页面上的值发生变化时（比如用户输入内容），被绑定的变量也会变化。</p>
+<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><h5 id="v-if"><a href="#v-if" class="headerlink" title="v-if"></a>v-if</h5><p>同样也是用来决定元素的隐藏与出现</p>
+<p>但是它是通过修改DOM树的方式实现的</p>
+<h5 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h5><p>遍历数组中的值，并利用一个模板显示出来</p>
+<p>如下，<strong>li <strong>标签就是所谓的模板，在模板中添加</strong>遍历项student</strong>的名字和年龄</p>
+<p>所以就会输出数组中所有学生的名字和年龄</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo&#39; &gt;</span><br><span class="line">       &lt;ul&gt;</span><br><span class="line">           &lt;li v-for&#x3D;&quot;(student, index) in students&quot;&gt;</span><br><span class="line">               第&#123;&#123; index + 1 &#125;&#125;位同学叫&#123;&#123;student.name&#125;&#125;，年龄&#123;&#123;student.age&#125;&#125;</span><br><span class="line">           &lt;&#x2F;li&gt;</span><br><span class="line">       &lt;&#x2F;ul&gt;</span><br><span class="line">   &lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1871,92 +1748,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

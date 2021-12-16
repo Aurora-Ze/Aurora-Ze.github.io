@@ -205,333 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/MyBatis-Plus/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/MyBatis-Plus/" class="post-title-link" itemprop="url">MyBatis-Plus</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-15 20:48:49" itemprop="dateModified" datetime="2021-12-15T20:48:49+08:00">2021-12-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MyBatis-Plus/" itemprop="url" rel="index"><span itemprop="name">MyBatis-Plus</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/MyBatis-Plus/" class="post-meta-item leancloud_visitors" data-flag-title="MyBatis-Plus" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>其实官方的教程很详细，一切以<a target="_blank" rel="noopener" href="https://mp.baomidou.com/">官网</a>为准。</p>
-</blockquote>
-<h2 id="一、配置"><a href="#一、配置" class="headerlink" title="一、配置"></a>一、配置</h2><h5 id="引入Maven依赖"><a href="#引入Maven依赖" class="headerlink" title="引入Maven依赖"></a>引入Maven依赖</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--            mybatis-plus--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--        mysql--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="添加数据源配置"><a href="#添加数据源配置" class="headerlink" title="添加数据源配置"></a>添加数据源配置</h5><p>Spring Boot 2.1集成了jdbc8.0驱动，需要注意两点：</p>
-<ol>
-<li>不再推荐使用<code>com.mysql.jdbc.Driver</code></li>
-<li>url路径后要加上时区信息<code>?serverTimezone=GMT%2B8</code></li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/awesome?serverTimezone=GMT%2B8</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">88775682whz</span></span><br><span class="line"></span><br><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">  <span class="attr">configuration:</span></span><br><span class="line">    <span class="attr">log-impl:</span> <span class="string">org.apache.ibatis.logging.stdout.StdOutImpl</span> <span class="comment"># 输出日志</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="修改启动类"><a href="#修改启动类" class="headerlink" title="修改启动类"></a>修改启动类</h5><p>在启动类上添加包扫描的注解</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.ze.aurora.mapper&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LearningApplication</span> </span>&#123;</span><br><span class="line">	<span class="comment">/** ... **/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="定义Mapper"><a href="#定义Mapper" class="headerlink" title="定义Mapper"></a>定义Mapper</h5><p>定义mapper接口，继承<code>BaseMapper</code>并实现泛型</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="symbol">UserMapper</span> <span class="symbol">extends</span> <span class="symbol">BaseMapper</span>&lt;<span class="symbol">User</span>&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二、使用"><a href="#二、使用" class="headerlink" title="二、使用"></a>二、使用</h2><h5 id="id生成策略"><a href="#id生成策略" class="headerlink" title="id生成策略"></a>id生成策略</h5><p>在id的属性上添加<code>@TableId(type = IdType.xxx)</code>注解来设置具体策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableId(type = IdType.NONE)</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> id;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="自动填充"><a href="#自动填充" class="headerlink" title="自动填充"></a>自动填充</h5><p><strong>1.添加注解</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableField(fill = FieldFill.INSERT_UPDATE)</span> <span class="comment">// 新增或修改时自动填充</span></span><br><span class="line"><span class="keyword">private</span> Date createTime;</span><br></pre></td></tr></table></figure>
-
-<p><strong>2.实现自定义的handler</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span> <span class="keyword">implements</span> <span class="title">MetaObjectHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertFill</span><span class="params">(MetaObject metaObject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.setFieldValByName(<span class="string">&quot;createTime&quot;</span>, <span class="keyword">new</span> Date(), metaObject);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateFill</span><span class="params">(MetaObject metaObject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.strictUpdateFill(metaObject, <span class="string">&quot;createTime&quot;</span>, <span class="keyword">new</span> Date(), metaObject);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h5><p><strong>原理：</strong>通过设置一个version字段，取出记录时获取version。准备更新时，带上version去更新，通过判断version是否一样，再决定更新成功与否。</p>
-<p><strong>1.数据库添加version字段，并设置默认值为0</strong></p>
-<p><code>version</code>必须设置一个默认值，不能为null，否则会发生错误。</p>
-<p>设置默认值的方式有两种，一种是直接在数据库里修改，另一种则是利用上面提到的<code>自动填充</code>，具体做法不再赘述。</p>
-<p><strong>2.添加配置类</strong>（下方是旧版。新旧版本不太一样，详情见官网）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.ze.aurora.mapper&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBatisPlusConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> OptimisticLockerInterceptor <span class="title">optimisticLockerInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> OptimisticLockerInterceptor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>3.实体类添加version属性，并使用Version注解</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 版本号实现乐观锁*/</span></span><br><span class="line"><span class="meta">@Version</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> version;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h5><p><strong>1.配置分页插件</strong></p>
-<p>在<code>MyBatisPlus</code>配置类（如果没有，则参照上一段代码的做法创建一个）中添加以下代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> PaginationInterceptor <span class="title">paginationInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> PaginationInterceptor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>2.使用Page传参</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">selectPage</span><span class="params">(<span class="keyword">long</span> pageSize, <span class="keyword">long</span> offset)</span> </span>&#123;</span><br><span class="line">    Page&lt;User&gt; page = <span class="keyword">new</span> Page&lt;&gt;(pageSize, offset);</span><br><span class="line">    <span class="comment">// 无条件分页查询</span></span><br><span class="line">    userMapper.selectPage(page, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">    List&lt;User&gt; userList = page.getRecords();</span><br><span class="line">    <span class="keyword">return</span> userList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="逻辑删除"><a href="#逻辑删除" class="headerlink" title="逻辑删除"></a>逻辑删除</h5><p><strong>1.数据库新增deleted字段（注意设置默认值为0）</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table user add deleted int default 0;</span><br></pre></td></tr></table></figure>
-
-<p><strong>2.实体类添加@TableLogic注解</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableLogic</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> deleted;</span><br></pre></td></tr></table></figure>
-
-<p><strong>3.自定义逻辑删除与未删除的取值（可选）</strong></p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">  <span class="attr">global-config:</span></span><br><span class="line">    <span class="attr">db-config:</span></span><br><span class="line">      <span class="attr">logic-not-delete-value:</span> <span class="number">0</span> <span class="comment"># 逻辑未删除，默认为0</span></span><br><span class="line">      <span class="attr">logic-delete-value:</span> <span class="number">1</span> <span class="comment"># 逻辑删除，默认为1</span></span><br></pre></td></tr></table></figure>
-
-<p>如果是旧版的MyBatisPlus，还需要注入相应的配置类。</p>
-<h5 id="条件构造器"><a href="#条件构造器" class="headerlink" title="条件构造器"></a>条件构造器</h5><p>常见的条件缩写：</p>
-<ul>
-<li><code>gt</code>：great than</li>
-<li><code>lt</code>：less than</li>
-<li><code>ne</code>：not equals</li>
-<li>…(基本都是英文缩写)</li>
-</ul>
-<p>基本用法：实现where语句的条件，如<code>select * from user where age &gt; 60</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">selectOldUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 1.定义QueryWrapper</span></span><br><span class="line">    QueryWrapper&lt;User&gt; wrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">    <span class="comment">// 2.添加条件</span></span><br><span class="line">    wrapper.gt(<span class="string">&quot;age&quot;</span>, <span class="number">60</span>);</span><br><span class="line">    <span class="comment">// 3.传入wrapper进行查询</span></span><br><span class="line">    List&lt;User&gt; userList = userMapper.selectList(wrapper);</span><br><span class="line">    <span class="keyword">return</span> userList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>基本用法：实现查询指定列，如<code>select name, email ...</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrapper.select(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;email&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>基本用法：多条件查询，如<code>select * from user where deleted = 0 and age &gt; 60 or (age &lt; 20)</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wrapper.eq(<span class="string">&quot;deleted&quot;</span>, <span class="number">0</span>)</span><br><span class="line">        .gt(<span class="string">&quot;age&quot;</span>, <span class="number">60</span>)</span><br><span class="line">        .or(i -&gt; i.lt(<span class="string">&quot;age&quot;</span>, <span class="number">20</span>));</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">项目介绍</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-02 15:53:16" itemprop="dateModified" datetime="2021-05-02T15:53:16+08:00">2021-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tensquare/" itemprop="url" rel="index"><span itemprop="name">tensquare</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" class="post-meta-item leancloud_visitors" data-flag-title="项目介绍" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="一、项目介绍"><a href="#一、项目介绍" class="headerlink" title="一、项目介绍"></a>一、项目介绍</h4><h6 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h6><p>本项目旨在搭建一个交流平台，主要目标是爱好写作、分享博客的各位小伙伴们</p>
-<p>用户可以在其中浏览文章，发布文章、发表评论等。</p>
-<p>当遇到美文时，可以点赞，或关注作者，以及时获取其最新推送</p>
-<h6 id="2-需求分析"><a href="#2-需求分析" class="headerlink" title="2. 需求分析"></a>2. 需求分析</h6><p>用户：发布文章，修改文章，删除文章，点赞，发布评论，关注作者</p>
-<p>系统：推送消息给用户</p>
-<h6 id="3-模块划分"><a href="#3-模块划分" class="headerlink" title="3. 模块划分"></a>3. 模块划分</h6><p>按功能来划分，可以分成以下模块</p>
-<ul>
-<li>文章模块</li>
-</ul>
-<p>对文章进行操作，包括发布、修改、删除、点赞等</p>
-<ul>
-<li>评论模块</li>
-</ul>
-<p>用户在某一篇文章下发表评论、删除评论</p>
-<ul>
-<li>用户模块</li>
-</ul>
-<p>用户登录、注册</p>
-<ul>
-<li>消息模块</li>
-</ul>
-<p>消息推送，包括文章被读者点赞，或者是关注的作者发表了新文章</p>
-<h6 id="4-架构及技术选型"><a href="#4-架构及技术选型" class="headerlink" title="4. 架构及技术选型"></a>4. 架构及技术选型</h6><ul>
-<li><h6 id="开发模式"><a href="#开发模式" class="headerlink" title="开发模式"></a>开发模式</h6></li>
-</ul>
-<p>采用前后端分离的开发方式</p>
-<ul>
-<li>后端架构</li>
-</ul>
-<p>采用当前主流的基于 Spring Cloud 的微服务架构</p>
-<p>用到的技术有：Spring Boot、Spring Cloud、MyBatis Plus、MySQL</p>
-<p>用到的组件有：</p>
-<table>
-<thead>
-<tr>
-<th align="center">组件</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Eureka</td>
-<td align="center">用来注册服务</td>
-</tr>
-<tr>
-<td align="center">Maven</td>
-<td align="center">管理依赖</td>
-</tr>
-<tr>
-<td align="center">Feign</td>
-<td align="center">服务间调用</td>
-</tr>
-<tr>
-<td align="center">Redis</td>
-<td align="center">缓存用户间的订阅和点赞关系</td>
-</tr>
-<tr>
-<td align="center">netty</td>
-<td align="center">异步通信，配合消息队列完成消息推送</td>
-</tr>
-<tr>
-<td align="center">RabbitMQ</td>
-<td align="center">存放通知消息</td>
-</tr>
-<tr>
-<td align="center">MongoDB</td>
-<td align="center">持久化存储评论数据（不太重要的数据）</td>
-</tr>
-<tr>
-<td align="center">docker</td>
-<td align="center">部署虚拟化容器</td>
-</tr>
-</tbody></table>
-<h6 id="5-补充"><a href="#5-补充" class="headerlink" title="5. 补充"></a>5. 补充</h6><p>模块划分后，又添加了common模块和encrypt模块</p>
-<p> <code>common</code> 用来部署一些公共部分，如状态码StatusCode，返回结果Result，分页查询结果PageResult、ID生成器IdWorker</p>
-<p> <code>encrypt</code> 用来进行接口加密，前端用公钥对数据进行加密，后端用私钥进行解密</p>
-<h4 id="二、难点总结"><a href="#二、难点总结" class="headerlink" title="二、难点总结"></a>二、难点总结</h4><h5 id="1-分页查询"><a href="#1-分页查询" class="headerlink" title="1. 分页查询"></a>1. 分页查询</h5><p>controller层</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;search/&#123;page&#125;/&#123;size&#125;&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result <span class="title">findByPage</span><span class="params">(<span class="meta">@PathVariable</span> Integer page,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="meta">@PathVariable</span> Integer size,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="meta">@RequestBody</span> Map&lt;String,Object&gt; map)</span> </span>&#123;      <span class="comment">// json数据转成map而不是对象，方便遍历属性</span></span><br><span class="line">    Page&lt;Article&gt; pageData = articleService.search(map, page, size); <span class="comment">// 调用service层的方法</span></span><br><span class="line">    PageResult&lt;Article&gt; pageResult = <span class="keyword">new</span> PageResult&lt;&gt;(               <span class="comment">// 封装成自己定义的结果类</span></span><br><span class="line">            pageData.getTotal(), pageData.getRecords()</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Result(<span class="keyword">true</span>, StatusCode.OK, <span class="string">&quot;查询成功&quot;</span>, pageResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>service层</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Page&lt;Article&gt; <span class="title">search</span><span class="params">(Map&lt;String, Object&gt; map, Integer page, Integer size)</span> </span>&#123;</span><br><span class="line">    EntityWrapper&lt;Article&gt; wrapper = <span class="keyword">new</span> EntityWrapper&lt;Article&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String field : map.keySet()) &#123;</span><br><span class="line">        wrapper.eq(<span class="keyword">null</span> != map.get(field), field, map.get(field));<span class="comment">// 不考虑字段值为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    Page&lt;Article&gt; pageData = <span class="keyword">new</span> Page&lt;&gt;(page, size);</span><br><span class="line">    List list = articleDao.selectPage(pageData, wrapper); <span class="comment">// 传入分页参数（Page）、查询条件（EntityWrapper）</span></span><br><span class="line">    pageData.setRecords(list);                            <span class="comment">// 目的是找到和 map 中非空的键值对相匹配的数据</span></span><br><span class="line">    <span class="keyword">return</span> pageData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="2-使用redis"><a href="#2-使用redis" class="headerlink" title="2. 使用redis"></a>2. 使用redis</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">String userKey = <span class="string">&quot;article_subscribe_&quot;</span> + userId;  <span class="comment">// 作者集合</span></span><br><span class="line">String authorKey = <span class="string">&quot;article_author_&quot;</span> + authorId; <span class="comment">// 读者集合</span></span><br><span class="line">Boolean flag = redisTemplate.boundSetOps(userKey).isMember(authorId);<span class="comment">// 查询该用户是否已经订阅作者</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="comment">// 取消订阅</span></span><br><span class="line">    redisTemplate.boundSetOps(userKey).remove(authorId); <span class="comment">// redis 删除指定集合的某条数据</span></span><br><span class="line">    redisTemplate.boundSetOps(authorKey).remove(userId);</span><br><span class="line">    <span class="comment">// 删除绑定关系</span></span><br><span class="line">    rabbitAdmin.removeBinding(binding);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 进行订阅</span></span><br><span class="line">    redisTemplate.boundSetOps(userKey).add(authorId);    <span class="comment">// redis 往指定集合添加一条数据</span></span><br><span class="line">    redisTemplate.boundSetOps(authorKey).add(userId);</span><br><span class="line">    <span class="comment">// 声明队列、添加绑定关系</span></span><br><span class="line">    rabbitAdmin.declareQueue(queue);</span><br><span class="line">    rabbitAdmin.declareBinding(binding);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="3-rabbitMQ使用"><a href="#3-rabbitMQ使用" class="headerlink" title="3.rabbitMQ使用"></a>3.rabbitMQ使用</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建管理器</span></span><br><span class="line">RabbitAdmin rabbitAdmin = <span class="keyword">new</span> RabbitAdmin(rabbitTemplate.getConnectionFactory());</span><br><span class="line"><span class="comment">// 声明交换机，路由键为article_subscribe，消息通过交换机来发送</span></span><br><span class="line">DirectExchange exchange = <span class="keyword">new</span> DirectExchange(<span class="string">&quot;article_subscribe&quot;</span>);</span><br><span class="line">rabbitAdmin.declareExchange(exchange);</span><br><span class="line"><span class="comment">// 创建消息队列</span></span><br><span class="line">Queue queue = <span class="keyword">new</span> Queue(<span class="string">&quot;article_subscribe_&quot;</span> +  userId, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// 绑定交换机与队列</span></span><br><span class="line">Binding binding = BindingBuilder.bind(queue).to(exchange).with(authorId);</span><br><span class="line"></span><br><span class="line"><span class="keyword">boolean</span> flag; <span class="comment">// 获取是否订阅的关系</span></span><br><span class="line"><span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="comment">//如果已经订阅，就取消绑定队列与交换机的绑定关系</span></span><br><span class="line">	rabbitAdmin.removeBinding(binding);    </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	rabbitAdmin.declareQueue(queue);</span><br><span class="line">    rabbitAdmin.declareBinding(binding);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//...关注作者发布文章后，生成消息推送</span></span><br><span class="line">rabbitTemplate.convertAndSend(<span class="string">&quot;article_subscribe&quot;</span>, userId, id);</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E5%8D%81%E6%AC%A1%E6%96%B9/%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1366,6 +1039,240 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%91/" class="post-title-link" itemprop="url">树的各种概念</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-30 21:23:58" itemprop="dateModified" datetime="2021-08-30T21:23:58+08:00">2021-08-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%91/" class="post-meta-item leancloud_visitors" data-flag-title="树的各种概念" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="一、满二叉树"><a href="#一、满二叉树" class="headerlink" title="一、满二叉树"></a>一、满二叉树</h4><blockquote>
+<p>从根节点到每一个叶子节点，所经过的路径数是相同的</p>
+</blockquote>
+<p>简单来说，就是二叉树是满的</p>
+<h4 id="二、完全二叉树"><a href="#二、完全二叉树" class="headerlink" title="二、完全二叉树"></a>二、完全二叉树</h4><p>除了最后一层，其他都是满的</p>
+<p>而且最后一层的节点必须靠左边</p>
+<h4 id="三、二叉搜索树"><a href="#三、二叉搜索树" class="headerlink" title="三、二叉搜索树"></a>三、二叉搜索树</h4><blockquote>
+<p>1.是一颗二叉树</p>
+<p>2.任意节点的左子树上的节点一定小于该节点，右子树上的节点一定大于该节点</p>
+</blockquote>
+<p>这种树结构适合查找</p>
+<h4 id="四、二叉平衡树"><a href="#四、二叉平衡树" class="headerlink" title="四、二叉平衡树"></a>四、二叉平衡树</h4><p>二叉平衡树又叫做<strong>AVL树</strong></p>
+<p><strong>二叉搜索树在极端情况下会退化成链表，为了防止这种情况出现，提出了平衡树的概念</strong></p>
+<blockquote>
+<p>平衡树是指任意节点的左右子树高度不超过1</p>
+</blockquote>
+<p><strong>这样，我们就可以把二叉搜索树优化成平衡的二叉搜索树。</strong></p>
+<p>注意：二叉平衡树是更加严格的搜索数。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/" class="post-title-link" itemprop="url">有限状态机</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-04 14:25:20" itemprop="dateModified" datetime="2021-05-04T14:25:20+08:00">2021-05-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="有限状态机" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="有限状态机"><a href="#有限状态机" class="headerlink" title="有限状态机"></a>有限状态机</h2><h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h4><blockquote>
+<p><strong>有限状态机</strong>（Finite-state machine，FSM），简称状态机，是表示<strong>有限个状态</strong>以及在这些状态之间的<strong>转移</strong>和动作等行为的数学模型。</p>
+</blockquote>
+<h4 id="2-适用范围"><a href="#2-适用范围" class="headerlink" title="2.适用范围"></a>2.适用范围</h4><p>在解决比较繁琐，容易思维混乱的问题时，可以使用有限状态机模型，限定该问题的范围和各种情形，并画出状态转移图或列出表格，以便厘清细节。</p>
+<h4 id="3-示例"><a href="#3-示例" class="headerlink" title="3.示例"></a>3.示例</h4><p>链接直达：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/string-to-integer-atoi/">字符串转整数（atoi）</a></p>
+<ul>
+<li>题目描述</li>
+</ul>
+<p>请你来实现一个 <code>myAtoi(string s)</code> 函数，使其能将字符串转换成一个 32 位有符号整数（类似 C/C++ 中的 <code>atoi</code> 函数）。</p>
+<ul>
+<li>状态机表格</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">状态\条件</th>
+<th align="center">‘ ’</th>
+<th align="center">+/-</th>
+<th align="center">number</th>
+<th align="center">other</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">start</td>
+<td align="center">start</td>
+<td align="center">signed</td>
+<td align="center">get_number</td>
+<td align="center">end</td>
+</tr>
+<tr>
+<td align="center">signed</td>
+<td align="center">end</td>
+<td align="center">end</td>
+<td align="center">get_number</td>
+<td align="center">end</td>
+</tr>
+<tr>
+<td align="center">get_number</td>
+<td align="center">end</td>
+<td align="center">end</td>
+<td align="center">get_number</td>
+<td align="center">end</td>
+</tr>
+<tr>
+<td align="center">end</td>
+<td align="center">end</td>
+<td align="center">end</td>
+<td align="center">end</td>
+<td align="center">end</td>
+</tr>
+</tbody></table>
+<ul>
+<li>题解代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">myAtoi</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        FSMTable fsm = <span class="keyword">new</span> FSMTable();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i ++) &#123;</span><br><span class="line">            fsm.get(s.charAt(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)(fsm.sign * fsm.ans);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">FSMTable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sign = <span class="number">1</span>;           <span class="comment">//符号,1 or -1</span></span><br><span class="line">        <span class="keyword">long</span> ans = <span class="number">0</span>;           <span class="comment">//结果</span></span><br><span class="line">        String state = <span class="string">&quot;start&quot;</span>; <span class="comment">//记录当前状态,从start状态开始</span></span><br><span class="line">        HashMap&lt;String, String[]&gt; table = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">FSMTable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">//构建状态表</span></span><br><span class="line">            table.put(<span class="string">&quot;start&quot;</span>, <span class="keyword">new</span> String[] &#123;<span class="string">&quot;start&quot;</span>, <span class="string">&quot;signed&quot;</span>, <span class="string">&quot;get_number&quot;</span>, <span class="string">&quot;end&quot;</span>&#125;);</span><br><span class="line">            table.put(<span class="string">&quot;signed&quot;</span>, <span class="keyword">new</span> String[] &#123;<span class="string">&quot;end&quot;</span>, <span class="string">&quot;end&quot;</span>, <span class="string">&quot;get_number&quot;</span>, <span class="string">&quot;end&quot;</span>&#125;);</span><br><span class="line">            table.put(<span class="string">&quot;get_number&quot;</span>, <span class="keyword">new</span> String[] &#123;<span class="string">&quot;end&quot;</span>, <span class="string">&quot;end&quot;</span>, <span class="string">&quot;get_number&quot;</span>, <span class="string">&quot;end&quot;</span>&#125;);</span><br><span class="line">            table.put(<span class="string">&quot;end&quot;</span>, <span class="keyword">new</span> String[] &#123;<span class="string">&quot;end&quot;</span>, <span class="string">&quot;end&quot;</span>, <span class="string">&quot;end&quot;</span>, <span class="string">&quot;end&quot;</span>&#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取字符,进行状态转移</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">get</span><span class="params">(<span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">            state = table.get(state)[judge(c)];</span><br><span class="line">            <span class="keyword">if</span> (<span class="string">&quot;get_number&quot;</span>.equals(state)) &#123;</span><br><span class="line">                ans = ans * <span class="number">10</span> + c - <span class="string">&#x27;0&#x27;</span>; <span class="comment">// c - &#x27;0&#x27; 即为字符 c 代表的数字</span></span><br><span class="line">                ans = sign == <span class="number">1</span> ? Math.min((<span class="keyword">long</span>)Integer.MAX_VALUE, ans) : Math.min(-(<span class="keyword">long</span>)Integer.MIN_VALUE, ans);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;signed&quot;</span>.equals(state)) &#123;</span><br><span class="line">                sign = c == <span class="string">&#x27;+&#x27;</span> ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//判断字符，返回状态</span></span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">judge</span><span class="params">(<span class="keyword">char</span> c)</span></span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (c == <span class="string">&#x27; &#x27;</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&#x27;+&#x27;</span> || c == <span class="string">&#x27;-&#x27;</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (Character.isDigit(c)) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1531,92 +1438,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

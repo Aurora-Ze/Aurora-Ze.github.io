@@ -205,286 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Linux命令学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-15 20:33:44" itemprop="dateModified" datetime="2021-12-15T20:33:44+08:00">2021-12-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-meta-item leancloud_visitors" data-flag-title="Linux命令学习" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、基本命令"><a href="#一、基本命令" class="headerlink" title="一、基本命令"></a>一、基本命令</h2><h3 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h3><p><code>cd [path]</code>：前往指定的路径</p>
-<ul>
-<li><code>cd -</code>：返回到上次的路径</li>
-<li><code>cd ~</code>：前往当前用户的用户目录</li>
-<li><code>cd /</code>：前往根目录</li>
-</ul>
-<p><code>pwd</code>：打印当前路径</p>
-<h3 id="目录文件"><a href="#目录文件" class="headerlink" title="目录文件"></a>目录文件</h3><p><code>mkdir [dir_name]</code>：创建一个目录</p>
-<p><code>cp [src] [dst]</code>：复制文件</p>
-<p><code>mv [src] [dst]</code>：移动文件（也可以用来重命名文件）</p>
-<p><code>rm [path]</code>：删除文件</p>
-<ul>
-<li><code>-r</code>：表示递归的删除整个目录或文件</li>
-<li><code>-f</code>：表示不需要确认</li>
-</ul>
-<h3 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h3><p><strong>1. 搜索命令、程序等</strong></p>
-<p><code>which</code>：在<strong>PATH</strong>指定的路径中查找。（一般用于查找命令）</p>
-<p><code>whereis</code>：用于程序名的搜索，如二进制、man说明文件和源代码文件</p>
-<p><strong>2. 常规搜索</strong></p>
-<p><code>find [path] [condition]</code>：在指定目录中根据某些条件进行查询</p>
-<ul>
-<li><code>-name logfile</code>：查询文件名为logfile的文件</li>
-<li><code>-perm 644</code>：查询权限为644的文件</li>
-</ul>
-<p><code>locate</code>：可以等价于<code>find -name</code>方式，但是它是从文件数据库中进行查询，因此速度更快。</p>
-<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>压缩：<code>gzip [path]</code></p>
-<p>解压缩：<code>gzip -d [path]</code></p>
-<p>此外，使用<code>tar -czvf [dst] [src]</code>和<code>tar -zxf [src]</code>也可以实现压缩和解压。</p>
-<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p><code>ln [src] [dst]</code>命令可以与文件建立链接，其中：</p>
-<ul>
-<li><strong>硬链接：</strong>一个文件的所有硬链接使用同一个<code>inode</code>。最开始的源文件可以视为是一个硬链接。</li>
-<li><strong>软链接<code>-s</code>：</strong>类似于快捷方式的存在，它存储的是<code>源文件的地址</code>，因此源文件删除后就无法再通过软链接来读取</li>
-</ul>
-<h3 id="grep与xargs"><a href="#grep与xargs" class="headerlink" title="grep与xargs"></a>grep与xargs</h3><p>在管道用法中，比较常见的两个命令就是<code>grep</code>和<code>xargs</code></p>
-<ul>
-<li><p><code>grep</code>：查询符合条件的字符串</p>
-</li>
-<li><p><code>xargs</code>：将上游的输出作为下游的输入参数</p>
-</li>
-</ul>
-<p><strong>grep用法</strong></p>
-<p><code>tail -f log | grep &quot;error&quot;</code></p>
-<p>监听并输出log日志，并查询其中的error字符串（即高亮显示）</p>
-<p><strong>xargs用法</strong></p>
-<p><code>find . -perm 644 | xargs -I @ mv @ ../newDir</code></p>
-<p>查询当前目录中权限为644的所有文件，并移动到指定目录中</p>
-<p><code>xargs</code>的<code>-I</code>参数可以定义一个指示符，这里定义为**@<strong>。然后在后面的<code>mv</code>命令中就可以使用</strong>@**来表示参数应放的位置。</p>
-<h2 id="二、用户管理"><a href="#二、用户管理" class="headerlink" title="二、用户管理"></a>二、用户管理</h2><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>操作用户</strong></p>
-<p><code>useradd [username]</code></p>
-<p><code>passwd [username]</code></p>
-<p><code>userdel [username]</code></p>
-<p><code>usermod -g [groupname] [username]</code>：修改某个用户所属的组</p>
-<p><strong>操作组</strong></p>
-<p><code>groupadd [groupname]</code></p>
-<p><code>groupmod [groupname]</code></p>
-<p><code>groupdel [groupname]</code></p>
-<h3 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h3><p>有三个和用户信息相关的文件，分别是：</p>
-<p><code>/etc/passwd</code>：</p>
-<p>记录用户基本信息，如用户名、UID、GID等等</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># structure </span></span><br><span class="line"><span class="comment"># name:password:uid:gid:comment:directory:shell</span></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">whz:x:1001:1001::/home/whz:/bin/bash</span><br></pre></td></tr></table></figure>
-
-<p><code>/etc/shadow</code>：记录加密形式的用户密码，只有root用户才能够查看</p>
-<p><code>/etc/group</code>：记录组信息</p>
-<h3 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h3><blockquote>
-<p>测试<strong>passwd</strong>命令时发现，普通用户可以修改自己的密码，但是<code>/etc/passwd</code>或<code>/etc/shadow</code>对普通用户来说都是没有权限的，那么它是怎么做到的呢？</p>
-</blockquote>
-<blockquote>
-<p>TIPS</p>
-<p><code>/etc/passwd</code>是文件，存储了用户信息。</p>
-<p><code>/usr/bin/passwd</code>是命令，修改密码时调用的。</p>
-</blockquote>
-<p>答案就在<code>/usr/bin/passwd</code>这个命令自身上。</p>
-<p>查看<code>passwd</code>命令的权限，发现一个特殊的权限<code>s</code>：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-xr-x. 1 root root 33600 4月   6 2020 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
-
-<p><code>s(Set UID)</code>表示文件在执行时暂时拥有文件所有者的权限（本例即root权限）。正因为有了root权限，普通用户才得以成功修改密码。</p>
-<h2 id="三、Shell脚本"><a href="#三、Shell脚本" class="headerlink" title="三、Shell脚本"></a>三、Shell脚本</h2><p>shell脚本一般以<code>#!/bin/bash</code>作为开头。</p>
-<p>下面是一个kafka集群（部署在单台虚拟机上）的启动和关闭脚本示例</p>
-<ol>
-<li>使用<code>$1</code>来获取执行脚本的第一个参数</li>
-<li>case语法来判断参数是<code>start</code>还是<code>stop</code></li>
-<li>通过循环来执行kafka提供的启动脚本</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">case $1 in </span><br><span class="line">&quot;start&quot;)&#123;</span><br><span class="line"></span><br><span class="line">        for i in kafka1 kafka2 kafka3</span><br><span class="line">        do </span><br><span class="line">                echo &quot;------------ start $i ------------&quot;</span><br><span class="line">                /usr/local/service/$i/bin/kafka-server-start.sh -daemon /usr/local/service/$i/config/server.properties</span><br><span class="line">        done</span><br><span class="line"></span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line">&quot;stop&quot;)&#123;</span><br><span class="line">        echo &quot;------------ stop kafka ------------&quot;</span><br><span class="line">        bash /usr/local/service/kafka1/bin/kafka-server-stop.sh</span><br><span class="line">&#125;;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、Systemd"><a href="#四、Systemd" class="headerlink" title="四、Systemd"></a>四、Systemd</h2><h3 id="systemd与systemctl"><a href="#systemd与systemctl" class="headerlink" title="systemd与systemctl"></a>systemd与systemctl</h3><blockquote>
-<p><strong>systemd</strong>是Linux系统的一种启动方式，它代替了原先<strong>init</strong>进程的启动方式。</p>
-<p><strong>systemctl</strong>是一组控制systemd系统和进行服务管理的命令。</p>
-</blockquote>
-<p><strong>init</strong>进程采用串行启动的方式，启动时间较长；而<strong>systemd</strong>引入了并行启动的概念。</p>
-<p>此外，使用<strong>systemd</strong>后也是存在争议的，因为它违背了Unix的哲学<code>keep it simple, stupid</code>。</p>
-<h3 id="systemctl命令"><a href="#systemctl命令" class="headerlink" title="systemctl命令"></a>systemctl命令</h3><ul>
-<li><code>systemctl start [service]</code></li>
-<li><code>systemctl stop [service]</code></li>
-<li><code>systemctl restart [service]</code></li>
-<li><code>systemctl reload [service]</code></li>
-<li><code>systemctl status [service]</code></li>
-</ul>
-<h2 id="五、权限控制"><a href="#五、权限控制" class="headerlink" title="五、权限控制"></a>五、权限控制</h2><h3 id="传统的权限控制"><a href="#传统的权限控制" class="headerlink" title="传统的权限控制"></a>传统的权限控制</h3><p>在Linux系统中，存在一种传统的权限控制方式：<strong>UGO</strong>，即<code>user-group-other</code>。</p>
-<p>ugo把文件的操作者分为三类：<strong>所有者、同组用户和其他用户</strong>。每类用户都按照<code>读、写、执行</code>来分配权限。</p>
-<p>新建的目录权限为<code>775</code>，文件为<code>664</code>，这是由默认的<code>777</code>、<code>666</code>权限减去掩码<code>0002</code>得到的。</p>
-<hr>
-<p>现代的权限控制有两种：<code>ACL</code>和<code>SELinux</code></p>
-<h3 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h3><blockquote>
-<p>Access Control List 是一张表，告知操作系统每个用户对于某个文件来说具备何种权限。</p>
-<p>每个文件都拥有一个属性标志着它的权限控制表，表中的每个条目都对应着一个用户所拥有的权限。</p>
-</blockquote>
-<p><strong>ACL</strong>是对<strong>UGO</strong>的扩展，因为<strong>UGO</strong>进行权限控制的维度是所有者、同组用户和其他用户，无法从更加细化的维度（如每个用户）进行管理。</p>
-<p><strong>相关命令</strong></p>
-<p><code>getfacl [file]</code>：打印某个文件的ACL规则</p>
-<p><code>setfacl -m u:[username]:[rwx] [file]</code>：为某个文件设置一条关于用户的ACL规则，权限为rwx</p>
-<hr>
-<p>上面提到的两种权限控制都属于<strong>自主访问控制</strong>（DAC），权限管理的主体是用户，只要用户拥有相应文件的权限，就可以访问该文件。</p>
-<p>在DAC中，他人一旦非法获得root权限，那么整个操作系统就可能会受到不可预估的后果。</p>
-<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><blockquote>
-<p>SELinux是一种强安全性的权限控制策略，它是<strong>强制访问控制</strong>（MAC）的一种典型形式。</p>
-</blockquote>
-<p>在SELinux的操作系统中，决定一个资源是否被访问的因素除了上述的<strong>读写执行权限</strong>外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-title-link" itemprop="url">评论</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:11:07" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-meta-item leancloud_visitors" data-flag-title="评论" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>发现下载的资料里很多都是ziw文件，需要手动改成zip后才能进行解压。这里提供下批量改成zip后缀的代码。[呲牙]</p>
-<pre><code>public static void renameZip()  &#123;
-    String rootPath = &quot;E:\BaiduNetdiskDownload\在线教育--谷粒学院&quot;;
-    File root = new File(rootPath);
-    renameZip(root);
-&#125;
-</code></pre>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">renameZip</span><span class="params">(File root)</span> </span>&#123;</span><br><span class="line">    File[] currentFiles = root.listFiles();</span><br><span class="line">	String fileName; <span class="comment">// 当前文件名</span></span><br><span class="line">	File dstFile;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span>(File file : currentFiles) &#123;</span><br><span class="line">    	<span class="comment">// 是目录则继续往下递归</span></span><br><span class="line">        <span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">            renameZip(file); </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((fileName = file.getName()).length() &gt;= <span class="number">3</span> &amp;&amp;</span><br><span class="line">                <span class="string">&quot;ziw&quot;</span>.equals(fileName.substring(fileName.length() - <span class="number">3</span>))) &#123;</span><br><span class="line">            <span class="comment">// 修改后缀 ziw -&gt; zip</span></span><br><span class="line">            String absolutePath = file.getAbsolutePath();</span><br><span class="line">            dstFile = <span class="keyword">new</span> File(absolutePath.substring(<span class="number">0</span>, absolutePath.length() - <span class="number">3</span>) + <span class="string">&quot;zip&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!dstFile.exists()) &#123;</span><br><span class="line">                <span class="keyword">boolean</span> successToRename = file.renameTo(dstFile);</span><br><span class="line">                <span class="keyword">if</span> (!successToRename) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;fail to rename file: &quot;</span> + file.getName());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/tmp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1374,6 +1094,600 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">事务详解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-17 10:47:36" itemprop="dateModified" datetime="2021-10-17T10:47:36+08:00">2021-10-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" class="post-meta-item leancloud_visitors" data-flag-title="事务详解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一、什么是事务"><a href="#一、什么是事务" class="headerlink" title="一、什么是事务"></a>一、什么是事务</h1><h3 id="事务定义如下："><a href="#事务定义如下：" class="headerlink" title="事务定义如下："></a>事务定义如下：</h3><blockquote>
+<p>访问并可能更新数据库中各项数据的一个<strong>程序执行单元</strong></p>
+</blockquote>
+<h3 id="事务特性："><a href="#事务特性：" class="headerlink" title="事务特性："></a>事务特性：</h3><table>
+<thead>
+<tr>
+<th>特性（ACID）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原子性</td>
+<td>事务内的操作要么全部完成，要么全部失败回滚</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>依赖于开发者，来保证数据库在一个事务执行前后都处于正确状态</td>
+</tr>
+<tr>
+<td>隔离性</td>
+<td>并发事务之间相互隔离，察觉不到有其他事务在执行</td>
+</tr>
+<tr>
+<td>持久性</td>
+<td>事务一旦被提交，对数据的改变就是永久性的，即使故障也不会丢失改变的提交。</td>
+</tr>
+</tbody></table>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
+<thead>
+<tr>
+<th align="center">级别\问题（是否存在）</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">读未提交</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">读已提交</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">可重复读</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">是（MVCC时无）</td>
+</tr>
+<tr>
+<td align="center">串行化</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<h1 id="二、事务实现"><a href="#二、事务实现" class="headerlink" title="二、事务实现"></a>二、事务实现</h1><p>上面介绍的四个特性中，隔离性由锁和MVCC来实现；此外，原子性、一致性和持久性通过数据库的<code>redo log</code>和<code>undo log</code>来完成。</p>
+<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><p><code>redo log</code>是一种<code>物理格式</code>日志，记录了对页的修改；它实现了事务的持久性，由两部分组成：</p>
+<ul>
+<li>内存中的<code>重做日志缓冲</code>(redo log buffer)</li>
+<li>操作系统缓存中的<code>重做日志文件</code>(redo log file)</li>
+</ul>
+<p><strong>注意，这里为什么是在操作系统中呢？因为打开日志文件时没有使用<code>O_DIRECT</code>标志位，所以不能绕过操作系统直接添加到磁盘中。</strong></p>
+<p>所以从内存中更新数据到磁盘，经历了以下过程：</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502235152.png" alt="img"></p>
+<p>可以看到，从操作系统缓冲写入到磁盘，需要进行<code>fsync()</code>操作；多久执行一次该操作，可以通过参数<code>innodb_flush_log_at_trx_commit</code>来决定。该参数有三个取值，分别是0，1，2。</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">描述</th>
+<th align="center">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">表示主线程每隔一秒执行一次<strong>fsync()</strong></td>
+<td align="center">数据库或计算机宕机时，都会丢失一部分数据</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">表示事务每提交一次，就执行一次<strong>fsync()</strong></td>
+<td align="center">并发场景下性能较差</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">表示事务提交时，把<strong>重做日志缓冲</strong>写入到<strong>重做日志文件</strong>中</td>
+<td align="center">数据库宕机不会影响，因为日志已经在操作系统缓冲区了；系统宕机时，会丢失一部分数据</td>
+</tr>
+</tbody></table>
+<h2 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p><code>undo log</code>记录的是逻辑操作，具体地说，应该是事务中每步操作的<code>逆向操作</code></p>
+<p>例如，事务中执行了一条插入语句，那么<code>undo log</code>就会记录一次删除。</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li><p>回滚</p>
+<p>在事务失败时，可以根据它回滚到事务开始前的状态。</p>
+</li>
+<li><p>多版本控制</p>
+<p>在MVCC中，如果数据被其它事务占用，就可以根据<code>undo log</code>来获取之前版本的数据，避免阻塞地获取锁。</p>
+</li>
+</ul>
+<h3 id="3种操作的undo-log"><a href="#3种操作的undo-log" class="headerlink" title="3种操作的undo log"></a>3种操作的undo log</h3><h4 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h4><p>因为事务隔离性的要求，插入数据只对当前事务可见，其他事务不应该发现。</p>
+<p>所以它产生的undo log可以在事务提交后直接删除</p>
+<h4 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h4><p>先执行逻辑删除，把标志位设置成删除，然后等待purge线程进行物理删除</p>
+<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><p>这里分两类讨论</p>
+<ul>
+<li><p>不更新主键</p>
+<p>直接更新即可，并生成undo log</p>
+</li>
+<li><p>更新主键</p>
+<p>先标记删除原有主键的记录，再执行插入。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" class="post-title-link" itemprop="url">事务并发解决方案</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-17 12:02:20" itemprop="dateModified" datetime="2021-10-17T12:02:20+08:00">2021-10-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" class="post-meta-item leancloud_visitors" data-flag-title="事务并发解决方案" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一、事务"><a href="#一、事务" class="headerlink" title="一、事务"></a>一、事务</h1><p>关于事务的介绍，请看另一篇博客。</p>
+<p><strong>解决并发事务访问，主要有两种方式：</strong></p>
+<ul>
+<li><strong>LBCC</strong>（Lock Based Concurrent Control）</li>
+</ul>
+<ul>
+<li><strong>MVCC</strong>（Multi-Version Concurrent Control）</li>
+</ul>
+<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><ul>
+<li>脏读，读到其他事务修改后未提交的数据</li>
+<li>不可重复读，多次读数据，得到的不一致</li>
+<li>幻读，多次读的结果不同（多了数据或少了数据）</li>
+</ul>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
+<thead>
+<tr>
+<th align="center">级别\问题（是否存在）</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">读未提交</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">读已提交</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">可重复读</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">是（MVCC时有）</td>
+</tr>
+<tr>
+<td align="center">串行化</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<h1 id="二、LBCC"><a href="#二、LBCC" class="headerlink" title="二、LBCC"></a>二、LBCC</h1><h2 id="2-1锁的类型"><a href="#2-1锁的类型" class="headerlink" title="2.1锁的类型"></a>2.1锁的类型</h2><p>官网链接：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html">MySQL :: MySQL 8.0 Reference Manual :: 15.7.1 InnoDB Locking</a></p>
+<p>查阅MySQL官网，得知InnoDB存储引擎提到了以下几种锁方案</p>
+<ol>
+<li><p>共享锁与排他锁 （行级别）</p>
+</li>
+<li><p>意向锁 （表级别）</p>
+</li>
+<li><p>记录锁</p>
+</li>
+<li><p>间隙锁</p>
+</li>
+<li><p>Next-Key 锁</p>
+</li>
+</ol>
+<p>还有另外三种不做详细介绍，就简单说明一下概念</p>
+<ol>
+<li>插入意向锁</li>
+<li>自增锁</li>
+<li>预测锁</li>
+</ol>
+<p>下面我们将依次介绍上述5种锁的概念</p>
+<h2 id="2-2共享锁与排他锁"><a href="#2-2共享锁与排他锁" class="headerlink" title="2.2共享锁与排他锁"></a>2.2共享锁与排他锁</h2><p>共享锁和排他锁是InnoDB实现的行级别的锁。</p>
+<p><code>共享锁</code>又叫读锁，用来读取数据。多个共享锁可以同时存在。</p>
+<p><code>排他锁</code>又叫写锁，用来更新或删除数据（插入呢？），不能与其他锁并存</p>
+<p>举个简单的例子</p>
+<p>如果事务<code>T1</code>在读表中的记录<code>r</code>，那它就对记录<code>r</code>加了读锁</p>
+<p>这时候事务<code>T2</code>想要对记录<code>r</code>进行一些操作</p>
+<ul>
+<li>如果是读操作，<code>T2</code>可以直接对记录<code>r</code>加读锁</li>
+<li>如果是写操作，<code>T2</code>必须等待<code>T1</code>释放锁之后，才能对记录<code>r</code>加写锁</li>
+</ul>
+<h2 id="2-3意向锁"><a href="#2-3意向锁" class="headerlink" title="2.3意向锁"></a>2.3意向锁</h2><h3 id="2-3-1为什么要有意向锁呢？"><a href="#2-3-1为什么要有意向锁呢？" class="headerlink" title="2.3.1为什么要有意向锁呢？"></a>2.3.1为什么要有意向锁呢？</h3><p>针对一个场景：</p>
+<p>如果要对一张表加<strong>表锁</strong>，就要先确保表中的<strong>任意一行数据</strong>都没有<strong>被锁定</strong></p>
+<p>那么就需要进行全表扫描来判断，效率十分低下</p>
+<p><strong>而上述问题的本质，就是锁过于单一，只有读锁、写锁这些行级别锁的话，粒度较少，不具备灵活性。</strong></p>
+<p>所以提出了意向锁的思想 。</p>
+<h3 id="2-3-2意向锁"><a href="#2-3-2意向锁" class="headerlink" title="2.3.2意向锁"></a>2.3.2意向锁</h3><blockquote>
+<p>意向读锁：表明一个事务<strong>想要</strong>对某行数据设置读锁。</p>
+<p>意向写锁：表明一个事务<strong>想要</strong>对某行数据设置写锁。</p>
+</blockquote>
+<p>光说这个概念可能不太好理解，我们结合官网上的描述，来分析下它的主要目的、协议吧。</p>
+<h3 id="2-3-3官方解释"><a href="#2-3-3官方解释" class="headerlink" title="2.3.3官方解释"></a>2.3.3官方解释</h3><p><strong>关于意向锁的解释</strong></p>
+<blockquote>
+<p><code>InnoDB</code> supports <em>multiple granularity locking</em> which permits coexistence of row locks and table locks.</p>
+<p><code>InnoDB</code>支持多粒度的锁来保证行锁和表锁的共存。</p>
+<p>Intention locks are <code>table-level</code> locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. </p>
+<p>意向锁是表级别的锁，它代表一个事务之后想要获取的是什么类型（读锁或写锁）的锁。</p>
+<p>PS：实现了多粒度的锁。</p>
+</blockquote>
+<p><strong>意向锁的主要目的</strong></p>
+<blockquote>
+<p>Intention locks do not block anything except full table requests (for example, <code>LOCK TABLES ... WRITE</code>). The main purpose of intention locks is to show that someone is locking a row, or going to lock a row in the table.</p>
+<p>意向锁不会阻塞除<code>全表扫描</code>外的任何请求，它的主要目的就是表明其他事务正在锁，或者说将要锁某些记录。</p>
+<p>PS：结合上面的例子，有了意向锁之后，就不用靠全表扫描来判断当前事务是否可以加表锁</p>
+</blockquote>
+<p><strong>意向锁的协议</strong></p>
+<blockquote>
+<p>Before a transaction can acquire a shared lock on a row in a table, it must first acquire an <code>IS</code> lock or stronger on the table.</p>
+<p>一个事务获取某行的读锁之前，必须先获取表的意向读锁。</p>
+<p>Before a transaction can acquire an exclusive lock on a row in a table, it must first acquire an <code>IX</code> lock on the table.</p>
+<p>一个事务获取某行的写锁之前，必须先获取表的意向写锁。</p>
+</blockquote>
+<h3 id="2-3-4锁的具体使用"><a href="#2-3-4锁的具体使用" class="headerlink" title="2.3.4锁的具体使用"></a>2.3.4锁的具体使用</h3><p>首先，我们要了解意向锁和读写锁的共存关系（是否兼容）</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">IS</th>
+<th align="center">IX</th>
+<th align="center">S</th>
+<th align="center">X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>IS</strong></td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>IX</strong></td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>S</strong></td>
+<td align="center">是</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center"><strong>X</strong></td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<p><strong>分析：</strong></p>
+<p>意向锁之间：仅仅代表一个加锁的意向，所以意向锁之间不冲突</p>
+<p>读写锁之间：读锁与读锁不冲突，写锁与其他锁（这里只讨论读写锁）都冲突</p>
+<p>混合：要注意有读锁的情况下，意向写锁会冲突，即不能有写的念头。</p>
+<p><strong>用法：</strong></p>
+<p>从官网摘录一段select的语句结构</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	...</span><br><span class="line">	[FOR &#123;UPDATE | SHARE&#125;</span><br><span class="line">        [<span class="keyword">OF</span> tbl_name [, tbl_name] ...]</span><br><span class="line">        [NOWAIT <span class="operator">|</span> <span class="keyword">SKIP</span> LOCKED]</span><br><span class="line">      <span class="operator">|</span> LOCK <span class="keyword">IN</span> SHARE MODE]</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用意向读锁：</strong></p>
+<p><code>select ... for share</code>或<code>select ... lock in share mode</code></p>
+<p>两种方式来获取IS锁和对应记录的S锁，基本上是等价的</p>
+<p>区别的话</p>
+<ol>
+<li><p>看上面select语句的格式，可以发现<code>for share</code>可以添加一些参数，参数在后面介绍</p>
+</li>
+<li><p><code>lock in share mode</code>提供向后兼容性。</p>
+</li>
+</ol>
+<p><strong>使用意向写锁：</strong></p>
+<p><code>select ... for update</code>语句会先尝试获取IX锁，然后再获取目标记录的写锁</p>
+<p>如果获取不到，则会阻塞等待。（如果超时了就报错）</p>
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>nowait：不等待锁释放，立刻执行，获取不到锁就报错</li>
+<li>skip locked：也是立刻执行，但忽略那些被加锁的数据，只操作不加锁的数据。</li>
+</ul>
+<p>这两个参数在基于语句复制的情况下，是不安全的（官网上提到，但我不懂…猜测一下，可能是在有主从数据库的时候，会不安全吧）</p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html">如果想看更详细的，请转至官网处</a></p>
+<hr>
+<p>下面开始是一些具体锁的介绍，先贴一张图大致表示一下</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png" alt="lock_concret"></p>
+<h2 id="2-4记录锁（锁定记录）"><a href="#2-4记录锁（锁定记录）" class="headerlink" title="2.4记录锁（锁定记录）"></a>2.4记录锁（锁定记录）</h2><p>在进行等值查询时，锁住<strong>匹配</strong>到的记录。确切地说，应该是锁住记录的主键（或隐式主键）</p>
+<p>例如<code>select * from table1 where id = 4 for update</code>就是锁住了<code>id = 4</code>的记录</p>
+<h2 id="2-5间隙锁（锁定范围）"><a href="#2-5间隙锁（锁定范围）" class="headerlink" title="2.5间隙锁（锁定范围）"></a>2.5间隙锁（锁定范围）</h2><p>在查询时，锁定<strong>区间范围</strong></p>
+<p>①<code>select * from table1 where id = 6 for update</code></p>
+<p>②<code>select * from table1 where id &gt; 20 for update</code></p>
+<p>假设表的记录为<strong>1，4，7，10</strong></p>
+<p>那么语句①锁住区间（4，7）；语句②锁住区间（10，+∞）</p>
+<p><strong>间隙锁之间并不冲突</strong></p>
+<h2 id="2-6临界锁（锁定范围，左开右闭）"><a href="#2-6临界锁（锁定范围，左开右闭）" class="headerlink" title="2.6临界锁（锁定范围，左开右闭）"></a>2.6临界锁（锁定范围，左开右闭）</h2><p>条件：进行范围查询时，包含<strong>区间</strong>和<strong>具体记录</strong></p>
+<p><code>select * from table where id &gt; 5 and id &lt; 9 for update</code></p>
+<p>那么锁定的范围为(4，7] 和 (7，10]，即(4，10]</p>
+<p>我们可以发现，<strong>临界锁 = 间隙锁 + 记录锁</strong></p>
+<p><em><strong>而间隙锁锁住区间，不让其他事务进行插入，目的就在于避免幻读问题的出现</strong></em></p>
+<hr>
+<p>讲完这些锁之后，我们谈谈在<strong>不同隔离级别</strong>下<strong>锁</strong>的<strong>实现</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RU</td>
+<td align="center">不加锁</td>
+</tr>
+<tr>
+<td align="center">Serializable</td>
+<td align="center">所有select语句隐式地转化成共享锁，会与update、delete互斥</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">普通select语句</th>
+<th align="center">加锁的select和更新语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RC</td>
+<td align="center">MVCC</td>
+<td align="center">记录锁</td>
+</tr>
+<tr>
+<td align="center">RR</td>
+<td align="center">MVCC</td>
+<td align="center">记录锁、间隙锁、临界锁</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>①普通查询时，为什么RR可以解决不可重复读，而RC不可以</p>
+<p>两者都采用MVCC，而因为RR的快照读readview使用的是同一个（第一次读时生成），而RC是每次查询生成一次新的readview</p>
+</blockquote>
+<h2 id="加锁过程"><a href="#加锁过程" class="headerlink" title="加锁过程"></a>加锁过程</h2><p>加锁最小单位：临界锁</p>
+<p>临界锁的变化：</p>
+<ul>
+<li><p>未命中时变为间隙锁</p>
+</li>
+<li><p>命中时</p>
+<ul>
+<li>如果是<strong>单列唯一索引</strong>，则降级为行锁</li>
+<li>如果是<strong>非唯一的索引或多列索引</strong>，则锁住左右两个区间及命中的索引值</li>
+</ul>
+</li>
+</ul>
+<h1 id="三、MVCC"><a href="#三、MVCC" class="headerlink" title="三、MVCC"></a>三、MVCC</h1><h2 id="3-1定义"><a href="#3-1定义" class="headerlink" title="3.1定义"></a>3.1定义</h2><p>用于实现数据库的并发访问的一种方法，全称为多版本并发控制。</p>
+<h2 id="3-2前置概念"><a href="#3-2前置概念" class="headerlink" title="3.2前置概念"></a>3.2前置概念</h2><p>在学习MVCC前，需要先知道两个概念</p>
+<p><strong>当前读</strong></p>
+<ul>
+<li>数据：读取的是数据的最新版本。</li>
+<li>特点：读取时还要加锁，保证其他并发事务不能修改当前记录</li>
+<li>示例：共享锁、排他锁</li>
+</ul>
+<p><strong>快照读</strong></p>
+<ul>
+<li>数据：读取的是数据库某一时刻的快照的数据。</li>
+<li>特点：不加锁的、非阻塞的读；读到的数据不一定是最新数据，可能是历史版本。</li>
+<li>示例：MVCC普通读</li>
+</ul>
+<h2 id="3-3思想"><a href="#3-3思想" class="headerlink" title="3.3思想"></a>3.3思想</h2><blockquote>
+<p> 维持一个数据的多个版本，使得读写操作没有冲突</p>
+</blockquote>
+<h2 id="3-4实现"><a href="#3-4实现" class="headerlink" title="3.4实现"></a>3.4实现</h2><p>隐式字段 + undo回滚日志 + 快照</p>
+<p><strong>隐式字段</strong></p>
+<blockquote>
+<p>每行记录除了有用户定义的字段外，还有隐式字段，如行创建id、行删除id、回滚指针、自增ID</p>
+</blockquote>
+<ul>
+<li><p>行创建id：指插入或修改本条记录的事务id</p>
+</li>
+<li><p>行删除id：指删除本条记录的事务id</p>
+</li>
+<li><p>回滚指针：指向回滚日志中的关于<strong>这条记录</strong>的<strong>上一个版本</strong></p>
+</li>
+</ul>
+<ul>
+<li>自增ID：当表没有设定主键且不存在非空唯一的字段时，会采用自增ID来作为主键，构建主键索引</li>
+</ul>
+<p><strong>undo回滚日志</strong></p>
+<p>记录每次修改的操作，可从前往后遍历来进行数据回滚</p>
+<p>在进行<strong>修改（更新、插入、删除）</strong>操作时，mysql会生成一条日志（主键+当前事务id+回滚指针，指向前一条记录）</p>
+<p>删除只是把标志位改为true，即逻辑删除</p>
+<p><strong>ReadView</strong></p>
+<blockquote>
+<p>ReadView是事务进行快照读时产生的读视图，记录并维护了系统中当前较为活跃的事务id</p>
+</blockquote>
+<h2 id="3-5例子"><a href="#3-5例子" class="headerlink" title="3.5例子"></a>3.5例子</h2><p>在某次事务查询时，得到readview 为 <strong>[100,200,300]</strong></p>
+<p> 可以看出活跃事务中最小id为100，最大id为300</p>
+<p>从回滚日志中依次向后遍历，假设每次遍历到的事务id为x</p>
+<p>则有以下三种情况：</p>
+<ol>
+<li><p>x &lt; 100 表示此事务已提交，数据可见</p>
+</li>
+<li><p>x &gt; 300 表示此事务是在生成readview之后开启的事务，数据不可见</p>
+</li>
+<li><p>在100和300中间，此时就要查看x是否在活跃事务id中，如果是，则它仍未提交，数据不可见。</p>
+</li>
+</ol>
+<h2 id="3-6RR和RC隔离级别下"><a href="#3-6RR和RC隔离级别下" class="headerlink" title="3.6RR和RC隔离级别下"></a>3.6RR和RC隔离级别下</h2><p>针对同一个事务来说，</p>
+<ul>
+<li><p>读已提交：每次查询都会生成新的read-view</p>
+</li>
+<li><p>可重复读：只用第一次查询时生成的read-view（解决了不可重复读）</p>
+</li>
+</ul>
+<h1 id="四、补充问题"><a href="#四、补充问题" class="headerlink" title="四、补充问题"></a>四、补充问题</h1><h2 id="4-1死锁"><a href="#4-1死锁" class="headerlink" title="4.1死锁"></a>4.1死锁</h2><p><strong>定义</strong></p>
+<p>这里的死锁可以理解成两个及以上的事务在共同竞争锁资源，而产生的等待现象。</p>
+<p><strong>解决方案一</strong></p>
+<p>设置一个超时等待时间，超时后对某个事务进行回滚，然后其他事务就可以执行下去</p>
+<p>但是光靠超时来解决的话，可能会有大量事务要进行回滚，会非常耗时</p>
+<p><strong>解决方案二</strong></p>
+<p>等待图，这可以算是一种死锁检测算法。</p>
+<p>画出各个事务之间的依赖关系，如果形成环路，说明存在死锁。</p>
+<h2 id="4-2锁升级"><a href="#4-2锁升级" class="headerlink" title="4.2锁升级"></a>4.2锁升级</h2><p><del>知识盲区…</del></p>
+<p>InnoDB存储引擎并不存在锁升级的情况，因为它并不是根据每个记录来产生行锁的。</p>
+<p>它是根据每个事务访问的每个页对锁进行管理的，采用的是位图的方式</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1539,92 +1853,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

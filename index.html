@@ -205,205 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">字节码指令</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-03 11:46:25" itemprop="dateModified" datetime="2021-10-03T11:46:25+08:00">2021-10-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" class="post-meta-item leancloud_visitors" data-flag-title="字节码指令" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="字节码指令"><a href="#字节码指令" class="headerlink" title="字节码指令"></a>字节码指令</h1><h2 id="一、结构"><a href="#一、结构" class="headerlink" title="一、结构"></a>一、结构</h2><h3 id="1-1-简单定义"><a href="#1-1-简单定义" class="headerlink" title="1.1 简单定义"></a>1.1 简单定义</h3><blockquote>
-<p>Java虚拟机的指令是由<strong>一个字节长度</strong>的、<strong>代表着某种特定操作</strong>含义的数字（称为操作码，Opcode）以及跟随其后的零至多个代表此操作所需的参数（称为操作数，Operand）构成。</p>
-</blockquote>
-<p>简单来说，指令就是由一个字节的<strong>操作码</strong>和若干个<strong>参数</strong>构成。</p>
-<p>另外， 因为Java虚拟机采用的是<strong>面向操作数栈</strong>的架构，所以大多数指令只有一个操作码，而操作数被放在了操作数栈中。</p>
-<h3 id="1-2-特点"><a href="#1-2-特点" class="headerlink" title="1.2 特点"></a>1.2 特点</h3><p>从上面的定义中，我们可以发现，</p>
-<ul>
-<li><p>操作码总数不能超过256</p>
-<p>既然操作码只占了一个字节，那么<code>1字节 = 8比特，2^8 = 256</code>，即最多能表示<code>256</code>条指令</p>
-</li>
-<li><p>编译后Class文件中代码的操作数长度不对齐</p>
-</li>
-</ul>
-<p>这种字节码结构有着明显的优势和劣势：</p>
-<ul>
-<li><p>优势</p>
-<p>省略了大量的填充和间隔符号，编译代码更加精简</p>
-</li>
-<li><p>劣势</p>
-<p>处理超过一个字节的数据时，会因为重建而损失性能</p>
-</li>
-</ul>
-<h3 id="1-3-执行模型"><a href="#1-3-执行模型" class="headerlink" title="1.3 执行模型"></a>1.3 执行模型</h3><p>不考虑异常处理的话，可以用以下代码来表示Java虚拟机的解释器的执行过程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">	自动计算PC寄存器的值加<span class="number">1</span></span><br><span class="line">	根据PC寄存器指示的位置，从字节码流中取出操作码</span><br><span class="line">	<span class="keyword">if</span> (字节码存在操作数) &#123;</span><br><span class="line">		从字节码流中取出操作数</span><br><span class="line">	&#125;</span><br><span class="line">	执行操作码所定义的操作</span><br><span class="line">&#125; <span class="keyword">while</span> (字节码流的长度 &gt; <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、类别"><a href="#二、类别" class="headerlink" title="二、类别"></a>二、类别</h2><p>在Java虚拟机的指令集中，大多数指令都包含其操作所对应的数据类型信息。</p>
-<p>前面我们知道了指令集不能超过256条，而Java的数据类型有很多，如果针对每一种类型，都划分出专门的指令去操作它，可能就会溢出。</p>
-<p>那么Java虚拟机是怎么做的呢？</p>
-<p>在将这些之前，我们先要了解两个概念。</p>
-<h3 id="2-1-符号扩展和零位扩展"><a href="#2-1-符号扩展和零位扩展" class="headerlink" title="2.1 符号扩展和零位扩展"></a>2.1 符号扩展和零位扩展</h3><ul>
-<li><p>符号扩展，扩展时，前面全部补上符号位</p>
-</li>
-<li><p>零位扩展，扩展时前面全部补零</p>
-</li>
-</ul>
-<p>我们用一个例子来表示说明一下这两个概念，假设现在有两个数<code>+3</code>和<code>-3</code></p>
-<p>它们用8位的原码表示分别是<code>00000011</code>和<code>10000011</code></p>
-<p>现在我们要把它扩展到用16位来表示，就会产生如下结果</p>
-<table>
-<thead>
-<tr>
-<th align="center">数字</th>
-<th align="center">符号扩展</th>
-<th align="center">零位扩展</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">+3</td>
-<td align="center">0000000000000011</td>
-<td align="center">0000000000000011</td>
-</tr>
-<tr>
-<td align="center">-3</td>
-<td align="center">1111111110000011</td>
-<td align="center">0000000010000011</td>
-</tr>
-</tbody></table>
-<p>我们可以看到，对于正数而言，符号扩展和零位扩展是没有区别的；而负数的话就是扩展的数字不同。</p>
-<p>这两个概念和我们所说的溢出又有什么关系呢？</p>
-<p><strong>其实设计者为了让指令集不会溢出（或者说，复用一些指令），就让编译器在编译或运行时期，把byte和short类型的数据带符号扩展为int类型，把boolean和char类型数据零位扩展成int类型。</strong></p>
-<p>这样就不必对这四个类型单独再分配一些指令来处理了。</p>
-<h3 id="2-2-加载和存储指令"><a href="#2-2-加载和存储指令" class="headerlink" title="2.2 加载和存储指令"></a>2.2 加载和存储指令</h3><p>加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈之间来回传输。例如：</p>
-<ul>
-<li>把一个局部变量加载到操作栈中：iload，fload，dload</li>
-<li>把一个数值从操作数栈存储到局部变量表中：istore，lstore</li>
-<li>把一个常量加载到操作数栈：bipush，sipush</li>
-</ul>
-<h3 id="2-3-运算指令"><a href="#2-3-运算指令" class="headerlink" title="2.3 运算指令"></a>2.3 运算指令</h3><p>算术指令用于对操作数栈上的两个值进行某种特定运算，并把结果重新存入到操作栈顶。</p>
-<p>这里有两个<strong>注意点</strong>，</p>
-<p><strong>一是之前提过的byte，short，char，boolean是用int类型指令操作的</strong></p>
-<p><strong>二是计算浮点数时，会碰到取舍的问题</strong></p>
-<p>先介绍下<strong>两种舍入模式</strong>：</p>
-<ol>
-<li>向最接近数舍入</li>
-<li>向零舍入</li>
-</ol>
-<p>浮点数之间的计算，采用第一种向最接近数舍入，如果是浮点数转整型，采用向零舍入模式</p>
-<p>我们可以回想下，Java中浮点数之间计算后，结果并不是严格准确的；浮点数转整型，会丢弃小数部分；</p>
-<p>这些都和舍入模式相匹配。</p>
-<h3 id="2-4-类型转换指令"><a href="#2-4-类型转换指令" class="headerlink" title="2.4 类型转换指令"></a>2.4 类型转换指令</h3><p>用于对类型的<strong>显式转换</strong>；如果是隐式的（如int转long）就不用这些指令，因为虚拟机直接支持。</p>
-<p>注意，转换时可能会出现不同的正负号，因为long转int是简单的丢弃多余的高位部分，所以如果原来是负数，转换后可能就是正数了。</p>
-<p>对于浮点型的转换，</p>
-<ul>
-<li>如果是NaN，则转成int或long的0</li>
-<li>如果不是无穷大，则按向零舍入来取整<ul>
-<li>如果取整后在范围内，则直接用</li>
-<li>如果不在范围内，根据符号取边界值</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-5-对象创建与访问指令"><a href="#2-5-对象创建与访问指令" class="headerlink" title="2.5 对象创建与访问指令"></a>2.5 对象创建与访问指令</h3><p>Java中的对象包括类实例和数组，创建他们所采用的字节码并不同。</p>
-<p>对象创建完毕后，可以通过访问指令来获取对象实例（或数组实例）中的字段（或数组元素）。</p>
-<h3 id="2-6-操作数栈管理指令"><a href="#2-6-操作数栈管理指令" class="headerlink" title="2.6 操作数栈管理指令"></a>2.6 操作数栈管理指令</h3><p>用于管理操作数栈中的元素</p>
-<h3 id="2-7-控制转移指令"><a href="#2-7-控制转移指令" class="headerlink" title="2.7 控制转移指令"></a>2.7 控制转移指令</h3><p>控制转移指令可以让Java虚拟机有条件或无条件地从指定位置指令的下一条指令继续执行程序。</p>
-<h3 id="2-8-方法调用和返回指令"><a href="#2-8-方法调用和返回指令" class="headerlink" title="2.8 方法调用和返回指令"></a>2.8 方法调用和返回指令</h3><p>方法调用（分派、执行过程）将会在以后介绍。</p>
-<p>方法调用有一系列以”invoke”开头的指令</p>
-<p>返回有一系列以“return”结尾的指令</p>
-<h3 id="2-9-异常处理指令"><a href="#2-9-异常处理指令" class="headerlink" title="2.9 异常处理指令"></a>2.9 异常处理指令</h3><p>关于异常，有三种来源：</p>
-<ul>
-<li>Java程序显式抛出，由athrow指令实现</li>
-<li>Java程序try catch处理，用<code>异常表</code>来完成</li>
-<li>程序发生异常状况，自动抛出</li>
-</ul>
-<h3 id="2-10-同步指令"><a href="#2-10-同步指令" class="headerlink" title="2.10 同步指令"></a>2.10 同步指令</h3><p>Java虚拟机支持两种同步：<strong>方法级的同步</strong>和方法内部<strong>一段指令序列</strong>的同步。</p>
-<p>这两种同步都是靠管程（或者说锁）来实现的</p>
-<h4 id="对于方法级的同步"><a href="#对于方法级的同步" class="headerlink" title="对于方法级的同步"></a>对于方法级的同步</h4><p>它是隐式的，不用字节码指令来控制</p>
-<p>因为方法的访问标志里如果声明了<code>ACC_SYNCHRONIZED</code>，就能够表示它是同步方法</p>
-<p>然后在方法<strong>执行线程</strong>就要<strong>先获取管程，才能执行方法</strong>，方法结束后就会释放管程</p>
-<h4 id="对于指令序列的同步"><a href="#对于指令序列的同步" class="headerlink" title="对于指令序列的同步"></a>对于指令序列的同步</h4><p>它通常是由<code>synchronized</code>关键字声明的</p>
-<p>Java虚拟机的指令集中有<code>monitorenter</code>和<code>monitorexit</code>两条指令来支持<code>synchronized</code></p>
-<p><strong>实现<code>synchronized</code>指令，是<code>Javac编译器</code>和<code>Java虚拟机</code>共同协作的结果</strong></p>
-<p>怎么理解这句话呢？</p>
-<p>这就要谈谈这两个指令的用法了，这<strong>两条指令</strong>是加在同步指令序列的<strong>两端</strong>（开始和结束处），来<strong>保证同步性</strong>。</p>
-<p><strong>如果指令正常执行，毫无疑问能配对成功。</strong></p>
-<p><strong>如果执行到一般发生异常了，这时候被迫跳出同步指令序列，即只执行了<code>monitorenter</code>，而没有执行到<code>monitorexit</code></strong></p>
-<p>那怎么办呢？这就要看编译器了</p>
-<blockquote>
-<p>在编译时，为了保证方法异常时，monitorenter和monitorexit指令仍能够配对，编译器自动生成一个异常处理程序，声明可处理所有的异常，然后只要在monitorexit后面再来条相同的指令，就能成功配对了。</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/HelloWorld/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -549,433 +350,6 @@
 <li>代码整理：<code>shift + alt + f</code></li>
 <li>打开/关闭终端：<code>ctrl + ·(esc下面那个)</code></li>
 </ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">类文件结构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-29 18:58:39" itemprop="dateModified" datetime="2021-04-29T18:58:39+08:00">2021-04-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" class="post-meta-item leancloud_visitors" data-flag-title="类文件结构" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h2><h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><p>我们所写的程序想要被计算机执行，有两种方式，第一种是<strong>编译成由0和1组成的二进制格式，让计算机执行。</strong></p>
-<p>而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即：</p>
-<p><strong>编译成与操作系统和机器指令集无关的、平台中立的文件存储格式</strong></p>
-<p>这也正是<code>字节码</code>文件的由来。</p>
-<h3 id="二、介绍"><a href="#二、介绍" class="headerlink" title="二、介绍"></a>二、介绍</h3><p>Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。</p>
-<p>但是为了让虚拟机知道这是字节码文件，就需要严格定义字节码文件的格式</p>
-<p>因此在Class文件中，它的每个数据项的顺序和数量，甚至存储的字节序（统一使用Big Endian），都是被严格限定的。</p>
-<p>下面我们将介绍字节码文件的具体结构。</p>
-<h3 id="三、文件格式"><a href="#三、文件格式" class="headerlink" title="三、文件格式"></a>三、文件格式</h3><h5 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h5><p><strong>「Class文件」</strong>采用一种类似于C语言结构体的伪结构来存储数据。</p>
-<p>数据类型只有两种，「无符号数」和「表」</p>
-<ul>
-<li><p>无符号数</p>
-<p>用<code>u1,u2,u4,u8</code>分别来表示<code>1，2，4，8</code>个字节</p>
-<p>可以用来描述<strong>数字、索引引用、数量值或UTF-8编码的字符串值</strong></p>
-</li>
-<li><p>表</p>
-<p>由多个无符号数或表构成的复合数据类型</p>
-<p>为便于区分，表名一般以<code>_info</code>结尾</p>
-</li>
-</ul>
-<p>因为存在同一类型但数量不确定的数据，所以一般会用一个前置的容量计数器来表示数量。</p>
-<h3 id="四、详细介绍"><a href="#四、详细介绍" class="headerlink" title="四、详细介绍"></a>四、详细介绍</h3><h5 id="①魔数"><a href="#①魔数" class="headerlink" title="①魔数"></a>①魔数</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u4</td>
-<td align="center">magic</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>Class文件的头四个字节称为<strong>Magic Number</strong>，用来<strong>确认文件是否是JVM所能接收的Class文件</strong></p>
-<p>使用魔数的方式来区分文件类型，这种方式在GIF和JPEG中也可以看到。</p>
-<p>至于使用头字节而不是文件的扩展名来判断文件类型，主要还是为了安全考虑，毕竟啥文件改了后缀也能变成Class文件。</p>
-<p>Class文件魔数的具体取值为<code>0xCAFEBABE</code>，即咖啡宝贝</p>
-<h5 id="②主版本号和次版本号"><a href="#②主版本号和次版本号" class="headerlink" title="②主版本号和次版本号"></a>②主版本号和次版本号</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">minor_version</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">major_version</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>紧跟着魔数的四个字节分别表示<strong>Minor Version</strong>和<strong>Major Version</strong></p>
-<p>JDK1.1以后，每个大版本都会让主版本号加一。</p>
-<p>高版本的JDK能向下兼容低版本的Class文件，但是版本比它高的Class就不行，因为《Java虚拟机规范》要求了虚拟机必须拒绝执行超过其版本号的Class文件。</p>
-<h5 id="③常量池"><a href="#③常量池" class="headerlink" title="③常量池"></a>③常量池</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">constant_pool_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">cp_info</td>
-<td align="center">constant_pool</td>
-<td align="center">constant_pool_count - 1</td>
-</tr>
-</tbody></table>
-<p>由<code>constant_pool_count</code>和<code>constant_pool</code>构成。</p>
-<p><strong>constant_pool_count（u2类型）</strong></p>
-<p>因为常量池的容量是不固定的，所以入口处有u2类型的数据，来表示「常量池的容量」。</p>
-<p>注意，它是从1开始计数的，所以常量数量为$count - 1$</p>
-<p>这样做的原因，据设计者说，是为了<strong>能够让以后某些指向常量池的索引值的数据表达“不引用任何一个常量池项目”的含义。</strong></p>
-<p><strong>constant_pool（cp_info类型）</strong></p>
-<p>常量池中主要存放两大类常量：<strong>字面量</strong>和<strong>符号引用</strong></p>
-<ul>
-<li><p><strong>字面量</strong></p>
-<p>文本字符串，声明为final的常量值等</p>
-</li>
-<li><p><strong>符号引用</strong></p>
-<p>类、接口的全限定名</p>
-<p>字段的名称和描述符</p>
-<p>方法的名称和描述符等</p>
-</li>
-</ul>
-<p>常量池中的每个常量都是一个表，截至JDK13，共有17种不同类型的常量。</p>
-<p>这17类表有一个共同特点，即<strong>第一个字节都表示tag标志位，代表当前常量属于哪个常量表</strong>，后面的字节根据不同的表而变化。</p>
-<h5 id="④访问标志"><a href="#④访问标志" class="headerlink" title="④访问标志"></a>④访问标志</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">access_flags</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>常量池结束之后的两个字节，用来表示类或接口的访问标志</p>
-<p>可以取的值有：public、final、super、interface等共9个</p>
-<h5 id="⑤索引集合"><a href="#⑤索引集合" class="headerlink" title="⑤索引集合"></a>⑤索引集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">this_class</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">super_class</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">interfaces_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">interfaces</td>
-<td align="center">interfaces_count</td>
-</tr>
-</tbody></table>
-<p>类索引和父类索引都占两个字节，而接口索引是一组数据的集合。</p>
-<p>这些索引用来确认类的全限定名、父类的全限定名以及实现的接口的名称。</p>
-<p><strong>具体确认过程如下：</strong></p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png" alt="Snipaste_2021-04-25_17-01-01"></p>
-<h5 id="⑥字段表集合"><a href="#⑥字段表集合" class="headerlink" title="⑥字段表集合"></a>⑥字段表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">fields_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">field_info</td>
-<td align="center">fields</td>
-<td align="center">fields_count</td>
-</tr>
-</tbody></table>
-<p>包含了类或接口声明的类级变量（static）和实例变量，但不包含方法内的局部变量。</p>
-<p>我们可以先思考下，一个字段拥有什么属性？</p>
-<ul>
-<li>修饰符，public、static、volatile等</li>
-<li>名称，字段名</li>
-<li>类型，是什么数据类型</li>
-<li>属性，如果是集合类型，里面包含的其他属性</li>
-</ul>
-<p>根据上面罗列出来的信息，我们可以总结出字段表的内部结构</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">access_flags</td>
-<td align="center">1</td>
-<td align="center">字段修饰符</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">name_index</td>
-<td align="center">1</td>
-<td align="center">简单名称</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">descriptor_index</td>
-<td align="center">1</td>
-<td align="center">描述符</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">attributes_count</td>
-<td align="center">1</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">attribute_info</td>
-<td align="center">attributes</td>
-<td align="center">attributes_count</td>
-<td align="center"></td>
-</tr>
-</tbody></table>
-<p>这里解释下前面提到过的三个名词，全限定名、简单名称和描述符。</p>
-<ul>
-<li><p><strong>全限定名</strong></p>
-<p>com/edu/neu/TestApplication;</p>
-<p>代表类的全限定名</p>
-</li>
-<li><p><strong>简单名称</strong></p>
-<p>sort：sort()方法的简单名称</p>
-<p>arr：arr字段的简单名称</p>
-</li>
-<li><p><strong>描述符</strong></p>
-<p>描述符和上述两者相比更加复杂一些。它是用来描述<strong>字段的数据类型</strong>、<strong>方法的参数列表</strong>和<strong>返回值</strong>。</p>
-</li>
-</ul>
-<p><strong>描述字段时</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">标识字符</th>
-<th align="center">含义</th>
-<th align="center">标识字符</th>
-<th align="center">含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">B</td>
-<td align="center">基本类型byte</td>
-<td align="center">J</td>
-<td align="center">基本类型long</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">基本类型char</td>
-<td align="center">S</td>
-<td align="center">基本类型short</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">基本类型double</td>
-<td align="center">Z</td>
-<td align="center">基本类型boolean</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">基本类型float</td>
-<td align="center">V</td>
-<td align="center">特殊类型void</td>
-</tr>
-<tr>
-<td align="center">I</td>
-<td align="center">基本类型int</td>
-<td align="center">L</td>
-<td align="center">对象类型，如Ljava/lang/Object;</td>
-</tr>
-</tbody></table>
-<p><strong>基本数据类型和void都用大写字母来表示，对象类型则用L加上对象的全限定名来表示，数组类型在最前面加上若干个[</strong></p>
-<p>对于<code>java.lang.String[][]</code>类型，它的描述符将是<code>[[Ljava/lang/String;</code></p>
-<p>对于<code>int[]</code>，它的描述符将是<code>[I</code></p>
-<p><strong>描述方法时</strong></p>
-<p>按照<strong>先参数列表</strong>、<strong>后返回值</strong>的顺序进行描述，参数列表要放在<code>()</code>中。</p>
-<p>对于<code>int indexOf(char[] source, int srcOffset, int srcCount, char[] target, int tarOffset, int tarCount, int fromIndex)</code>，描述符将是<code>([CII[CIII)I</code></p>
-<h5 id="⑦方法表集合"><a href="#⑦方法表集合" class="headerlink" title="⑦方法表集合"></a>⑦方法表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">methods_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">method_info</td>
-<td align="center">methods</td>
-<td align="center">methods_count</td>
-</tr>
-</tbody></table>
-<p>方法表和上述字段表集合几乎一致，所以关于表结构这部分不再介绍。</p>
-<p>但是如果只是和字段一样的话，那么它的代码怎么保存呢？</p>
-<p>事实上，方法体经过编译器编译成字节码指令后，存放在方法的属性表集合中一个名为<code>Code</code>的属性里，我们在将属性表时，会介绍这些。</p>
-<h5 id="⑧属性表集合"><a href="#⑧属性表集合" class="headerlink" title="⑧属性表集合"></a>⑧属性表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">attributes_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">attribute_info</td>
-<td align="center">attributes</td>
-<td align="center">attributes_count</td>
-</tr>
-</tbody></table>
-<p>与Class文件中其他的数据项目要求严格的顺序、长度和内容不同，属性表集合的限制稍微宽松一些，不再要求各个属性表具有严格顺序。</p>
-<p>在最新的《Java虚拟机规范》的JavaSE12版本中，预定义属性达到29项。可想而知，它的内容非常多。</p>
-<p>下面我们介绍下属性表的基本结构</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">attribute_name_index</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u4</td>
-<td align="center">attribute_length</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u1</td>
-<td align="center">info</td>
-<td align="center">attribute_length</td>
-</tr>
-</tbody></table>
-<p>一个符合规范的属性表，它的属性名应该从常量池中引用<code>CONSTANT_Utf8_info</code>类型的常量来表示，而属性值的结构是完全自定义的，只需要通过一个<code>u4</code>长度属性去说明属性值所占用的位数即可。</p>
-<p>至于具体的属性值结构，可参考《深入理解Java虚拟机》P233。</p>
 
       
     </div>
@@ -1906,6 +1280,349 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-title-link" itemprop="url">Redis持久化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:50" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-meta-item leancloud_visitors" data-flag-title="Redis持久化" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p><code>Redis</code>是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。</p>
+<p>因此<code>Redis</code>用到了两种持久化策略，分别是<code>RDB</code>和<code>AOF</code></p>
+</blockquote>
+<h2 id="RDB-快照"><a href="#RDB-快照" class="headerlink" title="RDB(快照)"></a>RDB(快照)</h2><p>对于一种持久化方式，我们可能会有以下一些疑惑：</p>
+<ol>
+<li>它持久化了什么</li>
+<li>持久化是怎样进行的</li>
+<li>如何恢复数据</li>
+<li>特点</li>
+</ol>
+<p>下面我们会围绕这些问题进行介绍。</p>
+<h3 id="一、RDB介绍"><a href="#一、RDB介绍" class="headerlink" title="一、RDB介绍"></a>一、RDB介绍</h3><p>RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻的<strong>所有数据</strong>，即<strong>快照</strong></p>
+<p>它的文件结构大致如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">REDIS</th>
+<th align="center">db_version</th>
+<th align="center">databases</th>
+<th align="center">EOF</th>
+<th align="center">checksum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">魔数</td>
+<td align="center">rdb版本</td>
+<td align="center">多个数据库数据</td>
+<td align="center">标志结束</td>
+<td align="center">校验和</td>
+</tr>
+</tbody></table>
+<h3 id="二、RDB文件的生成与载入"><a href="#二、RDB文件的生成与载入" class="headerlink" title="二、RDB文件的生成与载入"></a>二、RDB文件的生成与载入</h3><h5 id="2-1RDB相关命令"><a href="#2-1RDB相关命令" class="headerlink" title="2.1RDB相关命令"></a>2.1RDB相关命令</h5><p>生成RDB文件的相关命令有两个，分别是<code>save</code>和<code>bgsave</code></p>
+<ul>
+<li><code>save</code>：会阻塞服务器进程</li>
+<li><code>bgsave</code>：创建子进程进行持久化，不阻塞</li>
+</ul>
+<h5 id="2-2生成情况：手动or自动"><a href="#2-2生成情况：手动or自动" class="headerlink" title="2.2生成情况：手动or自动"></a>2.2生成情况：手动or自动</h5><p>Redis客户端可以通过上述的<code>save</code>或<code>bgsave</code>命令手动进行持久化。</p>
+<p>此外，服务端也支持配置，在满足配置条件时自动执行RDB持久。</p>
+<p>例如<code>save 900 1</code>配置表示在900秒内修改1次，就会启动RDB。</p>
+<h5 id="2-3加载RDB文件"><a href="#2-3加载RDB文件" class="headerlink" title="2.3加载RDB文件"></a>2.3加载RDB文件</h5><p>如果没有开启AOF，服务器会在启动时寻找RDB文件并进行加载。</p>
+<h3 id="三、相关配置"><a href="#三、相关配置" class="headerlink" title="三、相关配置"></a>三、相关配置</h3><p><strong>RDB的默认配置</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">save</span> <span class="number">900</span> <span class="number">1</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">300</span> <span class="number">10</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">60</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关闭RDB持久化</strong></p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">save</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="AOF-追加"><a href="#AOF-追加" class="headerlink" title="AOF(追加)"></a>AOF(追加)</h2><h3 id="一、AOF介绍"><a href="#一、AOF介绍" class="headerlink" title="一、AOF介绍"></a>一、AOF介绍</h3><p>AOF持久化通过记录Redis服务器的<strong>写操作</strong>来实现持久化。</p>
+<h3 id="二、AOF文件的生成与载入"><a href="#二、AOF文件的生成与载入" class="headerlink" title="二、AOF文件的生成与载入"></a>二、AOF文件的生成与载入</h3><h5 id="2-1实现AOF文件"><a href="#2-1实现AOF文件" class="headerlink" title="2.1实现AOF文件"></a>2.1实现AOF文件</h5><p>实现AOF持久化的过程可以分为3步：<strong>命令追加</strong>、<strong>文件写入</strong>和<strong>文件同步</strong>。</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png" alt="image-20211025123206155"></p>
+<ul>
+<li>命令追加<ul>
+<li>redis在处理命令请求时，用AOF缓冲区记录执行过的一些写操作</li>
+</ul>
+</li>
+<li>文件写入<ul>
+<li>redis处理完请求后，会将AOF缓冲区的内容写入到AOF文件中</li>
+</ul>
+</li>
+<li>文件同步<ul>
+<li>由于操作系统缓冲的存在，就会产生怎样写的情况</li>
+<li>文件同步通过一个<code>appendfsync</code>参数来配置。</li>
+</ul>
+</li>
+</ul>
+<p><strong>appendfsync参数配置</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">取值</th>
+<th align="center">对应策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">always</td>
+<td align="center">每次文件写入时都进行同步</td>
+</tr>
+<tr>
+<td align="center">everysec（默认）</td>
+<td align="center">正常写（会经过OS缓冲），后台线程判断超过一秒钟时进行同步操作</td>
+</tr>
+<tr>
+<td align="center">no</td>
+<td align="center">正常写，由操作系统决定啥时候同步</td>
+</tr>
+</tbody></table>
+<p><strong>代码示例</strong></p>
+<p>写入文件时直接刷新到磁盘上，有两种方式可以做到。</p>
+<p>第一种：打开文件时使用<code>O_SYNC</code>标志位</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 同步打开</span></span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR|O_SYNC);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        </span><br><span class="line">    	close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种，写完文件后调用<code>fsync</code>、<code>fdatasync</code>等系统调用进行同步</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        fsync(fd);</span><br><span class="line">    </span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-2加载AOF文件"><a href="#2-2加载AOF文件" class="headerlink" title="2.2加载AOF文件"></a>2.2加载AOF文件</h5><p>服务器启动时，如果开启了AOF持久化，则redis会开启一个伪客户端，把分析得到的命令交给伪客户端执行。</p>
+<h3 id="三、AOF重写"><a href="#三、AOF重写" class="headerlink" title="三、AOF重写"></a>三、AOF重写</h3><h5 id="3-1为什么要重写AOF文件？"><a href="#3-1为什么要重写AOF文件？" class="headerlink" title="3.1为什么要重写AOF文件？"></a>3.1为什么要重写AOF文件？</h5><p>AOF文件记录的是写操作，容易发生文件体积膨胀的问题。</p>
+<p>此外加载AOF文件时，执行效率也会降低。</p>
+<h5 id="3-2怎样重写AOF文件"><a href="#3-2怎样重写AOF文件" class="headerlink" title="3.2怎样重写AOF文件"></a>3.2怎样重写AOF文件</h5><p>redis开启子进程，在后台利用当前数据库的数据来重新生成AOF文件并覆盖原文件。</p>
+<p>使用<code>BGREWRITEAOF</code>命令可以手动开启重写。</p>
+<p><strong>特点：</strong></p>
+<ol>
+<li>使用子进程而不是当前进程：防止服务器阻塞</li>
+<li>没有使用原AOF文件的方式：</li>
+</ol>
+<p><strong>问题：子进程在后台生成AOF文件时，当前数据库的数据可能会发生变化，导致持久化的数据与实际数据不一致的情况</strong></p>
+<p>解决：重写AOF时，服务器把写操作记录到AOF缓冲和AOF重写缓冲中。</p>
+<p>解释：前者是为了AOF持久化的正常工作，后者是将AOF重写过程中的数据变化记录下来，等子进程重写完毕后把这一部分发送给它。</p>
+<h3 id="四、相关配置"><a href="#四、相关配置" class="headerlink" title="四、相关配置"></a>四、相关配置</h3><p><strong>AOF默认为关闭，如果要开启，改为yes</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">appendonly</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文件同步策略</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta"># appendfsync no</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>自动重写AOF</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AOF文件大小为上次重写后AOF文件大小时，开始重写</span></span><br><span class="line">auto-aof-rewrite-percentage 100 </span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动进行AOF文件重写的最小大小</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结一下RDB与AOF的特点，从持久化速度、加载速度、文件大小、数据安全性等多个维度进行讨论。</p>
+<table>
+<thead>
+<tr>
+<th align="center">场景</th>
+<th align="center">RDB</th>
+<th align="center">AOF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">持久化速度</td>
+<td align="center">不支持秒级，慢</td>
+<td align="center">支持秒级</td>
+</tr>
+<tr>
+<td align="center">加载速度</td>
+<td align="center">很快</td>
+<td align="center">执行写操作，慢</td>
+</tr>
+<tr>
+<td align="center">文件大小</td>
+<td align="center">压缩后小</td>
+<td align="center">文件较大</td>
+</tr>
+<tr>
+<td align="center">数据安全性</td>
+<td align="center">距离上次持久化后的数据都可能会丢</td>
+<td align="center">默认配置下最多丢1秒的数据</td>
+</tr>
+<tr>
+<td align="center">开销</td>
+<td align="center">每次持久化都会fork一个子进程</td>
+<td align="center">处理事件后需要写缓冲</td>
+</tr>
+</tbody></table>
+<h2 id="RDB与AOF的混合使用"><a href="#RDB与AOF的混合使用" class="headerlink" title="RDB与AOF的混合使用"></a>RDB与AOF的混合使用</h2><p>redis4.0提出了两种持久化方式混合使用的方案：</p>
+<p>RDB以一定的频率运行，然后在两次RDB间使用AOF记录写操作。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Redis客户端与服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:32" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Redis客户端与服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><h3 id="一、客户端属性"><a href="#一、客户端属性" class="headerlink" title="一、客户端属性"></a>一、客户端属性</h3><p>服务器通过一个<code>clients</code>链表维护连接的客户端</p>
+<p>涉及的客户端信息有：描述符、名称、输入输出缓冲区、状态等等。</p>
+<h3 id="二、客户端类型"><a href="#二、客户端类型" class="headerlink" title="二、客户端类型"></a>二、客户端类型</h3><p>客户端的类型有：通过网络连接的客户端、加载AOF文件的伪客户端以及执行Lua脚本的伪客户端。</p>
+<p>不同的类型创建和关闭的方式不太一样。</p>
+<ol>
+<li>网络连接的客户端<ul>
+<li>创建：用<code>clients</code>链表相连</li>
+<li>关闭：正常关闭，或空转时间、缓冲区溢出等原因造成关闭</li>
+</ul>
+</li>
+<li>加载AOF文件的伪客户端<ul>
+<li>创建：单独创建</li>
+<li>关闭：加载完毕后关闭</li>
+</ul>
+</li>
+<li>执行Lua脚本的伪客户端<ul>
+<li>创建：用<code>lua_client</code>记录</li>
+<li>关闭：随服务器运行</li>
+</ul>
+</li>
+</ol>
+<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><h3 id="一、命令执行的过程"><a href="#一、命令执行的过程" class="headerlink" title="一、命令执行的过程"></a>一、命令执行的过程</h3><h5 id="1-1简化的过程"><a href="#1-1简化的过程" class="headerlink" title="1.1简化的过程"></a>1.1简化的过程</h5><ol>
+<li>客户端发送命令请求</li>
+<li>服务器接收请求并处理</li>
+<li>服务器返回结果</li>
+</ol>
+<p>其中1、3步其实涉及了Redis使用的<strong>协议格式</strong>，因为在通信时命令请求是被封装成某个协议格式进行发送的。</p>
+<p>第二步涉及Redis如何解析命令请求。</p>
+<h5 id="1-2服务器处理命令请求"><a href="#1-2服务器处理命令请求" class="headerlink" title="1.2服务器处理命令请求"></a>1.2服务器处理命令请求</h5><ol>
+<li>按协议格式解析命令请求</li>
+<li>命令执行器执行命令<ul>
+<li>预处理</li>
+<li>执行</li>
+<li>后续工作</li>
+</ul>
+</li>
+</ol>
+<p>Redis服务器维护了一个<code>命令表</code>的字典，可以根据命令的名称找到具体的执行函数。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -2071,92 +1788,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

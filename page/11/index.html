@@ -205,600 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">事务详解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-17 10:47:36" itemprop="dateModified" datetime="2021-10-17T10:47:36+08:00">2021-10-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" class="post-meta-item leancloud_visitors" data-flag-title="事务详解" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一、什么是事务"><a href="#一、什么是事务" class="headerlink" title="一、什么是事务"></a>一、什么是事务</h1><h3 id="事务定义如下："><a href="#事务定义如下：" class="headerlink" title="事务定义如下："></a>事务定义如下：</h3><blockquote>
-<p>访问并可能更新数据库中各项数据的一个<strong>程序执行单元</strong></p>
-</blockquote>
-<h3 id="事务特性："><a href="#事务特性：" class="headerlink" title="事务特性："></a>事务特性：</h3><table>
-<thead>
-<tr>
-<th>特性（ACID）</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>原子性</td>
-<td>事务内的操作要么全部完成，要么全部失败回滚</td>
-</tr>
-<tr>
-<td>一致性</td>
-<td>依赖于开发者，来保证数据库在一个事务执行前后都处于正确状态</td>
-</tr>
-<tr>
-<td>隔离性</td>
-<td>并发事务之间相互隔离，察觉不到有其他事务在执行</td>
-</tr>
-<tr>
-<td>持久性</td>
-<td>事务一旦被提交，对数据的改变就是永久性的，即使故障也不会丢失改变的提交。</td>
-</tr>
-</tbody></table>
-<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
-<thead>
-<tr>
-<th align="center">级别\问题（是否存在）</th>
-<th align="center">脏读</th>
-<th align="center">不可重复读</th>
-<th align="center">幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">读未提交</td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">读已提交</td>
-<td align="center">否</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">可重复读</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">是（MVCC时无）</td>
-</tr>
-<tr>
-<td align="center">串行化</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-</tbody></table>
-<h1 id="二、事务实现"><a href="#二、事务实现" class="headerlink" title="二、事务实现"></a>二、事务实现</h1><p>上面介绍的四个特性中，隔离性由锁和MVCC来实现；此外，原子性、一致性和持久性通过数据库的<code>redo log</code>和<code>undo log</code>来完成。</p>
-<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><p><code>redo log</code>是一种<code>物理格式</code>日志，记录了对页的修改；它实现了事务的持久性，由两部分组成：</p>
-<ul>
-<li>内存中的<code>重做日志缓冲</code>(redo log buffer)</li>
-<li>操作系统缓存中的<code>重做日志文件</code>(redo log file)</li>
-</ul>
-<p><strong>注意，这里为什么是在操作系统中呢？因为打开日志文件时没有使用<code>O_DIRECT</code>标志位，所以不能绕过操作系统直接添加到磁盘中。</strong></p>
-<p>所以从内存中更新数据到磁盘，经历了以下过程：</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502235152.png" alt="img"></p>
-<p>可以看到，从操作系统缓冲写入到磁盘，需要进行<code>fsync()</code>操作；多久执行一次该操作，可以通过参数<code>innodb_flush_log_at_trx_commit</code>来决定。该参数有三个取值，分别是0，1，2。</p>
-<table>
-<thead>
-<tr>
-<th align="center">参数</th>
-<th align="center">描述</th>
-<th align="center">特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">0</td>
-<td align="center">表示主线程每隔一秒执行一次<strong>fsync()</strong></td>
-<td align="center">数据库或计算机宕机时，都会丢失一部分数据</td>
-</tr>
-<tr>
-<td align="center">1</td>
-<td align="center">表示事务每提交一次，就执行一次<strong>fsync()</strong></td>
-<td align="center">并发场景下性能较差</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">表示事务提交时，把<strong>重做日志缓冲</strong>写入到<strong>重做日志文件</strong>中</td>
-<td align="center">数据库宕机不会影响，因为日志已经在操作系统缓冲区了；系统宕机时，会丢失一部分数据</td>
-</tr>
-</tbody></table>
-<h2 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p><code>undo log</code>记录的是逻辑操作，具体地说，应该是事务中每步操作的<code>逆向操作</code></p>
-<p>例如，事务中执行了一条插入语句，那么<code>undo log</code>就会记录一次删除。</p>
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
-<li><p>回滚</p>
-<p>在事务失败时，可以根据它回滚到事务开始前的状态。</p>
-</li>
-<li><p>多版本控制</p>
-<p>在MVCC中，如果数据被其它事务占用，就可以根据<code>undo log</code>来获取之前版本的数据，避免阻塞地获取锁。</p>
-</li>
-</ul>
-<h3 id="3种操作的undo-log"><a href="#3种操作的undo-log" class="headerlink" title="3种操作的undo log"></a>3种操作的undo log</h3><h4 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h4><p>因为事务隔离性的要求，插入数据只对当前事务可见，其他事务不应该发现。</p>
-<p>所以它产生的undo log可以在事务提交后直接删除</p>
-<h4 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h4><p>先执行逻辑删除，把标志位设置成删除，然后等待purge线程进行物理删除</p>
-<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><p>这里分两类讨论</p>
-<ul>
-<li><p>不更新主键</p>
-<p>直接更新即可，并生成undo log</p>
-</li>
-<li><p>更新主键</p>
-<p>先标记删除原有主键的记录，再执行插入。</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" class="post-title-link" itemprop="url">事务并发解决方案</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-17 12:02:20" itemprop="dateModified" datetime="2021-10-17T12:02:20+08:00">2021-10-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" class="post-meta-item leancloud_visitors" data-flag-title="事务并发解决方案" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一、事务"><a href="#一、事务" class="headerlink" title="一、事务"></a>一、事务</h1><p>关于事务的介绍，请看另一篇博客。</p>
-<p><strong>解决并发事务访问，主要有两种方式：</strong></p>
-<ul>
-<li><strong>LBCC</strong>（Lock Based Concurrent Control）</li>
-</ul>
-<ul>
-<li><strong>MVCC</strong>（Multi-Version Concurrent Control）</li>
-</ul>
-<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><ul>
-<li>脏读，读到其他事务修改后未提交的数据</li>
-<li>不可重复读，多次读数据，得到的不一致</li>
-<li>幻读，多次读的结果不同（多了数据或少了数据）</li>
-</ul>
-<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
-<thead>
-<tr>
-<th align="center">级别\问题（是否存在）</th>
-<th align="center">脏读</th>
-<th align="center">不可重复读</th>
-<th align="center">幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">读未提交</td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">读已提交</td>
-<td align="center">否</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">可重复读</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">是（MVCC时有）</td>
-</tr>
-<tr>
-<td align="center">串行化</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-</tbody></table>
-<h1 id="二、LBCC"><a href="#二、LBCC" class="headerlink" title="二、LBCC"></a>二、LBCC</h1><h2 id="2-1锁的类型"><a href="#2-1锁的类型" class="headerlink" title="2.1锁的类型"></a>2.1锁的类型</h2><p>官网链接：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html">MySQL :: MySQL 8.0 Reference Manual :: 15.7.1 InnoDB Locking</a></p>
-<p>查阅MySQL官网，得知InnoDB存储引擎提到了以下几种锁方案</p>
-<ol>
-<li><p>共享锁与排他锁 （行级别）</p>
-</li>
-<li><p>意向锁 （表级别）</p>
-</li>
-<li><p>记录锁</p>
-</li>
-<li><p>间隙锁</p>
-</li>
-<li><p>Next-Key 锁</p>
-</li>
-</ol>
-<p>还有另外三种不做详细介绍，就简单说明一下概念</p>
-<ol>
-<li>插入意向锁</li>
-<li>自增锁</li>
-<li>预测锁</li>
-</ol>
-<p>下面我们将依次介绍上述5种锁的概念</p>
-<h2 id="2-2共享锁与排他锁"><a href="#2-2共享锁与排他锁" class="headerlink" title="2.2共享锁与排他锁"></a>2.2共享锁与排他锁</h2><p>共享锁和排他锁是InnoDB实现的行级别的锁。</p>
-<p><code>共享锁</code>又叫读锁，用来读取数据。多个共享锁可以同时存在。</p>
-<p><code>排他锁</code>又叫写锁，用来更新或删除数据（插入呢？），不能与其他锁并存</p>
-<p>举个简单的例子</p>
-<p>如果事务<code>T1</code>在读表中的记录<code>r</code>，那它就对记录<code>r</code>加了读锁</p>
-<p>这时候事务<code>T2</code>想要对记录<code>r</code>进行一些操作</p>
-<ul>
-<li>如果是读操作，<code>T2</code>可以直接对记录<code>r</code>加读锁</li>
-<li>如果是写操作，<code>T2</code>必须等待<code>T1</code>释放锁之后，才能对记录<code>r</code>加写锁</li>
-</ul>
-<h2 id="2-3意向锁"><a href="#2-3意向锁" class="headerlink" title="2.3意向锁"></a>2.3意向锁</h2><h3 id="2-3-1为什么要有意向锁呢？"><a href="#2-3-1为什么要有意向锁呢？" class="headerlink" title="2.3.1为什么要有意向锁呢？"></a>2.3.1为什么要有意向锁呢？</h3><p>针对一个场景：</p>
-<p>如果要对一张表加<strong>表锁</strong>，就要先确保表中的<strong>任意一行数据</strong>都没有<strong>被锁定</strong></p>
-<p>那么就需要进行全表扫描来判断，效率十分低下</p>
-<p><strong>而上述问题的本质，就是锁过于单一，只有读锁、写锁这些行级别锁的话，粒度较少，不具备灵活性。</strong></p>
-<p>所以提出了意向锁的思想 。</p>
-<h3 id="2-3-2意向锁"><a href="#2-3-2意向锁" class="headerlink" title="2.3.2意向锁"></a>2.3.2意向锁</h3><blockquote>
-<p>意向读锁：表明一个事务<strong>想要</strong>对某行数据设置读锁。</p>
-<p>意向写锁：表明一个事务<strong>想要</strong>对某行数据设置写锁。</p>
-</blockquote>
-<p>光说这个概念可能不太好理解，我们结合官网上的描述，来分析下它的主要目的、协议吧。</p>
-<h3 id="2-3-3官方解释"><a href="#2-3-3官方解释" class="headerlink" title="2.3.3官方解释"></a>2.3.3官方解释</h3><p><strong>关于意向锁的解释</strong></p>
-<blockquote>
-<p><code>InnoDB</code> supports <em>multiple granularity locking</em> which permits coexistence of row locks and table locks.</p>
-<p><code>InnoDB</code>支持多粒度的锁来保证行锁和表锁的共存。</p>
-<p>Intention locks are <code>table-level</code> locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. </p>
-<p>意向锁是表级别的锁，它代表一个事务之后想要获取的是什么类型（读锁或写锁）的锁。</p>
-<p>PS：实现了多粒度的锁。</p>
-</blockquote>
-<p><strong>意向锁的主要目的</strong></p>
-<blockquote>
-<p>Intention locks do not block anything except full table requests (for example, <code>LOCK TABLES ... WRITE</code>). The main purpose of intention locks is to show that someone is locking a row, or going to lock a row in the table.</p>
-<p>意向锁不会阻塞除<code>全表扫描</code>外的任何请求，它的主要目的就是表明其他事务正在锁，或者说将要锁某些记录。</p>
-<p>PS：结合上面的例子，有了意向锁之后，就不用靠全表扫描来判断当前事务是否可以加表锁</p>
-</blockquote>
-<p><strong>意向锁的协议</strong></p>
-<blockquote>
-<p>Before a transaction can acquire a shared lock on a row in a table, it must first acquire an <code>IS</code> lock or stronger on the table.</p>
-<p>一个事务获取某行的读锁之前，必须先获取表的意向读锁。</p>
-<p>Before a transaction can acquire an exclusive lock on a row in a table, it must first acquire an <code>IX</code> lock on the table.</p>
-<p>一个事务获取某行的写锁之前，必须先获取表的意向写锁。</p>
-</blockquote>
-<h3 id="2-3-4锁的具体使用"><a href="#2-3-4锁的具体使用" class="headerlink" title="2.3.4锁的具体使用"></a>2.3.4锁的具体使用</h3><p>首先，我们要了解意向锁和读写锁的共存关系（是否兼容）</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">IS</th>
-<th align="center">IX</th>
-<th align="center">S</th>
-<th align="center">X</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><strong>IS</strong></td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">否</td>
-</tr>
-<tr>
-<td align="center"><strong>IX</strong></td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-<tr>
-<td align="center"><strong>S</strong></td>
-<td align="center">是</td>
-<td align="center">否</td>
-<td align="center">是</td>
-<td align="center">否</td>
-</tr>
-<tr>
-<td align="center"><strong>X</strong></td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-</tbody></table>
-<p><strong>分析：</strong></p>
-<p>意向锁之间：仅仅代表一个加锁的意向，所以意向锁之间不冲突</p>
-<p>读写锁之间：读锁与读锁不冲突，写锁与其他锁（这里只讨论读写锁）都冲突</p>
-<p>混合：要注意有读锁的情况下，意向写锁会冲突，即不能有写的念头。</p>
-<p><strong>用法：</strong></p>
-<p>从官网摘录一段select的语句结构</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	...</span><br><span class="line">	[FOR &#123;UPDATE | SHARE&#125;</span><br><span class="line">        [<span class="keyword">OF</span> tbl_name [, tbl_name] ...]</span><br><span class="line">        [NOWAIT <span class="operator">|</span> <span class="keyword">SKIP</span> LOCKED]</span><br><span class="line">      <span class="operator">|</span> LOCK <span class="keyword">IN</span> SHARE MODE]</span><br></pre></td></tr></table></figure>
-
-<p><strong>使用意向读锁：</strong></p>
-<p><code>select ... for share</code>或<code>select ... lock in share mode</code></p>
-<p>两种方式来获取IS锁和对应记录的S锁，基本上是等价的</p>
-<p>区别的话</p>
-<ol>
-<li><p>看上面select语句的格式，可以发现<code>for share</code>可以添加一些参数，参数在后面介绍</p>
-</li>
-<li><p><code>lock in share mode</code>提供向后兼容性。</p>
-</li>
-</ol>
-<p><strong>使用意向写锁：</strong></p>
-<p><code>select ... for update</code>语句会先尝试获取IX锁，然后再获取目标记录的写锁</p>
-<p>如果获取不到，则会阻塞等待。（如果超时了就报错）</p>
-<p><strong>参数说明：</strong></p>
-<ul>
-<li>nowait：不等待锁释放，立刻执行，获取不到锁就报错</li>
-<li>skip locked：也是立刻执行，但忽略那些被加锁的数据，只操作不加锁的数据。</li>
-</ul>
-<p>这两个参数在基于语句复制的情况下，是不安全的（官网上提到，但我不懂…猜测一下，可能是在有主从数据库的时候，会不安全吧）</p>
-<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html">如果想看更详细的，请转至官网处</a></p>
-<hr>
-<p>下面开始是一些具体锁的介绍，先贴一张图大致表示一下</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png" alt="lock_concret"></p>
-<h2 id="2-4记录锁（锁定记录）"><a href="#2-4记录锁（锁定记录）" class="headerlink" title="2.4记录锁（锁定记录）"></a>2.4记录锁（锁定记录）</h2><p>在进行等值查询时，锁住<strong>匹配</strong>到的记录。确切地说，应该是锁住记录的主键（或隐式主键）</p>
-<p>例如<code>select * from table1 where id = 4 for update</code>就是锁住了<code>id = 4</code>的记录</p>
-<h2 id="2-5间隙锁（锁定范围）"><a href="#2-5间隙锁（锁定范围）" class="headerlink" title="2.5间隙锁（锁定范围）"></a>2.5间隙锁（锁定范围）</h2><p>在查询时，锁定<strong>区间范围</strong></p>
-<p>①<code>select * from table1 where id = 6 for update</code></p>
-<p>②<code>select * from table1 where id &gt; 20 for update</code></p>
-<p>假设表的记录为<strong>1，4，7，10</strong></p>
-<p>那么语句①锁住区间（4，7）；语句②锁住区间（10，+∞）</p>
-<p><strong>间隙锁之间并不冲突</strong></p>
-<h2 id="2-6临界锁（锁定范围，左开右闭）"><a href="#2-6临界锁（锁定范围，左开右闭）" class="headerlink" title="2.6临界锁（锁定范围，左开右闭）"></a>2.6临界锁（锁定范围，左开右闭）</h2><p>条件：进行范围查询时，包含<strong>区间</strong>和<strong>具体记录</strong></p>
-<p><code>select * from table where id &gt; 5 and id &lt; 9 for update</code></p>
-<p>那么锁定的范围为(4，7] 和 (7，10]，即(4，10]</p>
-<p>我们可以发现，<strong>临界锁 = 间隙锁 + 记录锁</strong></p>
-<p><em><strong>而间隙锁锁住区间，不让其他事务进行插入，目的就在于避免幻读问题的出现</strong></em></p>
-<hr>
-<p>讲完这些锁之后，我们谈谈在<strong>不同隔离级别</strong>下<strong>锁</strong>的<strong>实现</strong>：</p>
-<table>
-<thead>
-<tr>
-<th align="center">隔离级别</th>
-<th align="center">机制</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">RU</td>
-<td align="center">不加锁</td>
-</tr>
-<tr>
-<td align="center">Serializable</td>
-<td align="center">所有select语句隐式地转化成共享锁，会与update、delete互斥</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th align="center">隔离级别</th>
-<th align="center">普通select语句</th>
-<th align="center">加锁的select和更新语句</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">RC</td>
-<td align="center">MVCC</td>
-<td align="center">记录锁</td>
-</tr>
-<tr>
-<td align="center">RR</td>
-<td align="center">MVCC</td>
-<td align="center">记录锁、间隙锁、临界锁</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>①普通查询时，为什么RR可以解决不可重复读，而RC不可以</p>
-<p>两者都采用MVCC，而因为RR的快照读readview使用的是同一个（第一次读时生成），而RC是每次查询生成一次新的readview</p>
-</blockquote>
-<h2 id="加锁过程"><a href="#加锁过程" class="headerlink" title="加锁过程"></a>加锁过程</h2><p>加锁最小单位：临界锁</p>
-<p>临界锁的变化：</p>
-<ul>
-<li><p>未命中时变为间隙锁</p>
-</li>
-<li><p>命中时</p>
-<ul>
-<li>如果是<strong>单列唯一索引</strong>，则降级为行锁</li>
-<li>如果是<strong>非唯一的索引或多列索引</strong>，则锁住左右两个区间及命中的索引值</li>
-</ul>
-</li>
-</ul>
-<h1 id="三、MVCC"><a href="#三、MVCC" class="headerlink" title="三、MVCC"></a>三、MVCC</h1><h2 id="3-1定义"><a href="#3-1定义" class="headerlink" title="3.1定义"></a>3.1定义</h2><p>用于实现数据库的并发访问的一种方法，全称为多版本并发控制。</p>
-<h2 id="3-2前置概念"><a href="#3-2前置概念" class="headerlink" title="3.2前置概念"></a>3.2前置概念</h2><p>在学习MVCC前，需要先知道两个概念</p>
-<p><strong>当前读</strong></p>
-<ul>
-<li>数据：读取的是数据的最新版本。</li>
-<li>特点：读取时还要加锁，保证其他并发事务不能修改当前记录</li>
-<li>示例：共享锁、排他锁</li>
-</ul>
-<p><strong>快照读</strong></p>
-<ul>
-<li>数据：读取的是数据库某一时刻的快照的数据。</li>
-<li>特点：不加锁的、非阻塞的读；读到的数据不一定是最新数据，可能是历史版本。</li>
-<li>示例：MVCC普通读</li>
-</ul>
-<h2 id="3-3思想"><a href="#3-3思想" class="headerlink" title="3.3思想"></a>3.3思想</h2><blockquote>
-<p> 维持一个数据的多个版本，使得读写操作没有冲突</p>
-</blockquote>
-<h2 id="3-4实现"><a href="#3-4实现" class="headerlink" title="3.4实现"></a>3.4实现</h2><p>隐式字段 + undo回滚日志 + 快照</p>
-<p><strong>隐式字段</strong></p>
-<blockquote>
-<p>每行记录除了有用户定义的字段外，还有隐式字段，如行创建id、行删除id、回滚指针、自增ID</p>
-</blockquote>
-<ul>
-<li><p>行创建id：指插入或修改本条记录的事务id</p>
-</li>
-<li><p>行删除id：指删除本条记录的事务id</p>
-</li>
-<li><p>回滚指针：指向回滚日志中的关于<strong>这条记录</strong>的<strong>上一个版本</strong></p>
-</li>
-</ul>
-<ul>
-<li>自增ID：当表没有设定主键且不存在非空唯一的字段时，会采用自增ID来作为主键，构建主键索引</li>
-</ul>
-<p><strong>undo回滚日志</strong></p>
-<p>记录每次修改的操作，可从前往后遍历来进行数据回滚</p>
-<p>在进行<strong>修改（更新、插入、删除）</strong>操作时，mysql会生成一条日志（主键+当前事务id+回滚指针，指向前一条记录）</p>
-<p>删除只是把标志位改为true，即逻辑删除</p>
-<p><strong>ReadView</strong></p>
-<blockquote>
-<p>ReadView是事务进行快照读时产生的读视图，记录并维护了系统中当前较为活跃的事务id</p>
-</blockquote>
-<h2 id="3-5例子"><a href="#3-5例子" class="headerlink" title="3.5例子"></a>3.5例子</h2><p>在某次事务查询时，得到readview 为 <strong>[100,200,300]</strong></p>
-<p> 可以看出活跃事务中最小id为100，最大id为300</p>
-<p>从回滚日志中依次向后遍历，假设每次遍历到的事务id为x</p>
-<p>则有以下三种情况：</p>
-<ol>
-<li><p>x &lt; 100 表示此事务已提交，数据可见</p>
-</li>
-<li><p>x &gt; 300 表示此事务是在生成readview之后开启的事务，数据不可见</p>
-</li>
-<li><p>在100和300中间，此时就要查看x是否在活跃事务id中，如果是，则它仍未提交，数据不可见。</p>
-</li>
-</ol>
-<h2 id="3-6RR和RC隔离级别下"><a href="#3-6RR和RC隔离级别下" class="headerlink" title="3.6RR和RC隔离级别下"></a>3.6RR和RC隔离级别下</h2><p>针对同一个事务来说，</p>
-<ul>
-<li><p>读已提交：每次查询都会生成新的read-view</p>
-</li>
-<li><p>可重复读：只用第一次查询时生成的read-view（解决了不可重复读）</p>
-</li>
-</ul>
-<h1 id="四、补充问题"><a href="#四、补充问题" class="headerlink" title="四、补充问题"></a>四、补充问题</h1><h2 id="4-1死锁"><a href="#4-1死锁" class="headerlink" title="4.1死锁"></a>4.1死锁</h2><p><strong>定义</strong></p>
-<p>这里的死锁可以理解成两个及以上的事务在共同竞争锁资源，而产生的等待现象。</p>
-<p><strong>解决方案一</strong></p>
-<p>设置一个超时等待时间，超时后对某个事务进行回滚，然后其他事务就可以执行下去</p>
-<p>但是光靠超时来解决的话，可能会有大量事务要进行回滚，会非常耗时</p>
-<p><strong>解决方案二</strong></p>
-<p>等待图，这可以算是一种死锁检测算法。</p>
-<p>画出各个事务之间的依赖关系，如果形成环路，说明存在死锁。</p>
-<h2 id="4-2锁升级"><a href="#4-2锁升级" class="headerlink" title="4.2锁升级"></a>4.2锁升级</h2><p><del>知识盲区…</del></p>
-<p>InnoDB存储引擎并不存在锁升级的情况，因为它并不是根据每个记录来产生行锁的。</p>
-<p>它是根据每个事务访问的每个页对锁进行管理的，采用的是位图的方式</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/MySQL%EF%BC%9A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1869,6 +1275,188 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/6_%E6%9C%80%E5%A4%A7%E5%AD%97%E5%BA%8F%E5%92%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/6_%E6%9C%80%E5%A4%A7%E5%AD%97%E5%BA%8F%E5%92%8C/" class="post-title-link" itemprop="url">最大字序和</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-13 21:17:26" itemprop="dateModified" datetime="2021-04-13T21:17:26+08:00">2021-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/6_%E6%9C%80%E5%A4%A7%E5%AD%97%E5%BA%8F%E5%92%8C/" class="post-meta-item leancloud_visitors" data-flag-title="最大字序和" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="最大字序和"><a href="#最大字序和" class="headerlink" title="最大字序和"></a>最大字序和</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定数组<code>nums</code>，找到具有<strong>最大和</strong>的<strong>连续</strong>子数组，并返回最大和</p>
+<p>这道题我们很容易就想到动态规划，然后一般状态定义有两种方式，$dp[i]$可以表示为</p>
+<ul>
+<li>长度为 $i+1$ 的数组中连续子数组的最大和</li>
+<li>以 $nums[i]$ 结尾的连续子数组的最大和</li>
+</ul>
+<p>我们可以发现，第二种定义更适合状态转移</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> len = nums.length;</span><br><span class="line">    <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">    dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> ans = dp[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; ++ i) &#123;</span><br><span class="line">        dp[i] = Math.max(dp[i-<span class="number">1</span>] + nums[i], nums[i]);</span><br><span class="line">        ans = Math.max(ans, dp[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>空间优化</strong></p>
+<p>注意，因为数组中可能存在负数</p>
+<p>所以如果想要从下标0开始遍历，就要让 <code>cur</code> 和 <code>ans</code> 的初始值为<code>Integer.MIN_VALUE</code>，这样会出现越界！</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> len = nums.length;</span><br><span class="line">    <span class="keyword">int</span> cur = nums[<span class="number">0</span>];</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">int</span> ans = cur;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; ++ i) &#123;</span><br><span class="line">        cur = Math.max(cur + nums[i], nums[i]);</span><br><span class="line">        ans = Math.max(ans, cur);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/5_K%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/5_K%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="post-title-link" itemprop="url">K个一组翻转链表</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-13 20:59:00" itemprop="dateModified" datetime="2021-04-13T20:59:00+08:00">2021-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/5_K%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="post-meta-item leancloud_visitors" data-flag-title="K个一组翻转链表" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="K个一组翻转链表"><a href="#K个一组翻转链表" class="headerlink" title="K个一组翻转链表"></a>K个一组翻转链表</h1><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-nodes-in-k-group/">题目请看这里</a></p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>给定K值，然后依次对链表的k个元素进行翻转</p>
+<p>如果剩余不满K个，则不进行翻转</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>根据翻转链表的思路，再进行计数，每遇到k个元素，就翻转一次</p>
+<p>思路并不算复杂，主要是编码较困难</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>封装翻转链表的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseKGroup</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (k == <span class="number">1</span>) <span class="keyword">return</span> head;</span><br><span class="line">        <span class="comment">// 初始化</span></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode();</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        ListNode tail = dummyHead;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (count == k) &#123;</span><br><span class="line">                ListNode next = cur.next;</span><br><span class="line">                cur.next = <span class="keyword">null</span>;</span><br><span class="line">                tail = reverseList(tail.next, tail, next);</span><br><span class="line">                count = <span class="number">1</span>;</span><br><span class="line">                cur = next;           </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                count ++;</span><br><span class="line">                cur = cur.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 举例：如果链表为 1-&gt; 2-&gt;3 -&gt;4 ，要翻转 2-&gt;3</span></span><br><span class="line"><span class="comment">    * @description    返回翻转后的尾部，或者说翻转前的头部	2    </span></span><br><span class="line"><span class="comment">    * @param head     要翻转部分的头节点	2</span></span><br><span class="line"><span class="comment">    * @param preHead  翻转链表外的头部	1</span></span><br><span class="line"><span class="comment">    * @param preTail  翻转链表外的尾部	4</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head, ListNode preHead, ListNode preTail)</span> </span>&#123;</span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        ListNode tmp = cur.next;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            tmp = cur.next;</span><br><span class="line">            <span class="keyword">if</span> (tmp == <span class="keyword">null</span>) <span class="keyword">break</span>;</span><br><span class="line">            cur.next = preTail;</span><br><span class="line">            preTail = cur;</span><br><span class="line">            cur = tmp;    </span><br><span class="line">        &#125;</span><br><span class="line">        cur.next = preTail;</span><br><span class="line">        preHead.next = cur;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -2034,92 +1622,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

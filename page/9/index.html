@@ -205,339 +205,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/" class="post-title-link" itemprop="url">Protobuf入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-29 12:31:16" itemprop="dateModified" datetime="2021-08-29T12:31:16+08:00">2021-08-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E5%B7%A5%E5%85%B7/protocol%20buffers/" class="post-meta-item leancloud_visitors" data-flag-title="Protobuf入门" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="文档链接"><a href="#文档链接" class="headerlink" title="文档链接"></a>文档链接</h1><p><a target="_blank" rel="noopener" href="https://developers.google.com/protocol-buffers">protocol-buffers官网</a></p>
-<p><a target="_blank" rel="noopener" href="https://developers.google.com/protocol-buffers/docs/proto3">proto3教程</a></p>
-<p><a target="_blank" rel="noopener" href="https://halfrost.com/protobuf_encode/#toc-0">高效的数据压缩编码方式 Protobuf </a></p>
-<h1 id="protocol-buffers"><a href="#protocol-buffers" class="headerlink" title="protocol buffers"></a>protocol buffers</h1><h3 id="什么是protocol-buffers"><a href="#什么是protocol-buffers" class="headerlink" title="什么是protocol buffers"></a>什么是protocol buffers</h3><p><strong>官方文档</strong></p>
-<blockquote>
-<p>Protocol buffers are Google’s language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler. You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages.</p>
-</blockquote>
-<p><strong>翻译</strong></p>
-<blockquote>
-<p>protocol buffers是Google开源的一种对结构化数据进行序列化的方式。它具有语言无关、平台无关和可扩展性；和xml相比，它更小，更快并且更加简单。</p>
-<p>用户只需要定义一次所需的结构化数据， 就可以利用生成的各种语言的代码从数据流中读写数据</p>
-</blockquote>
-<h3 id="选择语言进行安装"><a href="#选择语言进行安装" class="headerlink" title="选择语言进行安装"></a>选择语言进行安装</h3><p><a target="_blank" rel="noopener" href="https://github.com/protocolbuffers/protobuf/releases">Releases · protocolbuffers/protobuf (github.com)</a></p>
-<h1 id="一、定义Message"><a href="#一、定义Message" class="headerlink" title="一、定义Message"></a>一、定义Message</h1><p>示例：在<code>.proto</code>文件中定义一个名叫<code>SearchRequest</code>的消息格式，用来表示搜索的请求</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;./mvp&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginReq</span> </span>&#123;</span><br><span class="line">        <span class="built_in">string</span> UserName = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">string</span> Password = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginRsp</span> </span>&#123;</span><br><span class="line">        <span class="built_in">bool</span> IsLogin = <span class="number">1</span>;</span><br><span class="line">        User UserInfo = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第一行<code>syntax = &quot;proto3&quot;</code>表示使用proto3的语法，要放在正文（非空行和非注释行）中的第一行，如果没有这一行，则表示使用proto2语法</li>
-<li><code>go_package</code>指定生成目标代码的目录</li>
-<li>消息体<code>UserLoginReq</code>由2个字段构成，每个字段包含类型、名称和值。</li>
-</ul>
-<h3 id="1-1-指定字段类型"><a href="#1-1-指定字段类型" class="headerlink" title="1.1 指定字段类型"></a>1.1 指定字段类型</h3><p>如示例中的<code>UserName</code>字段，类型为<code>string</code>；</p>
-<p>类型既可以是数值类型，也可以是复合类型（枚举、其他消息体）</p>
-<h3 id="1-2-设定字段值"><a href="#1-2-设定字段值" class="headerlink" title="1.2 设定字段值"></a>1.2 设定字段值</h3><p>字段值是唯一的，被用来标识该字段在消息的二进制格式</p>
-<p><strong>字段值从1到15使用一个字节来编码，16到2047使用两个字节来编码，因此对于频繁出现的字段，它的值应该设成1到15之间。</strong></p>
-<p>关于更多，可以先去了解下<code>protocol buffer</code>的编码</p>
-<h3 id="1-3-指定字段规则"><a href="#1-3-指定字段规则" class="headerlink" title="1.3 指定字段规则"></a>1.3 指定字段规则</h3><ul>
-<li><p><strong>singular</strong></p>
-<p>  表示该字段出现次数不多于1（0个或者1个）</p>
-<p>  proto3默认使用这种规则</p>
-</li>
-<li><p><strong>repeated</strong></p>
-<p>  表示字段可以出现任意次，可以理解成数组</p>
-</li>
-</ul>
-<h1 id="二、定义Service"><a href="#二、定义Service" class="headerlink" title="二、定义Service"></a>二、定义Service</h1><p>如果想要将上面定义的<code>Message</code>类型用于<code>rpc调用</code>，就要定义一个服务，服务中可以声明多个接口。</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">LoginService</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">rpc</span> Login(UserLoginReq) <span class="keyword">returns</span> (UserLoginRsp)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-1-完整示例"><a href="#2-1-完整示例" class="headerlink" title="2.1 完整示例"></a>2.1 完整示例</h3><figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;./mvp&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">LoginService</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">rpc</span> Login(UserLoginReq) <span class="keyword">returns</span> (UserLoginRsp)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义用户登陆请求</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginReq</span> </span>&#123;</span><br><span class="line">        <span class="built_in">string</span> UserName = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">string</span> Password = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义用户登陆响应</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">UserLoginRsp</span> </span>&#123;</span><br><span class="line">        <span class="built_in">bool</span> IsLogin = <span class="number">1</span>;</span><br><span class="line">        User UserInfo = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义用户消息格式</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">        <span class="built_in">uint64</span> UserID = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">string</span> NickName = <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">uint64</span> Age = <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">repeated</span> <span class="built_in">string</span> ImgURL = <span class="number">4</span>;</span><br><span class="line">        UserType UserType = <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义枚举类型：用户权限类型</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">UserType</span> </span>&#123;</span><br><span class="line">        UT_Nil = <span class="number">0</span>;</span><br><span class="line">        UT_Visit = <span class="number">1</span>;</span><br><span class="line">        UT_Normal = <span class="number">2</span>;</span><br><span class="line">        UT_Admin = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="三、生成Go代码"><a href="#三、生成Go代码" class="headerlink" title="三、生成Go代码"></a>三、生成Go代码</h1><h3 id="3-1-下载插件"><a href="#3-1-下载插件" class="headerlink" title="3.1 下载插件"></a>3.1 下载插件</h3><p><code>protocol buffer complier</code>需要一个插件才能生成Go代码，因此先下载插件。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest</span><br></pre></td></tr></table></figure>
-
-<p>下载完毕后在<code>$GOPATH/bin</code>路径下会生成<code>protoc-gen-go</code></p>
-<h3 id="3-2-利用插件生成代码"><a href="#3-2-利用插件生成代码" class="headerlink" title="3.2 利用插件生成代码"></a>3.2 利用插件生成代码</h3><p>在项目的根目录下用终端（或cmd）输入以下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --go_out=. <span class="variable">$SRC_DIR</span>/addressbook.proto</span><br></pre></td></tr></table></figure>
-
-<p>参数说明</p>
-<ul>
-<li><p><code>go_out</code>：表示生成go代码</p>
-</li>
-<li><p><code>$SRC_DIR/addressbook.proto</code>：表示协议所在位置</p>
-</li>
-<li><p>如果想要指定代码生成的位置，则在协议文件中添加</p>
-  <figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;yourpath&quot;</span>;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="四、demo"><a href="#四、demo" class="headerlink" title="四、demo"></a>四、demo</h1><h3 id="4-1-编码并写入文件"><a href="#4-1-编码并写入文件" class="headerlink" title="4.1 编码并写入文件"></a>4.1 编码并写入文件</h3><p>主要使用<code>Marshal()</code>进行编码</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestProtoWrite 测试把消息写入指定文件中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestProtoWrite</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    login := &amp;mvp.UserLoginReq &#123;</span><br><span class="line">        UserName: <span class="string">&quot;zhangsan&quot;</span>,</span><br><span class="line">        Password: <span class="string">&quot;123&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    out, err := proto.Marshal(login)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to encode message login:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> err = ioutil.WriteFile(FilePath, out, fs.FileMode(<span class="number">777</span>)); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to write file:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4-2-读取消息并解码"><a href="#4-2-读取消息并解码" class="headerlink" title="4.2 读取消息并解码"></a>4.2 读取消息并解码</h3><p>使用<code>Unmarshal()</code>进行解码</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestProtoRead 测试从指定文件中读取消息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestProtoRead</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    in, err := ioutil.ReadFile(FilePath)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to read file:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    login := &amp;mvp.UserLoginReq&#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> err = proto.Unmarshal(in, login); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Fail to decode message login:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(login)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="五、编码详解"><a href="#五、编码详解" class="headerlink" title="五、编码详解"></a>五、编码详解</h1><h3 id="5-1-Base-128-Varints"><a href="#5-1-Base-128-Varints" class="headerlink" title="5.1 Base 128 Varints"></a>5.1 Base 128 Varints</h3><h5 id="官方文档说明"><a href="#官方文档说明" class="headerlink" title="官方文档说明"></a>官方文档说明</h5><blockquote>
-<p>To understand your simple protocol buffer encoding, you first need to understand <em>varints</em>. Varints are a method of serializing integers using one or more bytes. Smaller numbers take a smaller number of bytes.</p>
-<p>Each byte in a varint, except the last byte, has the <em>most significant bit</em> (msb) set – this indicates that there are further bytes to come. The lower 7 bits of each byte are used to store the two’s complement representation of the number in groups of 7 bits, <strong>least significant group first</strong>.</p>
-</blockquote>
-<h5 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h5><blockquote>
-<p>为了帮助你理解<code>protocol buffer</code>的编码方式，你需要先了解一下<code>varints</code>。<code>varints</code>是一种将整数类型序列化成一个或多个字节的方法。越小的数字序列化后产生的字节数就越少。</p>
-<p>varints中除了最后一个字节，其他字节的最高有效位都置为1，用来表示接下来还有字节；剩余的低7位则是对每7位为一组的二进制数据的补码表示。</p>
-</blockquote>
-<h5 id="编码示例"><a href="#编码示例" class="headerlink" title="编码示例"></a>编码示例</h5><p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210701200434.png"></p>
-<p>解码过程就是上述编码的逆过程，这里就不再赘述。</p>
-<h3 id="5-2-消息类型编码"><a href="#5-2-消息类型编码" class="headerlink" title="5.2 消息类型编码"></a>5.2 消息类型编码</h3><blockquote>
-<p>从之前的消息示例中我们可以看出，消息是由一系列的键值对组成的。</p>
-</blockquote>
-<h5 id="键值对介绍"><a href="#键值对介绍" class="headerlink" title="键值对介绍"></a>键值对介绍</h5><p>键被称为<code>tag</code>，由<code>field number</code>和<code>wire type</code>构成，前者表示设定的字段号，后者可以查表得。</p>
-<p>值就是该字段被赋予的数值。</p>
-<p><code>tag</code>的计算方式为：<br>$$<br>tag = (field number &lt;&lt; 3)  | wire type<br>$$<br>表格如下，其中3，4已被废弃，就是说<code>wire type</code>取值应该只有0，1，2，5，因此用三比特即可表示<code>wire type</code>。</p>
-<table>
-<thead>
-<tr>
-<th align="left">Type</th>
-<th align="left">Meaning</th>
-<th align="left">Used For</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">0</td>
-<td align="left">Varint</td>
-<td align="left">int32, int64, uint32, uint64, sint32, sint64, bool, enum</td>
-</tr>
-<tr>
-<td align="left">1</td>
-<td align="left">64-bit</td>
-<td align="left">fixed64, sfixed64, double</td>
-</tr>
-<tr>
-<td align="left">2</td>
-<td align="left">Length-delimited</td>
-<td align="left">string, bytes, embedded messages, packed repeated fields</td>
-</tr>
-<tr>
-<td align="left">3</td>
-<td align="left">Start group</td>
-<td align="left">groups (deprecated)</td>
-</tr>
-<tr>
-<td align="left">4</td>
-<td align="left">End group</td>
-<td align="left">groups (deprecated)</td>
-</tr>
-<tr>
-<td align="left">5</td>
-<td align="left">32-bit</td>
-<td align="left">fixed32, sfixed32, float</td>
-</tr>
-</tbody></table>
-<h5 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h5><p>现有以下消息，假设传入消息，a的值是150</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Test1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">int32</span> a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个消息体编码后得到的结果是<code>08 96 01</code>（16进制）</p>
-<ul>
-<li><p>计算tag</p>
-<p>  0001 ++ 000，得到<code>0001000</code>，即<strong>08</strong></p>
-</li>
-<li><p>对150进行编码，采取上述<code>varints</code>方式</p>
-<ul>
-<li>10010110</li>
-<li>1，0010110</li>
-<li>00000001，10010110</li>
-<li>得到编码<code>10010110，00000001</code></li>
-<li>用16进制表示，即<strong>96 01</strong></li>
-</ul>
-</li>
-</ul>
-<h3 id="5-3-字符串编码"><a href="#5-3-字符串编码" class="headerlink" title="5.3 字符串编码"></a>5.3 字符串编码</h3><p>和普通的整型相比，字符串在消息体中的编码方式多了一个length，表示字符串编码后的长度。</p>
-<p>形式为<code>key length content</code>。</p>
-<h5 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h5><p>b赋值为testing</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Test2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> b = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编码后的结果是<code>12 07 74 65 73 74 69 6e 67</code></p>
-<p>其中<strong>07</strong>表示长度，后面的7个16进制就是testing的utf8编码</p>
-<p>最开始的<strong>12</strong>就是key，由0010010转换成16进制得到。</p>
-<h2 id="六、"><a href="#六、" class="headerlink" title="六、"></a>六、</h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/maven%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E5%B7%A5%E5%85%B7/maven%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/" class="post-title-link" itemprop="url">Maven问题和解决方案记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-16 23:26:26" itemprop="dateModified" datetime="2021-08-16T23:26:26+08:00">2021-08-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E5%B7%A5%E5%85%B7/maven%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="Maven问题和解决方案记录" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="一、无脑配镜像"><a href="#一、无脑配镜像" class="headerlink" title="一、无脑配镜像"></a>一、无脑配镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tmd啥镜像都不用配</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="二、删除lastupdated文件"><a href="#二、删除lastupdated文件" class="headerlink" title="二、删除lastupdated文件"></a>二、删除lastupdated文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">listDirectory</span><span class="params">(File dir)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!dir.exists())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;目录：&quot;</span> + dir + <span class="string">&quot;不存在.&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (!dir.isDirectory()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(dir + <span class="string">&quot; 不是目录。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    File[] files = dir.listFiles();</span><br><span class="line">    <span class="keyword">if</span> (files != <span class="keyword">null</span> &amp;&amp; files.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (File file : files) &#123;</span><br><span class="line">            <span class="keyword">if</span> (file.isDirectory())</span><br><span class="line">                <span class="comment">//递归</span></span><br><span class="line">                listDirectory(file);</span><br><span class="line">            <span class="keyword">else</span>&#123; <span class="comment">// 删除以 lastUpdated 结尾的文件</span></span><br><span class="line">                String fileName = file.getName();</span><br><span class="line">                <span class="keyword">boolean</span> isLastupdated = fileName.toLowerCase().endsWith(<span class="string">&quot;lastupdated&quot;</span>);</span><br><span class="line">                <span class="keyword">if</span> (isLastupdated)&#123;</span><br><span class="line">                    <span class="keyword">boolean</span> is_delete = file.delete();</span><br><span class="line">                    System.out.println(<span class="string">&quot;删除的文件名 =&gt; &quot;</span> + file.getName() + <span class="string">&quot;  || 是否删除成功？ ==&gt; &quot;</span> + is_delete);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="comment">// 指定maven的本地仓库</span></span><br><span class="line">    listDirectory(<span class="keyword">new</span> File(<span class="string">&quot;E:\\programs\\mvnrepository&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="三、问题"><a href="#三、问题" class="headerlink" title="三、问题"></a>三、问题</h3><h5 id="描述1："><a href="#描述1：" class="headerlink" title="描述1："></a>描述1：</h5><blockquote>
-<p>Could not transfer artifact xxx from/to xxx解决方案</p>
-</blockquote>
-<h5 id="解决方案1："><a href="#解决方案1：" class="headerlink" title="解决方案1："></a>解决方案1：</h5><ol>
-<li>用上述工具类删除下载失败的文件</li>
-<li>在<code>pom.xml</code>文件中，右键-&gt;Maven-&gt;reload project</li>
-<li>完美运行</li>
-</ol>
-<h5 id="解决方案2："><a href="#解决方案2：" class="headerlink" title="解决方案2："></a>解决方案2：</h5><p>删除文件不用多说</p>
-<p>然后在终端输入以下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean &amp;&amp; mvn compile -Dmaven.wagon.http.ssl.insecure=<span class="literal">true</span> -Dmaven.wagon.http.ssl.allowall=<span class="literal">true</span> -Dmaven.wagon.http.ssl.ignore.validity.dates=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>然后刷新试试（注意，maven没有配置镜像，裸连）</p>
-<hr>
-<h5 id="描述2："><a href="#描述2：" class="headerlink" title="描述2："></a>描述2：</h5><p>出现SSL证书问题</p>
-<h5 id="解决方案2：-1"><a href="#解决方案2：-1" class="headerlink" title="解决方案2："></a>解决方案2：</h5><p>最简单粗暴的，在终端输入</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean &amp;&amp; mvn compile -Dmaven.wagon.http.ssl.insecure=<span class="literal">true</span> -Dmaven.wagon.http.ssl.allowall=<span class="literal">true</span> -Dmaven.wagon.http.ssl.ignore.validity.dates=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>如果显示<strong>无法识别mvn命令</strong>，那就是<strong>环境变量</strong>没配置对，重新去配下maven的环境变量</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_22041375/article/details/103491941">剩余方法参考这里</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E5%B7%A5%E5%85%B7/Git&Github%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1667,6 +1334,286 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Linux命令学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-15 20:33:44" itemprop="dateModified" datetime="2021-12-15T20:33:44+08:00">2021-12-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-meta-item leancloud_visitors" data-flag-title="Linux命令学习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、基本命令"><a href="#一、基本命令" class="headerlink" title="一、基本命令"></a>一、基本命令</h2><h3 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h3><p><code>cd [path]</code>：前往指定的路径</p>
+<ul>
+<li><code>cd -</code>：返回到上次的路径</li>
+<li><code>cd ~</code>：前往当前用户的用户目录</li>
+<li><code>cd /</code>：前往根目录</li>
+</ul>
+<p><code>pwd</code>：打印当前路径</p>
+<h3 id="目录文件"><a href="#目录文件" class="headerlink" title="目录文件"></a>目录文件</h3><p><code>mkdir [dir_name]</code>：创建一个目录</p>
+<p><code>cp [src] [dst]</code>：复制文件</p>
+<p><code>mv [src] [dst]</code>：移动文件（也可以用来重命名文件）</p>
+<p><code>rm [path]</code>：删除文件</p>
+<ul>
+<li><code>-r</code>：表示递归的删除整个目录或文件</li>
+<li><code>-f</code>：表示不需要确认</li>
+</ul>
+<h3 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h3><p><strong>1. 搜索命令、程序等</strong></p>
+<p><code>which</code>：在<strong>PATH</strong>指定的路径中查找。（一般用于查找命令）</p>
+<p><code>whereis</code>：用于程序名的搜索，如二进制、man说明文件和源代码文件</p>
+<p><strong>2. 常规搜索</strong></p>
+<p><code>find [path] [condition]</code>：在指定目录中根据某些条件进行查询</p>
+<ul>
+<li><code>-name logfile</code>：查询文件名为logfile的文件</li>
+<li><code>-perm 644</code>：查询权限为644的文件</li>
+</ul>
+<p><code>locate</code>：可以等价于<code>find -name</code>方式，但是它是从文件数据库中进行查询，因此速度更快。</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>压缩：<code>gzip [path]</code></p>
+<p>解压缩：<code>gzip -d [path]</code></p>
+<p>此外，使用<code>tar -czvf [dst] [src]</code>和<code>tar -zxf [src]</code>也可以实现压缩和解压。</p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p><code>ln [src] [dst]</code>命令可以与文件建立链接，其中：</p>
+<ul>
+<li><strong>硬链接：</strong>一个文件的所有硬链接使用同一个<code>inode</code>。最开始的源文件可以视为是一个硬链接。</li>
+<li><strong>软链接<code>-s</code>：</strong>类似于快捷方式的存在，它存储的是<code>源文件的地址</code>，因此源文件删除后就无法再通过软链接来读取</li>
+</ul>
+<h3 id="grep与xargs"><a href="#grep与xargs" class="headerlink" title="grep与xargs"></a>grep与xargs</h3><p>在管道用法中，比较常见的两个命令就是<code>grep</code>和<code>xargs</code></p>
+<ul>
+<li><p><code>grep</code>：查询符合条件的字符串</p>
+</li>
+<li><p><code>xargs</code>：将上游的输出作为下游的输入参数</p>
+</li>
+</ul>
+<p><strong>grep用法</strong></p>
+<p><code>tail -f log | grep &quot;error&quot;</code></p>
+<p>监听并输出log日志，并查询其中的error字符串（即高亮显示）</p>
+<p><strong>xargs用法</strong></p>
+<p><code>find . -perm 644 | xargs -I @ mv @ ../newDir</code></p>
+<p>查询当前目录中权限为644的所有文件，并移动到指定目录中</p>
+<p><code>xargs</code>的<code>-I</code>参数可以定义一个指示符，这里定义为**@<strong>。然后在后面的<code>mv</code>命令中就可以使用</strong>@**来表示参数应放的位置。</p>
+<h2 id="二、用户管理"><a href="#二、用户管理" class="headerlink" title="二、用户管理"></a>二、用户管理</h2><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>操作用户</strong></p>
+<p><code>useradd [username]</code></p>
+<p><code>passwd [username]</code></p>
+<p><code>userdel [username]</code></p>
+<p><code>usermod -g [groupname] [username]</code>：修改某个用户所属的组</p>
+<p><strong>操作组</strong></p>
+<p><code>groupadd [groupname]</code></p>
+<p><code>groupmod [groupname]</code></p>
+<p><code>groupdel [groupname]</code></p>
+<h3 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h3><p>有三个和用户信息相关的文件，分别是：</p>
+<p><code>/etc/passwd</code>：</p>
+<p>记录用户基本信息，如用户名、UID、GID等等</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># structure </span></span><br><span class="line"><span class="comment"># name:password:uid:gid:comment:directory:shell</span></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">whz:x:1001:1001::/home/whz:/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><code>/etc/shadow</code>：记录加密形式的用户密码，只有root用户才能够查看</p>
+<p><code>/etc/group</code>：记录组信息</p>
+<h3 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h3><blockquote>
+<p>测试<strong>passwd</strong>命令时发现，普通用户可以修改自己的密码，但是<code>/etc/passwd</code>或<code>/etc/shadow</code>对普通用户来说都是没有权限的，那么它是怎么做到的呢？</p>
+</blockquote>
+<blockquote>
+<p>TIPS</p>
+<p><code>/etc/passwd</code>是文件，存储了用户信息。</p>
+<p><code>/usr/bin/passwd</code>是命令，修改密码时调用的。</p>
+</blockquote>
+<p>答案就在<code>/usr/bin/passwd</code>这个命令自身上。</p>
+<p>查看<code>passwd</code>命令的权限，发现一个特殊的权限<code>s</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-xr-x. 1 root root 33600 4月   6 2020 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p><code>s(Set UID)</code>表示文件在执行时暂时拥有文件所有者的权限（本例即root权限）。正因为有了root权限，普通用户才得以成功修改密码。</p>
+<h2 id="三、Shell脚本"><a href="#三、Shell脚本" class="headerlink" title="三、Shell脚本"></a>三、Shell脚本</h2><p>shell脚本一般以<code>#!/bin/bash</code>作为开头。</p>
+<p>下面是一个kafka集群（部署在单台虚拟机上）的启动和关闭脚本示例</p>
+<ol>
+<li>使用<code>$1</code>来获取执行脚本的第一个参数</li>
+<li>case语法来判断参数是<code>start</code>还是<code>stop</code></li>
+<li>通过循环来执行kafka提供的启动脚本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">case $1 in </span><br><span class="line">&quot;start&quot;)&#123;</span><br><span class="line"></span><br><span class="line">        for i in kafka1 kafka2 kafka3</span><br><span class="line">        do </span><br><span class="line">                echo &quot;------------ start $i ------------&quot;</span><br><span class="line">                /usr/local/service/$i/bin/kafka-server-start.sh -daemon /usr/local/service/$i/config/server.properties</span><br><span class="line">        done</span><br><span class="line"></span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line">&quot;stop&quot;)&#123;</span><br><span class="line">        echo &quot;------------ stop kafka ------------&quot;</span><br><span class="line">        bash /usr/local/service/kafka1/bin/kafka-server-stop.sh</span><br><span class="line">&#125;;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Systemd"><a href="#四、Systemd" class="headerlink" title="四、Systemd"></a>四、Systemd</h2><h3 id="systemd与systemctl"><a href="#systemd与systemctl" class="headerlink" title="systemd与systemctl"></a>systemd与systemctl</h3><blockquote>
+<p><strong>systemd</strong>是Linux系统的一种启动方式，它代替了原先<strong>init</strong>进程的启动方式。</p>
+<p><strong>systemctl</strong>是一组控制systemd系统和进行服务管理的命令。</p>
+</blockquote>
+<p><strong>init</strong>进程采用串行启动的方式，启动时间较长；而<strong>systemd</strong>引入了并行启动的概念。</p>
+<p>此外，使用<strong>systemd</strong>后也是存在争议的，因为它违背了Unix的哲学<code>keep it simple, stupid</code>。</p>
+<h3 id="systemctl命令"><a href="#systemctl命令" class="headerlink" title="systemctl命令"></a>systemctl命令</h3><ul>
+<li><code>systemctl start [service]</code></li>
+<li><code>systemctl stop [service]</code></li>
+<li><code>systemctl restart [service]</code></li>
+<li><code>systemctl reload [service]</code></li>
+<li><code>systemctl status [service]</code></li>
+</ul>
+<h2 id="五、权限控制"><a href="#五、权限控制" class="headerlink" title="五、权限控制"></a>五、权限控制</h2><h3 id="传统的权限控制"><a href="#传统的权限控制" class="headerlink" title="传统的权限控制"></a>传统的权限控制</h3><p>在Linux系统中，存在一种传统的权限控制方式：<strong>UGO</strong>，即<code>user-group-other</code>。</p>
+<p>ugo把文件的操作者分为三类：<strong>所有者、同组用户和其他用户</strong>。每类用户都按照<code>读、写、执行</code>来分配权限。</p>
+<p>新建的目录权限为<code>775</code>，文件为<code>664</code>，这是由默认的<code>777</code>、<code>666</code>权限减去掩码<code>0002</code>得到的。</p>
+<hr>
+<p>现代的权限控制有两种：<code>ACL</code>和<code>SELinux</code></p>
+<h3 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h3><blockquote>
+<p>Access Control List 是一张表，告知操作系统每个用户对于某个文件来说具备何种权限。</p>
+<p>每个文件都拥有一个属性标志着它的权限控制表，表中的每个条目都对应着一个用户所拥有的权限。</p>
+</blockquote>
+<p><strong>ACL</strong>是对<strong>UGO</strong>的扩展，因为<strong>UGO</strong>进行权限控制的维度是所有者、同组用户和其他用户，无法从更加细化的维度（如每个用户）进行管理。</p>
+<p><strong>相关命令</strong></p>
+<p><code>getfacl [file]</code>：打印某个文件的ACL规则</p>
+<p><code>setfacl -m u:[username]:[rwx] [file]</code>：为某个文件设置一条关于用户的ACL规则，权限为rwx</p>
+<hr>
+<p>上面提到的两种权限控制都属于<strong>自主访问控制</strong>（DAC），权限管理的主体是用户，只要用户拥有相应文件的权限，就可以访问该文件。</p>
+<p>在DAC中，他人一旦非法获得root权限，那么整个操作系统就可能会受到不可预估的后果。</p>
+<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><blockquote>
+<p>SELinux是一种强安全性的权限控制策略，它是<strong>强制访问控制</strong>（MAC）的一种典型形式。</p>
+</blockquote>
+<p>在SELinux的操作系统中，决定一个资源是否被访问的因素除了上述的<strong>读写执行权限</strong>外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-title-link" itemprop="url">评论</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:11:07" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-meta-item leancloud_visitors" data-flag-title="评论" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>发现下载的资料里很多都是ziw文件，需要手动改成zip后才能进行解压。这里提供下批量改成zip后缀的代码。[呲牙]</p>
+<pre><code>public static void renameZip()  &#123;
+    String rootPath = &quot;E:\BaiduNetdiskDownload\在线教育--谷粒学院&quot;;
+    File root = new File(rootPath);
+    renameZip(root);
+&#125;
+</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">renameZip</span><span class="params">(File root)</span> </span>&#123;</span><br><span class="line">    File[] currentFiles = root.listFiles();</span><br><span class="line">	String fileName; <span class="comment">// 当前文件名</span></span><br><span class="line">	File dstFile;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span>(File file : currentFiles) &#123;</span><br><span class="line">    	<span class="comment">// 是目录则继续往下递归</span></span><br><span class="line">        <span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">            renameZip(file); </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((fileName = file.getName()).length() &gt;= <span class="number">3</span> &amp;&amp;</span><br><span class="line">                <span class="string">&quot;ziw&quot;</span>.equals(fileName.substring(fileName.length() - <span class="number">3</span>))) &#123;</span><br><span class="line">            <span class="comment">// 修改后缀 ziw -&gt; zip</span></span><br><span class="line">            String absolutePath = file.getAbsolutePath();</span><br><span class="line">            dstFile = <span class="keyword">new</span> File(absolutePath.substring(<span class="number">0</span>, absolutePath.length() - <span class="number">3</span>) + <span class="string">&quot;zip&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!dstFile.exists()) &#123;</span><br><span class="line">                <span class="keyword">boolean</span> successToRename = file.renameTo(dstFile);</span><br><span class="line">                <span class="keyword">if</span> (!successToRename) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;fail to rename file: &quot;</span> + file.getName());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1832,92 +1779,6 @@ setInterval("createtime()",250);
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"onLEwKPIGR1aCmBdwGejbexF-MdYXbMMI","app_key":"t2siWdIpwwli1r3ESEAjtitV","server_url":"https://onlewkpi.api.lncldglobal.com","security":true};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>

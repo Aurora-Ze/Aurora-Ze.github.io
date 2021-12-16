@@ -1,133 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>字节码指令</title>
-    <url>/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/</url>
-    <content><![CDATA[<h1 id="字节码指令"><a href="#字节码指令" class="headerlink" title="字节码指令"></a>字节码指令</h1><h2 id="一、结构"><a href="#一、结构" class="headerlink" title="一、结构"></a>一、结构</h2><h3 id="1-1-简单定义"><a href="#1-1-简单定义" class="headerlink" title="1.1 简单定义"></a>1.1 简单定义</h3><blockquote>
-<p>Java虚拟机的指令是由<strong>一个字节长度</strong>的、<strong>代表着某种特定操作</strong>含义的数字（称为操作码，Opcode）以及跟随其后的零至多个代表此操作所需的参数（称为操作数，Operand）构成。</p>
-</blockquote>
-<p>简单来说，指令就是由一个字节的<strong>操作码</strong>和若干个<strong>参数</strong>构成。</p>
-<p>另外， 因为Java虚拟机采用的是<strong>面向操作数栈</strong>的架构，所以大多数指令只有一个操作码，而操作数被放在了操作数栈中。</p>
-<h3 id="1-2-特点"><a href="#1-2-特点" class="headerlink" title="1.2 特点"></a>1.2 特点</h3><p>从上面的定义中，我们可以发现，</p>
-<ul>
-<li><p>操作码总数不能超过256</p>
-<p>既然操作码只占了一个字节，那么<code>1字节 = 8比特，2^8 = 256</code>，即最多能表示<code>256</code>条指令</p>
-</li>
-<li><p>编译后Class文件中代码的操作数长度不对齐</p>
-</li>
-</ul>
-<p>这种字节码结构有着明显的优势和劣势：</p>
-<ul>
-<li><p>优势</p>
-<p>省略了大量的填充和间隔符号，编译代码更加精简</p>
-</li>
-<li><p>劣势</p>
-<p>处理超过一个字节的数据时，会因为重建而损失性能</p>
-</li>
-</ul>
-<h3 id="1-3-执行模型"><a href="#1-3-执行模型" class="headerlink" title="1.3 执行模型"></a>1.3 执行模型</h3><p>不考虑异常处理的话，可以用以下代码来表示Java虚拟机的解释器的执行过程</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">	自动计算PC寄存器的值加<span class="number">1</span></span><br><span class="line">	根据PC寄存器指示的位置，从字节码流中取出操作码</span><br><span class="line">	<span class="keyword">if</span> (字节码存在操作数) &#123;</span><br><span class="line">		从字节码流中取出操作数</span><br><span class="line">	&#125;</span><br><span class="line">	执行操作码所定义的操作</span><br><span class="line">&#125; <span class="keyword">while</span> (字节码流的长度 &gt; <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、类别"><a href="#二、类别" class="headerlink" title="二、类别"></a>二、类别</h2><p>在Java虚拟机的指令集中，大多数指令都包含其操作所对应的数据类型信息。</p>
-<p>前面我们知道了指令集不能超过256条，而Java的数据类型有很多，如果针对每一种类型，都划分出专门的指令去操作它，可能就会溢出。</p>
-<p>那么Java虚拟机是怎么做的呢？</p>
-<p>在将这些之前，我们先要了解两个概念。</p>
-<h3 id="2-1-符号扩展和零位扩展"><a href="#2-1-符号扩展和零位扩展" class="headerlink" title="2.1 符号扩展和零位扩展"></a>2.1 符号扩展和零位扩展</h3><ul>
-<li><p>符号扩展，扩展时，前面全部补上符号位</p>
-</li>
-<li><p>零位扩展，扩展时前面全部补零</p>
-</li>
-</ul>
-<p>我们用一个例子来表示说明一下这两个概念，假设现在有两个数<code>+3</code>和<code>-3</code></p>
-<p>它们用8位的原码表示分别是<code>00000011</code>和<code>10000011</code></p>
-<p>现在我们要把它扩展到用16位来表示，就会产生如下结果</p>
-<table>
-<thead>
-<tr>
-<th align="center">数字</th>
-<th align="center">符号扩展</th>
-<th align="center">零位扩展</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">+3</td>
-<td align="center">0000000000000011</td>
-<td align="center">0000000000000011</td>
-</tr>
-<tr>
-<td align="center">-3</td>
-<td align="center">1111111110000011</td>
-<td align="center">0000000010000011</td>
-</tr>
-</tbody></table>
-<p>我们可以看到，对于正数而言，符号扩展和零位扩展是没有区别的；而负数的话就是扩展的数字不同。</p>
-<p>这两个概念和我们所说的溢出又有什么关系呢？</p>
-<p><strong>其实设计者为了让指令集不会溢出（或者说，复用一些指令），就让编译器在编译或运行时期，把byte和short类型的数据带符号扩展为int类型，把boolean和char类型数据零位扩展成int类型。</strong></p>
-<p>这样就不必对这四个类型单独再分配一些指令来处理了。</p>
-<h3 id="2-2-加载和存储指令"><a href="#2-2-加载和存储指令" class="headerlink" title="2.2 加载和存储指令"></a>2.2 加载和存储指令</h3><p>加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈之间来回传输。例如：</p>
-<ul>
-<li>把一个局部变量加载到操作栈中：iload，fload，dload</li>
-<li>把一个数值从操作数栈存储到局部变量表中：istore，lstore</li>
-<li>把一个常量加载到操作数栈：bipush，sipush</li>
-</ul>
-<h3 id="2-3-运算指令"><a href="#2-3-运算指令" class="headerlink" title="2.3 运算指令"></a>2.3 运算指令</h3><p>算术指令用于对操作数栈上的两个值进行某种特定运算，并把结果重新存入到操作栈顶。</p>
-<p>这里有两个<strong>注意点</strong>，</p>
-<p><strong>一是之前提过的byte，short，char，boolean是用int类型指令操作的</strong></p>
-<p><strong>二是计算浮点数时，会碰到取舍的问题</strong></p>
-<p>先介绍下<strong>两种舍入模式</strong>：</p>
-<ol>
-<li>向最接近数舍入</li>
-<li>向零舍入</li>
-</ol>
-<p>浮点数之间的计算，采用第一种向最接近数舍入，如果是浮点数转整型，采用向零舍入模式</p>
-<p>我们可以回想下，Java中浮点数之间计算后，结果并不是严格准确的；浮点数转整型，会丢弃小数部分；</p>
-<p>这些都和舍入模式相匹配。</p>
-<h3 id="2-4-类型转换指令"><a href="#2-4-类型转换指令" class="headerlink" title="2.4 类型转换指令"></a>2.4 类型转换指令</h3><p>用于对类型的<strong>显式转换</strong>；如果是隐式的（如int转long）就不用这些指令，因为虚拟机直接支持。</p>
-<p>注意，转换时可能会出现不同的正负号，因为long转int是简单的丢弃多余的高位部分，所以如果原来是负数，转换后可能就是正数了。</p>
-<p>对于浮点型的转换，</p>
-<ul>
-<li>如果是NaN，则转成int或long的0</li>
-<li>如果不是无穷大，则按向零舍入来取整<ul>
-<li>如果取整后在范围内，则直接用</li>
-<li>如果不在范围内，根据符号取边界值</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-5-对象创建与访问指令"><a href="#2-5-对象创建与访问指令" class="headerlink" title="2.5 对象创建与访问指令"></a>2.5 对象创建与访问指令</h3><p>Java中的对象包括类实例和数组，创建他们所采用的字节码并不同。</p>
-<p>对象创建完毕后，可以通过访问指令来获取对象实例（或数组实例）中的字段（或数组元素）。</p>
-<h3 id="2-6-操作数栈管理指令"><a href="#2-6-操作数栈管理指令" class="headerlink" title="2.6 操作数栈管理指令"></a>2.6 操作数栈管理指令</h3><p>用于管理操作数栈中的元素</p>
-<h3 id="2-7-控制转移指令"><a href="#2-7-控制转移指令" class="headerlink" title="2.7 控制转移指令"></a>2.7 控制转移指令</h3><p>控制转移指令可以让Java虚拟机有条件或无条件地从指定位置指令的下一条指令继续执行程序。</p>
-<h3 id="2-8-方法调用和返回指令"><a href="#2-8-方法调用和返回指令" class="headerlink" title="2.8 方法调用和返回指令"></a>2.8 方法调用和返回指令</h3><p>方法调用（分派、执行过程）将会在以后介绍。</p>
-<p>方法调用有一系列以”invoke”开头的指令</p>
-<p>返回有一系列以“return”结尾的指令</p>
-<h3 id="2-9-异常处理指令"><a href="#2-9-异常处理指令" class="headerlink" title="2.9 异常处理指令"></a>2.9 异常处理指令</h3><p>关于异常，有三种来源：</p>
-<ul>
-<li>Java程序显式抛出，由athrow指令实现</li>
-<li>Java程序try catch处理，用<code>异常表</code>来完成</li>
-<li>程序发生异常状况，自动抛出</li>
-</ul>
-<h3 id="2-10-同步指令"><a href="#2-10-同步指令" class="headerlink" title="2.10 同步指令"></a>2.10 同步指令</h3><p>Java虚拟机支持两种同步：<strong>方法级的同步</strong>和方法内部<strong>一段指令序列</strong>的同步。</p>
-<p>这两种同步都是靠管程（或者说锁）来实现的</p>
-<h4 id="对于方法级的同步"><a href="#对于方法级的同步" class="headerlink" title="对于方法级的同步"></a>对于方法级的同步</h4><p>它是隐式的，不用字节码指令来控制</p>
-<p>因为方法的访问标志里如果声明了<code>ACC_SYNCHRONIZED</code>，就能够表示它是同步方法</p>
-<p>然后在方法<strong>执行线程</strong>就要<strong>先获取管程，才能执行方法</strong>，方法结束后就会释放管程</p>
-<h4 id="对于指令序列的同步"><a href="#对于指令序列的同步" class="headerlink" title="对于指令序列的同步"></a>对于指令序列的同步</h4><p>它通常是由<code>synchronized</code>关键字声明的</p>
-<p>Java虚拟机的指令集中有<code>monitorenter</code>和<code>monitorexit</code>两条指令来支持<code>synchronized</code></p>
-<p><strong>实现<code>synchronized</code>指令，是<code>Javac编译器</code>和<code>Java虚拟机</code>共同协作的结果</strong></p>
-<p>怎么理解这句话呢？</p>
-<p>这就要谈谈这两个指令的用法了，这<strong>两条指令</strong>是加在同步指令序列的<strong>两端</strong>（开始和结束处），来<strong>保证同步性</strong>。</p>
-<p><strong>如果指令正常执行，毫无疑问能配对成功。</strong></p>
-<p><strong>如果执行到一般发生异常了，这时候被迫跳出同步指令序列，即只执行了<code>monitorenter</code>，而没有执行到<code>monitorexit</code></strong></p>
-<p>那怎么办呢？这就要看编译器了</p>
-<blockquote>
-<p>在编译时，为了保证方法异常时，monitorenter和monitorexit指令仍能够配对，编译器自动生成一个异常处理程序，声明可处理所有的异常，然后只要在monitorexit后面再来条相同的指令，就能成功配对了。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Hello World</title>
     <url>/2021/12/13/HelloWorld/</url>
     <content><![CDATA[<h1 id="记录博客用法"><a href="#记录博客用法" class="headerlink" title="记录博客用法"></a>记录博客用法</h1><h2 id="一、按钮"><a href="#一、按钮" class="headerlink" title="一、按钮"></a>一、按钮</h2><h3 id="1-描述"><a href="#1-描述" class="headerlink" title="1.描述"></a>1.描述</h3><blockquote>
@@ -230,361 +103,6 @@
 <li>打开/关闭终端：<code>ctrl + ·(esc下面那个)</code></li>
 </ol>
 ]]></content>
-  </entry>
-  <entry>
-    <title>类文件结构</title>
-    <url>/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<h2 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h2><h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><p>我们所写的程序想要被计算机执行，有两种方式，第一种是<strong>编译成由0和1组成的二进制格式，让计算机执行。</strong></p>
-<p>而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即：</p>
-<p><strong>编译成与操作系统和机器指令集无关的、平台中立的文件存储格式</strong></p>
-<p>这也正是<code>字节码</code>文件的由来。</p>
-<h3 id="二、介绍"><a href="#二、介绍" class="headerlink" title="二、介绍"></a>二、介绍</h3><p>Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。</p>
-<p>但是为了让虚拟机知道这是字节码文件，就需要严格定义字节码文件的格式</p>
-<p>因此在Class文件中，它的每个数据项的顺序和数量，甚至存储的字节序（统一使用Big Endian），都是被严格限定的。</p>
-<p>下面我们将介绍字节码文件的具体结构。</p>
-<h3 id="三、文件格式"><a href="#三、文件格式" class="headerlink" title="三、文件格式"></a>三、文件格式</h3><h5 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h5><p><strong>「Class文件」</strong>采用一种类似于C语言结构体的伪结构来存储数据。</p>
-<p>数据类型只有两种，「无符号数」和「表」</p>
-<ul>
-<li><p>无符号数</p>
-<p>用<code>u1,u2,u4,u8</code>分别来表示<code>1，2，4，8</code>个字节</p>
-<p>可以用来描述<strong>数字、索引引用、数量值或UTF-8编码的字符串值</strong></p>
-</li>
-<li><p>表</p>
-<p>由多个无符号数或表构成的复合数据类型</p>
-<p>为便于区分，表名一般以<code>_info</code>结尾</p>
-</li>
-</ul>
-<p>因为存在同一类型但数量不确定的数据，所以一般会用一个前置的容量计数器来表示数量。</p>
-<h3 id="四、详细介绍"><a href="#四、详细介绍" class="headerlink" title="四、详细介绍"></a>四、详细介绍</h3><h5 id="①魔数"><a href="#①魔数" class="headerlink" title="①魔数"></a>①魔数</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u4</td>
-<td align="center">magic</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>Class文件的头四个字节称为<strong>Magic Number</strong>，用来<strong>确认文件是否是JVM所能接收的Class文件</strong></p>
-<p>使用魔数的方式来区分文件类型，这种方式在GIF和JPEG中也可以看到。</p>
-<p>至于使用头字节而不是文件的扩展名来判断文件类型，主要还是为了安全考虑，毕竟啥文件改了后缀也能变成Class文件。</p>
-<p>Class文件魔数的具体取值为<code>0xCAFEBABE</code>，即咖啡宝贝</p>
-<h5 id="②主版本号和次版本号"><a href="#②主版本号和次版本号" class="headerlink" title="②主版本号和次版本号"></a>②主版本号和次版本号</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">minor_version</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">major_version</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>紧跟着魔数的四个字节分别表示<strong>Minor Version</strong>和<strong>Major Version</strong></p>
-<p>JDK1.1以后，每个大版本都会让主版本号加一。</p>
-<p>高版本的JDK能向下兼容低版本的Class文件，但是版本比它高的Class就不行，因为《Java虚拟机规范》要求了虚拟机必须拒绝执行超过其版本号的Class文件。</p>
-<h5 id="③常量池"><a href="#③常量池" class="headerlink" title="③常量池"></a>③常量池</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">constant_pool_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">cp_info</td>
-<td align="center">constant_pool</td>
-<td align="center">constant_pool_count - 1</td>
-</tr>
-</tbody></table>
-<p>由<code>constant_pool_count</code>和<code>constant_pool</code>构成。</p>
-<p><strong>constant_pool_count（u2类型）</strong></p>
-<p>因为常量池的容量是不固定的，所以入口处有u2类型的数据，来表示「常量池的容量」。</p>
-<p>注意，它是从1开始计数的，所以常量数量为$count - 1$</p>
-<p>这样做的原因，据设计者说，是为了<strong>能够让以后某些指向常量池的索引值的数据表达“不引用任何一个常量池项目”的含义。</strong></p>
-<p><strong>constant_pool（cp_info类型）</strong></p>
-<p>常量池中主要存放两大类常量：<strong>字面量</strong>和<strong>符号引用</strong></p>
-<ul>
-<li><p><strong>字面量</strong></p>
-<p>文本字符串，声明为final的常量值等</p>
-</li>
-<li><p><strong>符号引用</strong></p>
-<p>类、接口的全限定名</p>
-<p>字段的名称和描述符</p>
-<p>方法的名称和描述符等</p>
-</li>
-</ul>
-<p>常量池中的每个常量都是一个表，截至JDK13，共有17种不同类型的常量。</p>
-<p>这17类表有一个共同特点，即<strong>第一个字节都表示tag标志位，代表当前常量属于哪个常量表</strong>，后面的字节根据不同的表而变化。</p>
-<h5 id="④访问标志"><a href="#④访问标志" class="headerlink" title="④访问标志"></a>④访问标志</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">access_flags</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>常量池结束之后的两个字节，用来表示类或接口的访问标志</p>
-<p>可以取的值有：public、final、super、interface等共9个</p>
-<h5 id="⑤索引集合"><a href="#⑤索引集合" class="headerlink" title="⑤索引集合"></a>⑤索引集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">this_class</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">super_class</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">interfaces_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">interfaces</td>
-<td align="center">interfaces_count</td>
-</tr>
-</tbody></table>
-<p>类索引和父类索引都占两个字节，而接口索引是一组数据的集合。</p>
-<p>这些索引用来确认类的全限定名、父类的全限定名以及实现的接口的名称。</p>
-<p><strong>具体确认过程如下：</strong></p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png" alt="Snipaste_2021-04-25_17-01-01"></p>
-<h5 id="⑥字段表集合"><a href="#⑥字段表集合" class="headerlink" title="⑥字段表集合"></a>⑥字段表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">fields_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">field_info</td>
-<td align="center">fields</td>
-<td align="center">fields_count</td>
-</tr>
-</tbody></table>
-<p>包含了类或接口声明的类级变量（static）和实例变量，但不包含方法内的局部变量。</p>
-<p>我们可以先思考下，一个字段拥有什么属性？</p>
-<ul>
-<li>修饰符，public、static、volatile等</li>
-<li>名称，字段名</li>
-<li>类型，是什么数据类型</li>
-<li>属性，如果是集合类型，里面包含的其他属性</li>
-</ul>
-<p>根据上面罗列出来的信息，我们可以总结出字段表的内部结构</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">access_flags</td>
-<td align="center">1</td>
-<td align="center">字段修饰符</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">name_index</td>
-<td align="center">1</td>
-<td align="center">简单名称</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">descriptor_index</td>
-<td align="center">1</td>
-<td align="center">描述符</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">attributes_count</td>
-<td align="center">1</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">attribute_info</td>
-<td align="center">attributes</td>
-<td align="center">attributes_count</td>
-<td align="center"></td>
-</tr>
-</tbody></table>
-<p>这里解释下前面提到过的三个名词，全限定名、简单名称和描述符。</p>
-<ul>
-<li><p><strong>全限定名</strong></p>
-<p>com/edu/neu/TestApplication;</p>
-<p>代表类的全限定名</p>
-</li>
-<li><p><strong>简单名称</strong></p>
-<p>sort：sort()方法的简单名称</p>
-<p>arr：arr字段的简单名称</p>
-</li>
-<li><p><strong>描述符</strong></p>
-<p>描述符和上述两者相比更加复杂一些。它是用来描述<strong>字段的数据类型</strong>、<strong>方法的参数列表</strong>和<strong>返回值</strong>。</p>
-</li>
-</ul>
-<p><strong>描述字段时</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">标识字符</th>
-<th align="center">含义</th>
-<th align="center">标识字符</th>
-<th align="center">含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">B</td>
-<td align="center">基本类型byte</td>
-<td align="center">J</td>
-<td align="center">基本类型long</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">基本类型char</td>
-<td align="center">S</td>
-<td align="center">基本类型short</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">基本类型double</td>
-<td align="center">Z</td>
-<td align="center">基本类型boolean</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">基本类型float</td>
-<td align="center">V</td>
-<td align="center">特殊类型void</td>
-</tr>
-<tr>
-<td align="center">I</td>
-<td align="center">基本类型int</td>
-<td align="center">L</td>
-<td align="center">对象类型，如Ljava/lang/Object;</td>
-</tr>
-</tbody></table>
-<p><strong>基本数据类型和void都用大写字母来表示，对象类型则用L加上对象的全限定名来表示，数组类型在最前面加上若干个[</strong></p>
-<p>对于<code>java.lang.String[][]</code>类型，它的描述符将是<code>[[Ljava/lang/String;</code></p>
-<p>对于<code>int[]</code>，它的描述符将是<code>[I</code></p>
-<p><strong>描述方法时</strong></p>
-<p>按照<strong>先参数列表</strong>、<strong>后返回值</strong>的顺序进行描述，参数列表要放在<code>()</code>中。</p>
-<p>对于<code>int indexOf(char[] source, int srcOffset, int srcCount, char[] target, int tarOffset, int tarCount, int fromIndex)</code>，描述符将是<code>([CII[CIII)I</code></p>
-<h5 id="⑦方法表集合"><a href="#⑦方法表集合" class="headerlink" title="⑦方法表集合"></a>⑦方法表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">methods_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">method_info</td>
-<td align="center">methods</td>
-<td align="center">methods_count</td>
-</tr>
-</tbody></table>
-<p>方法表和上述字段表集合几乎一致，所以关于表结构这部分不再介绍。</p>
-<p>但是如果只是和字段一样的话，那么它的代码怎么保存呢？</p>
-<p>事实上，方法体经过编译器编译成字节码指令后，存放在方法的属性表集合中一个名为<code>Code</code>的属性里，我们在将属性表时，会介绍这些。</p>
-<h5 id="⑧属性表集合"><a href="#⑧属性表集合" class="headerlink" title="⑧属性表集合"></a>⑧属性表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">attributes_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">attribute_info</td>
-<td align="center">attributes</td>
-<td align="center">attributes_count</td>
-</tr>
-</tbody></table>
-<p>与Class文件中其他的数据项目要求严格的顺序、长度和内容不同，属性表集合的限制稍微宽松一些，不再要求各个属性表具有严格顺序。</p>
-<p>在最新的《Java虚拟机规范》的JavaSE12版本中，预定义属性达到29项。可想而知，它的内容非常多。</p>
-<p>下面我们介绍下属性表的基本结构</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">attribute_name_index</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u4</td>
-<td align="center">attribute_length</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u1</td>
-<td align="center">info</td>
-<td align="center">attribute_length</td>
-</tr>
-</tbody></table>
-<p>一个符合规范的属性表，它的属性名应该从常量池中引用<code>CONSTANT_Utf8_info</code>类型的常量来表示，而属性值的结构是完全自定义的，只需要通过一个<code>u4</code>长度属性去说明属性值所占用的位数即可。</p>
-<p>至于具体的属性值结构，可参考《深入理解Java虚拟机》P233。</p>
-]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
   </entry>
   <entry>
     <title>(三).Executor框架介绍</title>
@@ -7711,6 +7229,361 @@
       </categories>
   </entry>
   <entry>
+    <title>类文件结构</title>
+    <url>/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<h2 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h2><h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><p>我们所写的程序想要被计算机执行，有两种方式，第一种是<strong>编译成由0和1组成的二进制格式，让计算机执行。</strong></p>
+<p>而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即：</p>
+<p><strong>编译成与操作系统和机器指令集无关的、平台中立的文件存储格式</strong></p>
+<p>这也正是<code>字节码</code>文件的由来。</p>
+<h3 id="二、介绍"><a href="#二、介绍" class="headerlink" title="二、介绍"></a>二、介绍</h3><p>Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。</p>
+<p>但是为了让虚拟机知道这是字节码文件，就需要严格定义字节码文件的格式</p>
+<p>因此在Class文件中，它的每个数据项的顺序和数量，甚至存储的字节序（统一使用Big Endian），都是被严格限定的。</p>
+<p>下面我们将介绍字节码文件的具体结构。</p>
+<h3 id="三、文件格式"><a href="#三、文件格式" class="headerlink" title="三、文件格式"></a>三、文件格式</h3><h5 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h5><p><strong>「Class文件」</strong>采用一种类似于C语言结构体的伪结构来存储数据。</p>
+<p>数据类型只有两种，「无符号数」和「表」</p>
+<ul>
+<li><p>无符号数</p>
+<p>用<code>u1,u2,u4,u8</code>分别来表示<code>1，2，4，8</code>个字节</p>
+<p>可以用来描述<strong>数字、索引引用、数量值或UTF-8编码的字符串值</strong></p>
+</li>
+<li><p>表</p>
+<p>由多个无符号数或表构成的复合数据类型</p>
+<p>为便于区分，表名一般以<code>_info</code>结尾</p>
+</li>
+</ul>
+<p>因为存在同一类型但数量不确定的数据，所以一般会用一个前置的容量计数器来表示数量。</p>
+<h3 id="四、详细介绍"><a href="#四、详细介绍" class="headerlink" title="四、详细介绍"></a>四、详细介绍</h3><h5 id="①魔数"><a href="#①魔数" class="headerlink" title="①魔数"></a>①魔数</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u4</td>
+<td align="center">magic</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>Class文件的头四个字节称为<strong>Magic Number</strong>，用来<strong>确认文件是否是JVM所能接收的Class文件</strong></p>
+<p>使用魔数的方式来区分文件类型，这种方式在GIF和JPEG中也可以看到。</p>
+<p>至于使用头字节而不是文件的扩展名来判断文件类型，主要还是为了安全考虑，毕竟啥文件改了后缀也能变成Class文件。</p>
+<p>Class文件魔数的具体取值为<code>0xCAFEBABE</code>，即咖啡宝贝</p>
+<h5 id="②主版本号和次版本号"><a href="#②主版本号和次版本号" class="headerlink" title="②主版本号和次版本号"></a>②主版本号和次版本号</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">minor_version</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">major_version</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>紧跟着魔数的四个字节分别表示<strong>Minor Version</strong>和<strong>Major Version</strong></p>
+<p>JDK1.1以后，每个大版本都会让主版本号加一。</p>
+<p>高版本的JDK能向下兼容低版本的Class文件，但是版本比它高的Class就不行，因为《Java虚拟机规范》要求了虚拟机必须拒绝执行超过其版本号的Class文件。</p>
+<h5 id="③常量池"><a href="#③常量池" class="headerlink" title="③常量池"></a>③常量池</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">constant_pool_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">cp_info</td>
+<td align="center">constant_pool</td>
+<td align="center">constant_pool_count - 1</td>
+</tr>
+</tbody></table>
+<p>由<code>constant_pool_count</code>和<code>constant_pool</code>构成。</p>
+<p><strong>constant_pool_count（u2类型）</strong></p>
+<p>因为常量池的容量是不固定的，所以入口处有u2类型的数据，来表示「常量池的容量」。</p>
+<p>注意，它是从1开始计数的，所以常量数量为$count - 1$</p>
+<p>这样做的原因，据设计者说，是为了<strong>能够让以后某些指向常量池的索引值的数据表达“不引用任何一个常量池项目”的含义。</strong></p>
+<p><strong>constant_pool（cp_info类型）</strong></p>
+<p>常量池中主要存放两大类常量：<strong>字面量</strong>和<strong>符号引用</strong></p>
+<ul>
+<li><p><strong>字面量</strong></p>
+<p>文本字符串，声明为final的常量值等</p>
+</li>
+<li><p><strong>符号引用</strong></p>
+<p>类、接口的全限定名</p>
+<p>字段的名称和描述符</p>
+<p>方法的名称和描述符等</p>
+</li>
+</ul>
+<p>常量池中的每个常量都是一个表，截至JDK13，共有17种不同类型的常量。</p>
+<p>这17类表有一个共同特点，即<strong>第一个字节都表示tag标志位，代表当前常量属于哪个常量表</strong>，后面的字节根据不同的表而变化。</p>
+<h5 id="④访问标志"><a href="#④访问标志" class="headerlink" title="④访问标志"></a>④访问标志</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">access_flags</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>常量池结束之后的两个字节，用来表示类或接口的访问标志</p>
+<p>可以取的值有：public、final、super、interface等共9个</p>
+<h5 id="⑤索引集合"><a href="#⑤索引集合" class="headerlink" title="⑤索引集合"></a>⑤索引集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">this_class</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">super_class</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">interfaces_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">interfaces</td>
+<td align="center">interfaces_count</td>
+</tr>
+</tbody></table>
+<p>类索引和父类索引都占两个字节，而接口索引是一组数据的集合。</p>
+<p>这些索引用来确认类的全限定名、父类的全限定名以及实现的接口的名称。</p>
+<p><strong>具体确认过程如下：</strong></p>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png" alt="Snipaste_2021-04-25_17-01-01"></p>
+<h5 id="⑥字段表集合"><a href="#⑥字段表集合" class="headerlink" title="⑥字段表集合"></a>⑥字段表集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">fields_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">field_info</td>
+<td align="center">fields</td>
+<td align="center">fields_count</td>
+</tr>
+</tbody></table>
+<p>包含了类或接口声明的类级变量（static）和实例变量，但不包含方法内的局部变量。</p>
+<p>我们可以先思考下，一个字段拥有什么属性？</p>
+<ul>
+<li>修饰符，public、static、volatile等</li>
+<li>名称，字段名</li>
+<li>类型，是什么数据类型</li>
+<li>属性，如果是集合类型，里面包含的其他属性</li>
+</ul>
+<p>根据上面罗列出来的信息，我们可以总结出字段表的内部结构</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">access_flags</td>
+<td align="center">1</td>
+<td align="center">字段修饰符</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">name_index</td>
+<td align="center">1</td>
+<td align="center">简单名称</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">descriptor_index</td>
+<td align="center">1</td>
+<td align="center">描述符</td>
+</tr>
+<tr>
+<td align="center">u2</td>
+<td align="center">attributes_count</td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">attribute_info</td>
+<td align="center">attributes</td>
+<td align="center">attributes_count</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>这里解释下前面提到过的三个名词，全限定名、简单名称和描述符。</p>
+<ul>
+<li><p><strong>全限定名</strong></p>
+<p>com/edu/neu/TestApplication;</p>
+<p>代表类的全限定名</p>
+</li>
+<li><p><strong>简单名称</strong></p>
+<p>sort：sort()方法的简单名称</p>
+<p>arr：arr字段的简单名称</p>
+</li>
+<li><p><strong>描述符</strong></p>
+<p>描述符和上述两者相比更加复杂一些。它是用来描述<strong>字段的数据类型</strong>、<strong>方法的参数列表</strong>和<strong>返回值</strong>。</p>
+</li>
+</ul>
+<p><strong>描述字段时</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">标识字符</th>
+<th align="center">含义</th>
+<th align="center">标识字符</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">B</td>
+<td align="center">基本类型byte</td>
+<td align="center">J</td>
+<td align="center">基本类型long</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">基本类型char</td>
+<td align="center">S</td>
+<td align="center">基本类型short</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">基本类型double</td>
+<td align="center">Z</td>
+<td align="center">基本类型boolean</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">基本类型float</td>
+<td align="center">V</td>
+<td align="center">特殊类型void</td>
+</tr>
+<tr>
+<td align="center">I</td>
+<td align="center">基本类型int</td>
+<td align="center">L</td>
+<td align="center">对象类型，如Ljava/lang/Object;</td>
+</tr>
+</tbody></table>
+<p><strong>基本数据类型和void都用大写字母来表示，对象类型则用L加上对象的全限定名来表示，数组类型在最前面加上若干个[</strong></p>
+<p>对于<code>java.lang.String[][]</code>类型，它的描述符将是<code>[[Ljava/lang/String;</code></p>
+<p>对于<code>int[]</code>，它的描述符将是<code>[I</code></p>
+<p><strong>描述方法时</strong></p>
+<p>按照<strong>先参数列表</strong>、<strong>后返回值</strong>的顺序进行描述，参数列表要放在<code>()</code>中。</p>
+<p>对于<code>int indexOf(char[] source, int srcOffset, int srcCount, char[] target, int tarOffset, int tarCount, int fromIndex)</code>，描述符将是<code>([CII[CIII)I</code></p>
+<h5 id="⑦方法表集合"><a href="#⑦方法表集合" class="headerlink" title="⑦方法表集合"></a>⑦方法表集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">methods_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">method_info</td>
+<td align="center">methods</td>
+<td align="center">methods_count</td>
+</tr>
+</tbody></table>
+<p>方法表和上述字段表集合几乎一致，所以关于表结构这部分不再介绍。</p>
+<p>但是如果只是和字段一样的话，那么它的代码怎么保存呢？</p>
+<p>事实上，方法体经过编译器编译成字节码指令后，存放在方法的属性表集合中一个名为<code>Code</code>的属性里，我们在将属性表时，会介绍这些。</p>
+<h5 id="⑧属性表集合"><a href="#⑧属性表集合" class="headerlink" title="⑧属性表集合"></a>⑧属性表集合</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">attributes_count</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">attribute_info</td>
+<td align="center">attributes</td>
+<td align="center">attributes_count</td>
+</tr>
+</tbody></table>
+<p>与Class文件中其他的数据项目要求严格的顺序、长度和内容不同，属性表集合的限制稍微宽松一些，不再要求各个属性表具有严格顺序。</p>
+<p>在最新的《Java虚拟机规范》的JavaSE12版本中，预定义属性达到29项。可想而知，它的内容非常多。</p>
+<p>下面我们介绍下属性表的基本结构</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">名称</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">u2</td>
+<td align="center">attribute_name_index</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u4</td>
+<td align="center">attribute_length</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">u1</td>
+<td align="center">info</td>
+<td align="center">attribute_length</td>
+</tr>
+</tbody></table>
+<p>一个符合规范的属性表，它的属性名应该从常量池中引用<code>CONSTANT_Utf8_info</code>类型的常量来表示，而属性值的结构是完全自定义的，只需要通过一个<code>u4</code>长度属性去说明属性值所占用的位数即可。</p>
+<p>至于具体的属性值结构，可参考《深入理解Java虚拟机》P233。</p>
+]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+  </entry>
+  <entry>
     <title>类加载过程</title>
     <url>/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="一、类加载过程"><a href="#一、类加载过程" class="headerlink" title="一、类加载过程"></a>一、类加载过程</h2><p>要把一个类的Class文件加载到Java虚拟机中，大致分为三个步骤：<strong>加载、连接和初始化</strong></p>
@@ -7730,6 +7603,133 @@
 <h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p>双亲委派机制，就是指要加载某个类时，向上传递请求，一直到启动类加载器</p>
 <p>然后依次判断能不能加载，不能的话再往下传。</p>
 <h3 id="为什么要这样做呢？"><a href="#为什么要这样做呢？" class="headerlink" title="为什么要这样做呢？"></a>为什么要这样做呢？</h3>]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>字节码指令</title>
+    <url>/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="字节码指令"><a href="#字节码指令" class="headerlink" title="字节码指令"></a>字节码指令</h1><h2 id="一、结构"><a href="#一、结构" class="headerlink" title="一、结构"></a>一、结构</h2><h3 id="1-1-简单定义"><a href="#1-1-简单定义" class="headerlink" title="1.1 简单定义"></a>1.1 简单定义</h3><blockquote>
+<p>Java虚拟机的指令是由<strong>一个字节长度</strong>的、<strong>代表着某种特定操作</strong>含义的数字（称为操作码，Opcode）以及跟随其后的零至多个代表此操作所需的参数（称为操作数，Operand）构成。</p>
+</blockquote>
+<p>简单来说，指令就是由一个字节的<strong>操作码</strong>和若干个<strong>参数</strong>构成。</p>
+<p>另外， 因为Java虚拟机采用的是<strong>面向操作数栈</strong>的架构，所以大多数指令只有一个操作码，而操作数被放在了操作数栈中。</p>
+<h3 id="1-2-特点"><a href="#1-2-特点" class="headerlink" title="1.2 特点"></a>1.2 特点</h3><p>从上面的定义中，我们可以发现，</p>
+<ul>
+<li><p>操作码总数不能超过256</p>
+<p>既然操作码只占了一个字节，那么<code>1字节 = 8比特，2^8 = 256</code>，即最多能表示<code>256</code>条指令</p>
+</li>
+<li><p>编译后Class文件中代码的操作数长度不对齐</p>
+</li>
+</ul>
+<p>这种字节码结构有着明显的优势和劣势：</p>
+<ul>
+<li><p>优势</p>
+<p>省略了大量的填充和间隔符号，编译代码更加精简</p>
+</li>
+<li><p>劣势</p>
+<p>处理超过一个字节的数据时，会因为重建而损失性能</p>
+</li>
+</ul>
+<h3 id="1-3-执行模型"><a href="#1-3-执行模型" class="headerlink" title="1.3 执行模型"></a>1.3 执行模型</h3><p>不考虑异常处理的话，可以用以下代码来表示Java虚拟机的解释器的执行过程</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">	自动计算PC寄存器的值加<span class="number">1</span></span><br><span class="line">	根据PC寄存器指示的位置，从字节码流中取出操作码</span><br><span class="line">	<span class="keyword">if</span> (字节码存在操作数) &#123;</span><br><span class="line">		从字节码流中取出操作数</span><br><span class="line">	&#125;</span><br><span class="line">	执行操作码所定义的操作</span><br><span class="line">&#125; <span class="keyword">while</span> (字节码流的长度 &gt; <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、类别"><a href="#二、类别" class="headerlink" title="二、类别"></a>二、类别</h2><p>在Java虚拟机的指令集中，大多数指令都包含其操作所对应的数据类型信息。</p>
+<p>前面我们知道了指令集不能超过256条，而Java的数据类型有很多，如果针对每一种类型，都划分出专门的指令去操作它，可能就会溢出。</p>
+<p>那么Java虚拟机是怎么做的呢？</p>
+<p>在将这些之前，我们先要了解两个概念。</p>
+<h3 id="2-1-符号扩展和零位扩展"><a href="#2-1-符号扩展和零位扩展" class="headerlink" title="2.1 符号扩展和零位扩展"></a>2.1 符号扩展和零位扩展</h3><ul>
+<li><p>符号扩展，扩展时，前面全部补上符号位</p>
+</li>
+<li><p>零位扩展，扩展时前面全部补零</p>
+</li>
+</ul>
+<p>我们用一个例子来表示说明一下这两个概念，假设现在有两个数<code>+3</code>和<code>-3</code></p>
+<p>它们用8位的原码表示分别是<code>00000011</code>和<code>10000011</code></p>
+<p>现在我们要把它扩展到用16位来表示，就会产生如下结果</p>
+<table>
+<thead>
+<tr>
+<th align="center">数字</th>
+<th align="center">符号扩展</th>
+<th align="center">零位扩展</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">+3</td>
+<td align="center">0000000000000011</td>
+<td align="center">0000000000000011</td>
+</tr>
+<tr>
+<td align="center">-3</td>
+<td align="center">1111111110000011</td>
+<td align="center">0000000010000011</td>
+</tr>
+</tbody></table>
+<p>我们可以看到，对于正数而言，符号扩展和零位扩展是没有区别的；而负数的话就是扩展的数字不同。</p>
+<p>这两个概念和我们所说的溢出又有什么关系呢？</p>
+<p><strong>其实设计者为了让指令集不会溢出（或者说，复用一些指令），就让编译器在编译或运行时期，把byte和short类型的数据带符号扩展为int类型，把boolean和char类型数据零位扩展成int类型。</strong></p>
+<p>这样就不必对这四个类型单独再分配一些指令来处理了。</p>
+<h3 id="2-2-加载和存储指令"><a href="#2-2-加载和存储指令" class="headerlink" title="2.2 加载和存储指令"></a>2.2 加载和存储指令</h3><p>加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈之间来回传输。例如：</p>
+<ul>
+<li>把一个局部变量加载到操作栈中：iload，fload，dload</li>
+<li>把一个数值从操作数栈存储到局部变量表中：istore，lstore</li>
+<li>把一个常量加载到操作数栈：bipush，sipush</li>
+</ul>
+<h3 id="2-3-运算指令"><a href="#2-3-运算指令" class="headerlink" title="2.3 运算指令"></a>2.3 运算指令</h3><p>算术指令用于对操作数栈上的两个值进行某种特定运算，并把结果重新存入到操作栈顶。</p>
+<p>这里有两个<strong>注意点</strong>，</p>
+<p><strong>一是之前提过的byte，short，char，boolean是用int类型指令操作的</strong></p>
+<p><strong>二是计算浮点数时，会碰到取舍的问题</strong></p>
+<p>先介绍下<strong>两种舍入模式</strong>：</p>
+<ol>
+<li>向最接近数舍入</li>
+<li>向零舍入</li>
+</ol>
+<p>浮点数之间的计算，采用第一种向最接近数舍入，如果是浮点数转整型，采用向零舍入模式</p>
+<p>我们可以回想下，Java中浮点数之间计算后，结果并不是严格准确的；浮点数转整型，会丢弃小数部分；</p>
+<p>这些都和舍入模式相匹配。</p>
+<h3 id="2-4-类型转换指令"><a href="#2-4-类型转换指令" class="headerlink" title="2.4 类型转换指令"></a>2.4 类型转换指令</h3><p>用于对类型的<strong>显式转换</strong>；如果是隐式的（如int转long）就不用这些指令，因为虚拟机直接支持。</p>
+<p>注意，转换时可能会出现不同的正负号，因为long转int是简单的丢弃多余的高位部分，所以如果原来是负数，转换后可能就是正数了。</p>
+<p>对于浮点型的转换，</p>
+<ul>
+<li>如果是NaN，则转成int或long的0</li>
+<li>如果不是无穷大，则按向零舍入来取整<ul>
+<li>如果取整后在范围内，则直接用</li>
+<li>如果不在范围内，根据符号取边界值</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-5-对象创建与访问指令"><a href="#2-5-对象创建与访问指令" class="headerlink" title="2.5 对象创建与访问指令"></a>2.5 对象创建与访问指令</h3><p>Java中的对象包括类实例和数组，创建他们所采用的字节码并不同。</p>
+<p>对象创建完毕后，可以通过访问指令来获取对象实例（或数组实例）中的字段（或数组元素）。</p>
+<h3 id="2-6-操作数栈管理指令"><a href="#2-6-操作数栈管理指令" class="headerlink" title="2.6 操作数栈管理指令"></a>2.6 操作数栈管理指令</h3><p>用于管理操作数栈中的元素</p>
+<h3 id="2-7-控制转移指令"><a href="#2-7-控制转移指令" class="headerlink" title="2.7 控制转移指令"></a>2.7 控制转移指令</h3><p>控制转移指令可以让Java虚拟机有条件或无条件地从指定位置指令的下一条指令继续执行程序。</p>
+<h3 id="2-8-方法调用和返回指令"><a href="#2-8-方法调用和返回指令" class="headerlink" title="2.8 方法调用和返回指令"></a>2.8 方法调用和返回指令</h3><p>方法调用（分派、执行过程）将会在以后介绍。</p>
+<p>方法调用有一系列以”invoke”开头的指令</p>
+<p>返回有一系列以“return”结尾的指令</p>
+<h3 id="2-9-异常处理指令"><a href="#2-9-异常处理指令" class="headerlink" title="2.9 异常处理指令"></a>2.9 异常处理指令</h3><p>关于异常，有三种来源：</p>
+<ul>
+<li>Java程序显式抛出，由athrow指令实现</li>
+<li>Java程序try catch处理，用<code>异常表</code>来完成</li>
+<li>程序发生异常状况，自动抛出</li>
+</ul>
+<h3 id="2-10-同步指令"><a href="#2-10-同步指令" class="headerlink" title="2.10 同步指令"></a>2.10 同步指令</h3><p>Java虚拟机支持两种同步：<strong>方法级的同步</strong>和方法内部<strong>一段指令序列</strong>的同步。</p>
+<p>这两种同步都是靠管程（或者说锁）来实现的</p>
+<h4 id="对于方法级的同步"><a href="#对于方法级的同步" class="headerlink" title="对于方法级的同步"></a>对于方法级的同步</h4><p>它是隐式的，不用字节码指令来控制</p>
+<p>因为方法的访问标志里如果声明了<code>ACC_SYNCHRONIZED</code>，就能够表示它是同步方法</p>
+<p>然后在方法<strong>执行线程</strong>就要<strong>先获取管程，才能执行方法</strong>，方法结束后就会释放管程</p>
+<h4 id="对于指令序列的同步"><a href="#对于指令序列的同步" class="headerlink" title="对于指令序列的同步"></a>对于指令序列的同步</h4><p>它通常是由<code>synchronized</code>关键字声明的</p>
+<p>Java虚拟机的指令集中有<code>monitorenter</code>和<code>monitorexit</code>两条指令来支持<code>synchronized</code></p>
+<p><strong>实现<code>synchronized</code>指令，是<code>Javac编译器</code>和<code>Java虚拟机</code>共同协作的结果</strong></p>
+<p>怎么理解这句话呢？</p>
+<p>这就要谈谈这两个指令的用法了，这<strong>两条指令</strong>是加在同步指令序列的<strong>两端</strong>（开始和结束处），来<strong>保证同步性</strong>。</p>
+<p><strong>如果指令正常执行，毫无疑问能配对成功。</strong></p>
+<p><strong>如果执行到一般发生异常了，这时候被迫跳出同步指令序列，即只执行了<code>monitorenter</code>，而没有执行到<code>monitorexit</code></strong></p>
+<p>那怎么办呢？这就要看编译器了</p>
+<blockquote>
+<p>在编译时，为了保证方法异常时，monitorenter和monitorexit指令仍能够配对，编译器自动生成一个异常处理程序，声明可处理所有的异常，然后只要在monitorexit后面再来条相同的指令，就能成功配对了。</p>
+</blockquote>
+]]></content>
       <categories>
         <category>JVM</category>
       </categories>

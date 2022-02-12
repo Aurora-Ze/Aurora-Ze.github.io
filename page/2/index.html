@@ -47,15 +47,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -201,6 +192,1217 @@
 
           <div class="content index posts-expand">
             
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="post-title-link" itemprop="url">Redis主从复制</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:59" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="post-meta-item leancloud_visitors" data-flag-title="Redis主从复制" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>880</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><blockquote>
+<p><strong>主从复制</strong>是指将一个redis服务器中的数据复制到另一个服务器上，前者称为主服务器，后者则是从服务器。</p>
+<p>主从复制一般用于<strong>读写分离</strong>的场景，即主服务器执行读写请求，其他从服务器执行读请求。这样可以缓解主服务器的读写压力。</p>
+</blockquote>
+<h3 id="一、类型"><a href="#一、类型" class="headerlink" title="一、类型"></a>一、类型</h3><p><strong>全量复制：</strong>复制主服务器的所有数据；一般用于建立主从关系时。</p>
+<p><strong>增量复制：</strong>复制后来变化的部分数据；一般用于断开连接后重连时</p>
+<p>注意，增量复制是redis2.8以后才有的功能，在此之前只能进行全量复制。</p>
+<h3 id="二、主从复制的过程"><a href="#二、主从复制的过程" class="headerlink" title="二、主从复制的过程"></a>二、主从复制的过程</h3><p>全量复制的过程示意：</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211028204216.png" alt="image-20211028204216102"></p>
+<h5 id="1-发起主从复制的请求"><a href="#1-发起主从复制的请求" class="headerlink" title="1.发起主从复制的请求"></a>1.发起主从复制的请求</h5><p>客户端输入<code>salveof [ip] [port]</code>命令，表示希望当前redis服务器成为目标服务器的从节点。</p>
+<h5 id="2-向目标服务器发送同步请求"><a href="#2-向目标服务器发送同步请求" class="headerlink" title="2.向目标服务器发送同步请求"></a>2.向目标服务器发送同步请求</h5><p>服务器收到客户端的<code>salveof</code>命令后，向目标服务器发送<code>psync</code>命令。</p>
+<p>格式为<code>psync [runid] [offset]</code></p>
+<ul>
+<li>因为是首次连接，则发送<code>psync ? -1</code></li>
+<li>如果本地存有运行id和偏移量，则发送这些数据，用来表示重连。</li>
+</ul>
+<h5 id="3-响应请求"><a href="#3-响应请求" class="headerlink" title="3.响应请求"></a>3.响应请求</h5><p>主节点判断为全量复制，因此返回<code>fullresync [runid] [offset]</code>。</p>
+<p><strong>runid</strong></p>
+<p>每个服务器启动时会生成一个随机数runid。主从复制时，从节点会记录下主节点传过来的runid，作用有二：</p>
+<ol>
+<li>标志主节点的身份</li>
+<li>可以根据runid是否为空来判断是初次连接还是断线重连的主从复制。</li>
+</ol>
+<p><strong>offset</strong></p>
+<p>用来同步主从服务器之间接收的数据。</p>
+<p>主节点和从节点都持有<code>offset</code>，分别表示发送数据量和接收数据量。</p>
+<ul>
+<li>正常情况下，两者的偏移应该是相同的。</li>
+<li>断线重连时，从节点丢失一部分数据，因此它发送的psync请求携带的偏移量参数小于主节点，主节点可以判断并给出缺失的部分数据。</li>
+</ul>
+<h5 id="4-发送rdb快照"><a href="#4-发送rdb快照" class="headerlink" title="4.发送rdb快照"></a>4.发送rdb快照</h5><h5 id="5-发送写命令"><a href="#5-发送写命令" class="headerlink" title="5.发送写命令"></a>5.发送写命令</h5><p>在主从复制建立之后，主节点会把所有的写命令发送给从节点，<strong>来保证主从数据的一致</strong>。</p>
+<p>此外，为了应对<strong>增量复制</strong>的场景，主节点还将写命令放入了一个固定的缓冲区中，当从节点因为断线缺失一部分写命令后，主节点会从缓冲区中拿出来给它。</p>
+<h3 id="三、主从复制的一些问题"><a href="#三、主从复制的一些问题" class="headerlink" title="三、主从复制的一些问题"></a>三、主从复制的一些问题</h3><h5 id="3-1主从节点数据的延迟如何优化？"><a href="#3-1主从节点数据的延迟如何优化？" class="headerlink" title="3.1主从节点数据的延迟如何优化？"></a>3.1主从节点数据的延迟如何优化？</h5><h5 id="3-2从节点中数据的过期如何处理？"><a href="#3-2从节点中数据的过期如何处理？" class="headerlink" title="3.2从节点中数据的过期如何处理？"></a>3.2从节点中数据的过期如何处理？</h5><h5 id="3-3为什么主从复制不用AOF文件"><a href="#3-3为什么主从复制不用AOF文件" class="headerlink" title="3.3为什么主从复制不用AOF文件"></a>3.3为什么主从复制不用AOF文件</h5>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">Redis数据结构</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-06 12:39:57" itemprop="dateModified" datetime="2022-01-06T12:39:57+08:00">2022-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-meta-item leancloud_visitors" data-flag-title="Redis数据结构" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、简单动态字符串"><a href="#一、简单动态字符串" class="headerlink" title="一、简单动态字符串"></a>一、简单动态字符串</h2><h3 id="1-结构"><a href="#1-结构" class="headerlink" title="1.结构"></a>1.结构</h3><p>redis中字符串对应的结构体定义为<code>sdshdr</code>，包含三个属性：</p>
+<p>已用长度、可用长度和字节数组。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type <span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> len;</span><br><span class="line">	<span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">	<span class="keyword">char</span>[] buf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>字符串示例：sds {len: 2, free: 2, buf: [‘h’, ‘a’, ‘\0’, ‘’, ‘’]}</strong></p>
+<h3 id="2-修改字符串"><a href="#2-修改字符串" class="headerlink" title="2.修改字符串"></a>2.修改字符串</h3><p><strong>扩容策略</strong></p>
+<p>字符串增长时，如果可用空间足够，就直接分配；如果可用空间不足，则进行扩容。</p>
+<p>计算分配后的长度得到新的<code>len</code>，判断：</p>
+<ul>
+<li>如果<code>len</code>小于等于1MB（$2^{20}$），则分配len可用空间</li>
+<li>如果<code>len</code>大于1MB，则分配1MB可用空间</li>
+</ul>
+<p><strong>删除策略</strong></p>
+<p>删除字符串中的某些字符时，不会立刻释放那些空间，而是把它们作为free的空间</p>
+<p><strong>特点总结</strong></p>
+<ol>
+<li>减少内存重分配次数（由n次到至多为n）</li>
+<li>惰性回收</li>
+</ol>
+<h3 id="3-SDS与C字符串的区别"><a href="#3-SDS与C字符串的区别" class="headerlink" title="3.SDS与C字符串的区别"></a>3.SDS与C字符串的区别</h3><table>
+<thead>
+<tr>
+<th align="center">区别（SDS的特点）</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">O(1)时间复杂度获取字符串长度</td>
+<td align="center">通过<code>len</code>属性来获取已用长度</td>
+</tr>
+<tr>
+<td align="center">直接避免缓冲区溢出</td>
+<td align="center">追加字符串时，自动判断并进行扩容，防止忘记分配空间时<code>buf</code>溢出影响到其他内存区域</td>
+</tr>
+<tr>
+<td align="center">减少内存重分配次数</td>
+<td align="center">修改n次字符串，最多会产生n次内存重分配</td>
+</tr>
+<tr>
+<td align="center">二进制安全</td>
+<td align="center">支持任意的数据，如图片、序列化对象等</td>
+</tr>
+</tbody></table>
+<h2 id="二、链表"><a href="#二、链表" class="headerlink" title="二、链表"></a>二、链表</h2><p>链表的实现为常见的双向链表结构，表现在：</p>
+<ol>
+<li>当前节点拥有前后两个节点的指针</li>
+<li>定义链表结构体，方便操作</li>
+</ol>
+<h2 id="三、压缩列表（ziplist）"><a href="#三、压缩列表（ziplist）" class="headerlink" title="三、压缩列表（ziplist）"></a>三、压缩列表（ziplist）</h2><p>压缩列表是<strong>列表键</strong>和<strong>哈希键</strong>的底层实现之一，当列表元素数量较少且每个元素比较小时，会采用压缩列表进行实现。</p>
+<h3 id="1-结构-1"><a href="#1-结构-1" class="headerlink" title="1.结构"></a>1.结构</h3><p><strong>整体结构</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">zlbytes</th>
+<th align="center">zltail</th>
+<th align="center">zllen</th>
+<th align="center">entry1</th>
+<th align="center">entryN</th>
+<th align="center">zlend</th>
+</tr>
+</thead>
+</table>
+<p>属性说明：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th align="center">描述</th>
+<th align="center">长度（字节）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">zlbytes</td>
+<td align="center">记录压缩列表占用内存的字节数；用于确定zlend地址</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="left">zltail</td>
+<td align="center">记录从列表初始地址到表尾节点的偏移量；用于确定表尾地址</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="left">zllen</td>
+<td align="center">记录节点个数；如果是$2^{16}-1$，则需要遍历列表才行</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="left">entryX</td>
+<td align="center">每个节点</td>
+<td align="center">不定</td>
+</tr>
+<tr>
+<td align="left">zlend</td>
+<td align="center">标记压缩列表的末端</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p><strong>节点结构</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">previous_entry_length</th>
+<th align="center">encoding</th>
+<th align="center">content</th>
+</tr>
+</thead>
+</table>
+<p>节点属性说明：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">previous_entry_length</td>
+<td align="center">记录前一个节点的长度，占用1字节或5字节</td>
+</tr>
+<tr>
+<td align="left">encoding</td>
+<td align="center">记录数据的类型和长度</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">记录节点的值</td>
+</tr>
+</tbody></table>
+<p>其中，<code>previous_entry_length</code>属性最为重要，借助它我们可以从表尾节点向前遍历。</p>
+<p><strong>previous_entry_length的长度变化也是引起连锁更新的主要原因。</strong></p>
+<ol>
+<li>长度小于254时<ul>
+<li><code>previous_entry_length</code>占一字节</li>
+</ul>
+</li>
+<li>大于等于254时<ul>
+<li><code>previous_entry_length</code>占5字节，第一个字节作为标志取<code>0xFE</code>，剩余4个字节表示真正长度</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-连锁更新"><a href="#2-连锁更新" class="headerlink" title="2.连锁更新"></a>2.连锁更新</h3><p>假设列表为：node(N) - node(N-1) - node(…) - node(1)</p>
+<p>在极端情况下，在节点N前插入一个大于等于254字节的新节点，会引起从节点N到节点1的一轮更新。</p>
+<p>而在一轮更新时，修改每个节点的<code>previous_entry_length</code>属性时，最坏情况时也会引发后面所有节点的修改。</p>
+<p>因此最坏的时间复杂度为$O(n * n) = O(n^2)$。</p>
+<h3 id="3-应用"><a href="#3-应用" class="headerlink" title="3.应用"></a>3.应用</h3><p>压缩列表适合列表元素较少的场景，因为较少时读连续的内存会比较快。</p>
+<p>元素较多时会使用双向链表进行存储。（涉及对象与编码）</p>
+<h2 id="四、字典"><a href="#四、字典" class="headerlink" title="四、字典"></a>四、字典</h2><p>字典即哈希表，实现和Java的HashMap类似，内部结构是一个Entry数组</p>
+<p>哈希表涉及：</p>
+<ol>
+<li>计算哈希和下标：哈希值和掩码进行与操作</li>
+<li>解决哈希冲突：头插法</li>
+<li>扩容</li>
+<li>rehash</li>
+</ol>
+<h2 id="五、整数集合"><a href="#五、整数集合" class="headerlink" title="五、整数集合"></a>五、整数集合</h2><h3 id="1-结构-2"><a href="#1-结构-2" class="headerlink" title="1.结构"></a>1.结构</h3><p>集合内部使用数组来存放元素，和Java的HashSet不太一样。</p>
+<p>因此，我不得不抛出一些疑惑：contents数组有什么特点？它是如何实现去重的？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">intset</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> encoding; <span class="comment">// 编码方式，和数组升级有关</span></span><br><span class="line">    <span class="keyword">uint32_t</span> length;   <span class="comment">// 元素数量</span></span><br><span class="line">    <span class="keyword">int8_t</span> contents[]; <span class="comment">// 数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-特点"><a href="#2-特点" class="headerlink" title="2.特点"></a>2.特点</h3><p><strong>1.数组有序</strong></p>
+<p><strong>2.数组升级</strong></p>
+<ul>
+<li><p>何时升级：数组可以存放不同位数的整数，当插入一个更长位的整数后，数组格子就会扩大，但元素位数仍然不变</p>
+</li>
+<li><p>示例：原数组存有3个16位的整数1，2，3，共占48位。插入32位的65535后，数组扩容为128位，但是原来的3个元素仍占48位</p>
+</li>
+<li><p>优点</p>
+<ul>
+<li>灵活，数组可以存放不同位数的整型</li>
+<li>节约内存</li>
+</ul>
+</li>
+</ul>
+<p><strong>3.适用于较少元素的场景</strong></p>
+<h3 id="3-如何保证去重"><a href="#3-如何保证去重" class="headerlink" title="3.如何保证去重"></a>3.如何保证去重</h3><p>插入元素的时间复杂度为$O(n)$，那么在寻找指定位置时判断是否重复即可。</p>
+<h2 id="六、跳表（skiplist）"><a href="#六、跳表（skiplist）" class="headerlink" title="六、跳表（skiplist）"></a>六、跳表（skiplist）</h2><h3 id="1-基本介绍"><a href="#1-基本介绍" class="headerlink" title="1.基本介绍"></a>1.基本介绍</h3><p>跳表是一种有序的数据结构。</p>
+<p><strong>思想</strong></p>
+<p>普通链表查找的时间复杂度为$O(n)$，跳表通过存储<strong>额外的节点信息</strong>来达到减少查询元素的目的。</p>
+<p>那么额外的节点信息究竟是什么？答案就是<strong>层和回退指针</strong>。</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211023114232.png" alt="image-20211023114232297"></p>
+<p><strong>层</strong></p>
+<p><code>节点维度</code>：每个节点包含多个层和一个回退指针。</p>
+<p><code>跳表维度</code>：观察整个跳表，可以发现它是一个多层结构。第一层就是一条横向的，包含所有元素的链表。</p>
+<p>然后往上，每一层都是前一层的子集，这样就能做到查询时<strong>跳过一部分元素</strong></p>
+<p><strong>回退指针</strong></p>
+<p>通过回退指针可以实现从表尾向表头进行遍历</p>
+<p>注意：前进时，可以跳多个节点，但回退时是一个一个回退的</p>
+<p><strong>总结</strong></p>
+<p>跳表的节点定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> &#123;</span></span><br><span class="line">    <span class="comment">// 多层</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">zskiplistLevel</span> &#123;</span></span><br><span class="line">    	<span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">forward</span>;</span> <span class="comment">// 前进指针</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> span;             <span class="comment">// 两个节点之间的跨度</span></span><br><span class="line">    &#125; level[];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 回退指针</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">backward</span>;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 键值</span></span><br><span class="line">    <span class="keyword">double</span> score;</span><br><span class="line">    robj *obj;</span><br><span class="line">&#125; zskiplistNode;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-分析"><a href="#2-分析" class="headerlink" title="2.分析"></a>2.分析</h3><p><strong>查询</strong></p>
+<p>从某个节点的最上层链表开始查询，比较前进节点与目标值：</p>
+<ol>
+<li>如果下一跳的值小于等于目标值，则前进到下一跳（跳过了若干个节点）</li>
+<li>如果下一跳的值大于目标，则前进到下一跳并开始回退。</li>
+</ol>
+<p><strong>排位</strong></p>
+<p>查询该节点，然后累加经过的每一层的跨度（即跳过了多少个节点），就可以知道节点的排名。</p>
+<h3 id="3-应用-1"><a href="#3-应用-1" class="headerlink" title="3.应用"></a>3.应用</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BC%96%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BC%96%E7%A0%81/" class="post-title-link" itemprop="url">Redis对象与编码</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:22" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BC%96%E7%A0%81/" class="post-meta-item leancloud_visitors" data-flag-title="Redis对象与编码" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、对象"><a href="#一、对象" class="headerlink" title="一、对象"></a>一、对象</h2><p>Redis存储键值对时，把键和值都当作<code>redisObject</code>来实现</p>
+<p>redisObject包含三个属性：</p>
+<ul>
+<li>对象类型</li>
+<li>编码</li>
+<li>指向底层数据结构的指针</li>
+</ul>
+<h3 id="对象类型"><a href="#对象类型" class="headerlink" title="对象类型"></a>对象类型</h3><p>对象类型总共有五种：<strong>String、List、Hash、Set和ZSet</strong>。</p>
+<p>键值对中的键通常总是字符串对象，而值可以是不同的对象类型。</p>
+<p><strong>这五种对象就是Redis对外的5种数据类型。</strong></p>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>编码表示一个<strong>redisObject</strong>对象底层实现的数据类型。</p>
+<p>例如，一个字符串对象底层可以由<strong>int、raw或embstr</strong>实现（根据具体存储的值和大小来变化）</p>
+<h2 id="二、各种对象介绍"><a href="#二、各种对象介绍" class="headerlink" title="二、各种对象介绍"></a>二、各种对象介绍</h2><h3 id="字符串对象"><a href="#字符串对象" class="headerlink" title="字符串对象"></a>字符串对象</h3><h5 id="1-底层数据结构"><a href="#1-底层数据结构" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：int、raw和embstr</strong></p>
+<p><strong>使用情况：</strong></p>
+<ul>
+<li><strong>int</strong>：值为整数时，会使用int编码</li>
+<li><strong>embstr</strong>：字符串小于等于32字节时，使用短SDS。（只读）</li>
+<li><strong>raw</strong>：大于32字节，使用SDS。（简单动态字符串）</li>
+</ul>
+<h5 id="2-特点"><a href="#2-特点" class="headerlink" title="2.特点"></a>2.特点</h5><p>使用<code>embstr</code>可以减少内存分配次数。</p>
+<p>解释：用raw需要分配两次内存，一次为redisObject，另一次为sds；而embstr只进行一次分配</p>
+<h5 id="3-状态变化"><a href="#3-状态变化" class="headerlink" title="3.状态变化"></a>3.状态变化</h5><p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211022162851.png" alt="image-20211022162850653"></p>
+<h5 id="4-语法"><a href="#4-语法" class="headerlink" title="4.语法"></a>4.语法</h5><p>插入字符串键：<code>SET [key] [value]</code></p>
+<p>获取字符串键：<code>GET [key]</code></p>
+<hr>
+<h3 id="列表对象"><a href="#列表对象" class="headerlink" title="列表对象"></a>列表对象</h3><h5 id="1-底层数据结构-1"><a href="#1-底层数据结构-1" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：ziplist和linkedlist</strong></p>
+<p>使用情况：满足以下两个条件时，使用压缩列表；反之，则用双向链表。</p>
+<ol>
+<li>列表中的每个字符串对象都小于64字节</li>
+<li>列表总元素小于512个</li>
+</ol>
+<h5 id="2-变化"><a href="#2-变化" class="headerlink" title="2.变化"></a>2.变化</h5><blockquote>
+<p>linkedlist：next和prev指针浪费空间，且容易造成内存碎片化</p>
+<p>ziplist：适用于数据量较小的场景</p>
+<p>redis3.2之后，使用quicklist代替前两者，整体结构是链表，内部使用压缩列表分块</p>
+</blockquote>
+<h5 id="3-语法"><a href="#3-语法" class="headerlink" title="3.语法"></a>3.语法</h5><p>插入多个元素：<code>LRANGE [key] [value1] [value2]...</code></p>
+<p>获取整个列表：<code>LRANGE [key] 0 -1</code></p>
+<hr>
+<h3 id="哈希对象"><a href="#哈希对象" class="headerlink" title="哈希对象"></a>哈希对象</h3><h5 id="1-底层数据结构-2"><a href="#1-底层数据结构-2" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：ziplist和hashtable</strong></p>
+<p>哈希对象底层结构的变化情况基本和列表对象一致，即同样是满足两个条件时，使用压缩列表：</p>
+<ol>
+<li>每个键值对中的键和值都小于64字节</li>
+<li>总元素小于512个</li>
+</ol>
+<p>当用来实现<code>ziplist</code>哈希对象时，键值对是按<code>key1, value1, key2, value2</code>的顺序存储在<code>ziplist</code>中。</p>
+<h5 id="2-语法"><a href="#2-语法" class="headerlink" title="2.语法"></a>2.语法</h5><p>插入元素：<code>HSET [key] [k] [v]</code></p>
+<p>获取某个元素：<code>HGET [key] [k]</code></p>
+<p>判断是否存在某个键：<code>HEXISTS [key] [k]</code></p>
+<hr>
+<h3 id="集合对象"><a href="#集合对象" class="headerlink" title="集合对象"></a>集合对象</h3><h5 id="1-底层数据结构-3"><a href="#1-底层数据结构-3" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：intset和hashtable</strong></p>
+<p>使用情况：集合元素全是整数且个数小于512时，使用<code>intset</code>来存储。</p>
+<h5 id="2-语法-1"><a href="#2-语法-1" class="headerlink" title="2.语法"></a>2.语法</h5><p>插入多个元素：<code>SADD [key] [v1] [v2]...</code></p>
+<hr>
+<h3 id="有序集合对象"><a href="#有序集合对象" class="headerlink" title="有序集合对象"></a>有序集合对象</h3><p><strong>底层实现：ziplist和skiplist</strong></p>
+<p><strong>使用情况：</strong>满足两个条件时，使用ziplist；否则就用跳表实现</p>
+<ul>
+<li>元素个数小于128</li>
+<li>每个元素小于64字节</li>
+</ul>
+<p>使用跳表实现时，额外使用了一个map存储键值的映射关系，从而实现O(1)时间复杂度获取某个元素。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">Redis命令记录</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:09:27" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/" class="post-meta-item leancloud_visitors" data-flag-title="Redis命令记录" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>查看某个键的底层实现</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">object</span> encoding <span class="selector-attr">[key]</span></span><br></pre></td></tr></table></figure>
+
+<p>查看某个键的引用计数</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">object</span> refcount <span class="selector-attr">[key]</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="post-title-link" itemprop="url">Redis过期与淘汰策略</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:41" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="post-meta-item leancloud_visitors" data-flag-title="Redis过期与淘汰策略" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="过期"><a href="#过期" class="headerlink" title="过期"></a>过期</h2><p>redis的数据库通过<code>字典</code>保存所有的键值对，键是一个字符串对象，值可以是之前介绍的多种对象之一。</p>
+<p>但是随着键值对的不断增加，它占用的内存空间会越来越大，因此redis提供了设置过期的方法来减少内存的使用。</p>
+<h3 id="一、过期相关的命令"><a href="#一、过期相关的命令" class="headerlink" title="一、过期相关的命令"></a>一、过期相关的命令</h3><p><strong>设置过期时间</strong></p>
+<ul>
+<li><p>EXPIRE：秒级</p>
+</li>
+<li><p>PEXPIRE：毫秒级</p>
+</li>
+<li><p>EXPIREAT</p>
+</li>
+<li><p>PEXPIREAT</p>
+</li>
+<li><p>示例：<code>EXPIRE [key] [time]</code></p>
+</li>
+</ul>
+<p>另外，对于字符串对象可以在设置时直接附带过期时间。</p>
+<p>示例：<code>SETEX [key] [value] [time]</code></p>
+<p><strong>查看剩余过期时间</strong></p>
+<ul>
+<li>TTL：秒级</li>
+<li>PTTL：毫秒级</li>
+<li>示例：<code>TTL [key]</code></li>
+</ul>
+<h3 id="二、如何实现过期"><a href="#二、如何实现过期" class="headerlink" title="二、如何实现过期"></a>二、如何实现过期</h3><p>首先，我们需要知道：</p>
+<ol>
+<li>redis使用一个字典来存储所有键值对，该字典叫做<code>键空间</code></li>
+<li>键值对中的键和值都是一个<code>redisObject</code>对象</li>
+</ol>
+<p>知道上面两个概念后，redis实现过期的方式就很容易理解了：即<strong>使用一个<code>过期字典</code>记录键的过期时间</strong></p>
+<p>其中，过期字典的键值如下：</p>
+<ul>
+<li><p>过期字典的键与键空间的键相同，都是指向键的指针。</p>
+</li>
+<li><p>过期字典的值就是过期时间的毫秒时间戳，通过与当前时间戳进行比较来判断是否过期。</p>
+</li>
+</ul>
+<h3 id="三、过期策略介绍"><a href="#三、过期策略介绍" class="headerlink" title="三、过期策略介绍"></a>三、过期策略介绍</h3><p>常见的过期策略有3种，分别是定时删除、惰性删除和定期删除。</p>
+<p><strong>定时删除</strong></p>
+<ul>
+<li>描述：为每个键设置一个定时器，时间到就删除</li>
+<li>特点：及时删除对内存友好；但计时器过多时占用CPU资源</li>
+</ul>
+<p><strong>惰性删除</strong></p>
+<ul>
+<li>描述：取出键的时候才进行过期检查</li>
+<li>特点：占用CPU资源较少，但是过期键容易堆积，浪费内存</li>
+</ul>
+<p>基于上述两种删除策略，我们又有一种折中的方案，即：</p>
+<p><strong>定期删除</strong></p>
+<ul>
+<li>描述：分多次遍历各个数据库，随机抽一部分键值对进行过期检查</li>
+</ul>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>redis使用<code>惰性删除</code>和<code>定期删除</code>两种方式作为键值对的过期策略。</p>
+<p>但是仍然存在一些问题：</p>
+<ol>
+<li>定期删除的随机性可能会留下一些很久未使用的key</li>
+<li>大量加入键值对会造成内存溢出</li>
+</ol>
+<p>因此redis还采用了<code>内存淘汰策略</code>来应对内存耗尽的场景。</p>
+<h2 id="内存淘汰"><a href="#内存淘汰" class="headerlink" title="内存淘汰"></a>内存淘汰</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/newCheng/article/details/100700101">https://blog.csdn.net/newCheng/article/details/100700101</a></p>
+<h3 id="内存淘汰策略介绍（8种）"><a href="#内存淘汰策略介绍（8种）" class="headerlink" title="内存淘汰策略介绍（8种）"></a>内存淘汰策略介绍（8种）</h3><p><strong>无淘汰策略：noeviction，内存溢出时拒绝插入</strong></p>
+<p><strong>针对所有的键值对</strong></p>
+<ul>
+<li>allkeys-lru</li>
+<li>allkeys-random</li>
+<li>allkeys-lfu</li>
+</ul>
+<p><strong>针对设置过期时间的键值对</strong></p>
+<ul>
+<li>volatile-lru</li>
+<li>volatile-random</li>
+<li>volatile-lfu</li>
+<li>volatile-ttl：优先淘汰过期时间更早的键值对</li>
+</ul>
+<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>查看当前的最大内存设置和内存淘汰策略</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG GET maxmemory</span><br><span class="line">CONFIG GET maxmemory-policy</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改内存淘汰策略</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET maxmemory-policy allkeys-lru</span><br><span class="line">CONFIG REWRITE <span class="comment"># 服务启动时带上配置文件才能执行此命令，否则报错</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-title-link" itemprop="url">Redis持久化</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:50" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-meta-item leancloud_visitors" data-flag-title="Redis持久化" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p><code>Redis</code>是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。</p>
+<p>因此<code>Redis</code>用到了两种持久化策略，分别是<code>RDB</code>和<code>AOF</code></p>
+</blockquote>
+<h2 id="RDB-快照"><a href="#RDB-快照" class="headerlink" title="RDB(快照)"></a>RDB(快照)</h2><p>对于一种持久化方式，我们可能会有以下一些疑惑：</p>
+<ol>
+<li>它持久化了什么</li>
+<li>持久化是怎样进行的</li>
+<li>如何恢复数据</li>
+<li>特点</li>
+</ol>
+<p>下面我们会围绕这些问题进行介绍。</p>
+<h3 id="一、RDB介绍"><a href="#一、RDB介绍" class="headerlink" title="一、RDB介绍"></a>一、RDB介绍</h3><p>RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻的<strong>所有数据</strong>，即<strong>快照</strong></p>
+<p>它的文件结构大致如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">REDIS</th>
+<th align="center">db_version</th>
+<th align="center">databases</th>
+<th align="center">EOF</th>
+<th align="center">checksum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">魔数</td>
+<td align="center">rdb版本</td>
+<td align="center">多个数据库数据</td>
+<td align="center">标志结束</td>
+<td align="center">校验和</td>
+</tr>
+</tbody></table>
+<h3 id="二、RDB文件的生成与载入"><a href="#二、RDB文件的生成与载入" class="headerlink" title="二、RDB文件的生成与载入"></a>二、RDB文件的生成与载入</h3><h5 id="2-1RDB相关命令"><a href="#2-1RDB相关命令" class="headerlink" title="2.1RDB相关命令"></a>2.1RDB相关命令</h5><p>生成RDB文件的相关命令有两个，分别是<code>save</code>和<code>bgsave</code></p>
+<ul>
+<li><code>save</code>：会阻塞服务器进程</li>
+<li><code>bgsave</code>：创建子进程进行持久化，不阻塞</li>
+</ul>
+<h5 id="2-2生成情况：手动or自动"><a href="#2-2生成情况：手动or自动" class="headerlink" title="2.2生成情况：手动or自动"></a>2.2生成情况：手动or自动</h5><p>Redis客户端可以通过上述的<code>save</code>或<code>bgsave</code>命令手动进行持久化。</p>
+<p>此外，服务端也支持配置，在满足配置条件时自动执行RDB持久。</p>
+<p>例如<code>save 900 1</code>配置表示在900秒内修改1次，就会启动RDB。</p>
+<h5 id="2-3加载RDB文件"><a href="#2-3加载RDB文件" class="headerlink" title="2.3加载RDB文件"></a>2.3加载RDB文件</h5><p>如果没有开启AOF，服务器会在启动时寻找RDB文件并进行加载。</p>
+<h3 id="三、相关配置"><a href="#三、相关配置" class="headerlink" title="三、相关配置"></a>三、相关配置</h3><p><strong>RDB的默认配置</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">save</span> <span class="number">900</span> <span class="number">1</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">300</span> <span class="number">10</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">60</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关闭RDB持久化</strong></p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">save</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="AOF-追加"><a href="#AOF-追加" class="headerlink" title="AOF(追加)"></a>AOF(追加)</h2><h3 id="一、AOF介绍"><a href="#一、AOF介绍" class="headerlink" title="一、AOF介绍"></a>一、AOF介绍</h3><p>AOF持久化通过记录Redis服务器的<strong>写操作</strong>来实现持久化。</p>
+<h3 id="二、AOF文件的生成与载入"><a href="#二、AOF文件的生成与载入" class="headerlink" title="二、AOF文件的生成与载入"></a>二、AOF文件的生成与载入</h3><h5 id="2-1实现AOF文件"><a href="#2-1实现AOF文件" class="headerlink" title="2.1实现AOF文件"></a>2.1实现AOF文件</h5><p>实现AOF持久化的过程可以分为3步：<strong>命令追加</strong>、<strong>文件写入</strong>和<strong>文件同步</strong>。</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png" alt="image-20211025123206155"></p>
+<ul>
+<li>命令追加<ul>
+<li>redis在处理命令请求时，用AOF缓冲区记录执行过的一些写操作</li>
+</ul>
+</li>
+<li>文件写入<ul>
+<li>redis处理完请求后，会将AOF缓冲区的内容写入到AOF文件中</li>
+</ul>
+</li>
+<li>文件同步<ul>
+<li>由于操作系统缓冲的存在，就会产生怎样写的情况</li>
+<li>文件同步通过一个<code>appendfsync</code>参数来配置。</li>
+</ul>
+</li>
+</ul>
+<p><strong>appendfsync参数配置</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">取值</th>
+<th align="center">对应策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">always</td>
+<td align="center">每次文件写入时都进行同步</td>
+</tr>
+<tr>
+<td align="center">everysec（默认）</td>
+<td align="center">正常写（会经过OS缓冲），后台线程判断超过一秒钟时进行同步操作</td>
+</tr>
+<tr>
+<td align="center">no</td>
+<td align="center">正常写，由操作系统决定啥时候同步</td>
+</tr>
+</tbody></table>
+<p><strong>代码示例</strong></p>
+<p>写入文件时直接刷新到磁盘上，有两种方式可以做到。</p>
+<p>第一种：打开文件时使用<code>O_SYNC</code>标志位</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 同步打开</span></span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR|O_SYNC);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        </span><br><span class="line">    	close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种，写完文件后调用<code>fsync</code>、<code>fdatasync</code>等系统调用进行同步</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        fsync(fd);</span><br><span class="line">    </span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-2加载AOF文件"><a href="#2-2加载AOF文件" class="headerlink" title="2.2加载AOF文件"></a>2.2加载AOF文件</h5><p>服务器启动时，如果开启了AOF持久化，则redis会开启一个伪客户端，把分析得到的命令交给伪客户端执行。</p>
+<h3 id="三、AOF重写"><a href="#三、AOF重写" class="headerlink" title="三、AOF重写"></a>三、AOF重写</h3><h5 id="3-1为什么要重写AOF文件？"><a href="#3-1为什么要重写AOF文件？" class="headerlink" title="3.1为什么要重写AOF文件？"></a>3.1为什么要重写AOF文件？</h5><p>AOF文件记录的是写操作，容易发生文件体积膨胀的问题。</p>
+<p>此外加载AOF文件时，执行效率也会降低。</p>
+<h5 id="3-2怎样重写AOF文件"><a href="#3-2怎样重写AOF文件" class="headerlink" title="3.2怎样重写AOF文件"></a>3.2怎样重写AOF文件</h5><p>redis开启子进程，在后台利用当前数据库的数据来重新生成AOF文件并覆盖原文件。</p>
+<p>使用<code>BGREWRITEAOF</code>命令可以手动开启重写。</p>
+<p><strong>特点：</strong></p>
+<ol>
+<li>使用子进程而不是当前进程：防止服务器阻塞</li>
+<li>没有使用原AOF文件的方式：</li>
+</ol>
+<p><strong>问题：子进程在后台生成AOF文件时，当前数据库的数据可能会发生变化，导致持久化的数据与实际数据不一致的情况</strong></p>
+<p>解决：重写AOF时，服务器把写操作记录到AOF缓冲和AOF重写缓冲中。</p>
+<p>解释：前者是为了AOF持久化的正常工作，后者是将AOF重写过程中的数据变化记录下来，等子进程重写完毕后把这一部分发送给它。</p>
+<h3 id="四、相关配置"><a href="#四、相关配置" class="headerlink" title="四、相关配置"></a>四、相关配置</h3><p><strong>AOF默认为关闭，如果要开启，改为yes</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">appendonly</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文件同步策略</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta"># appendfsync no</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>自动重写AOF</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AOF文件大小为上次重写后AOF文件大小时，开始重写</span></span><br><span class="line">auto-aof-rewrite-percentage 100 </span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动进行AOF文件重写的最小大小</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结一下RDB与AOF的特点，从持久化速度、加载速度、文件大小、数据安全性等多个维度进行讨论。</p>
+<table>
+<thead>
+<tr>
+<th align="center">场景</th>
+<th align="center">RDB</th>
+<th align="center">AOF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">持久化速度</td>
+<td align="center">不支持秒级，慢</td>
+<td align="center">支持秒级</td>
+</tr>
+<tr>
+<td align="center">加载速度</td>
+<td align="center">很快</td>
+<td align="center">执行写操作，慢</td>
+</tr>
+<tr>
+<td align="center">文件大小</td>
+<td align="center">压缩后小</td>
+<td align="center">文件较大</td>
+</tr>
+<tr>
+<td align="center">数据安全性</td>
+<td align="center">距离上次持久化后的数据都可能会丢</td>
+<td align="center">默认配置下最多丢1秒的数据</td>
+</tr>
+<tr>
+<td align="center">开销</td>
+<td align="center">每次持久化都会fork一个子进程</td>
+<td align="center">处理事件后需要写缓冲</td>
+</tr>
+</tbody></table>
+<h2 id="RDB与AOF的混合使用"><a href="#RDB与AOF的混合使用" class="headerlink" title="RDB与AOF的混合使用"></a>RDB与AOF的混合使用</h2><p>redis4.0提出了两种持久化方式混合使用的方案：</p>
+<p>RDB以一定的频率运行，然后在两次RDB间使用AOF记录写操作。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Redis客户端与服务器</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:32" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Redis客户端与服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>446</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><h3 id="一、客户端属性"><a href="#一、客户端属性" class="headerlink" title="一、客户端属性"></a>一、客户端属性</h3><p>服务器通过一个<code>clients</code>链表维护连接的客户端</p>
+<p>涉及的客户端信息有：描述符、名称、输入输出缓冲区、状态等等。</p>
+<h3 id="二、客户端类型"><a href="#二、客户端类型" class="headerlink" title="二、客户端类型"></a>二、客户端类型</h3><p>客户端的类型有：通过网络连接的客户端、加载AOF文件的伪客户端以及执行Lua脚本的伪客户端。</p>
+<p>不同的类型创建和关闭的方式不太一样。</p>
+<ol>
+<li>网络连接的客户端<ul>
+<li>创建：用<code>clients</code>链表相连</li>
+<li>关闭：正常关闭，或空转时间、缓冲区溢出等原因造成关闭</li>
+</ul>
+</li>
+<li>加载AOF文件的伪客户端<ul>
+<li>创建：单独创建</li>
+<li>关闭：加载完毕后关闭</li>
+</ul>
+</li>
+<li>执行Lua脚本的伪客户端<ul>
+<li>创建：用<code>lua_client</code>记录</li>
+<li>关闭：随服务器运行</li>
+</ul>
+</li>
+</ol>
+<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><h3 id="一、命令执行的过程"><a href="#一、命令执行的过程" class="headerlink" title="一、命令执行的过程"></a>一、命令执行的过程</h3><h5 id="1-1简化的过程"><a href="#1-1简化的过程" class="headerlink" title="1.1简化的过程"></a>1.1简化的过程</h5><ol>
+<li>客户端发送命令请求</li>
+<li>服务器接收请求并处理</li>
+<li>服务器返回结果</li>
+</ol>
+<p>其中1、3步其实涉及了Redis使用的<strong>协议格式</strong>，因为在通信时命令请求是被封装成某个协议格式进行发送的。</p>
+<p>第二步涉及Redis如何解析命令请求。</p>
+<h5 id="1-2服务器处理命令请求"><a href="#1-2服务器处理命令请求" class="headerlink" title="1.2服务器处理命令请求"></a>1.2服务器处理命令请求</h5><ol>
+<li>按协议格式解析命令请求</li>
+<li>命令执行器执行命令<ul>
+<li>预处理</li>
+<li>执行</li>
+<li>后续工作</li>
+</ul>
+</li>
+</ol>
+<p>Redis服务器维护了一个<code>命令表</code>的字典，可以根据命令的名称找到具体的执行函数。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -217,10 +1419,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/" class="post-title-link" itemprop="url">消息存储</a>
-        </h2>
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/" class="post-title-link" itemprop="url">Kafka——消息存储</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -228,27 +1430,47 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:00:54" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 11:42:03" itemprop="dateModified" datetime="2021-12-17T11:42:03+08:00">2021-12-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/" class="post-meta-item leancloud_visitors" data-flag-title="消息存储" title="阅读次数">
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Kafka——消息存储" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -370,14 +1592,14 @@
 
 <p>另外，基于日志起始偏移量的删除是因为log文件有可能被截断，那么小于起始偏移量的消息就不应该被保留。</p>
 <hr>
-<h3 id="2-4Kafka高性能、高吞吐是怎样做到的？"><a href="#2-4Kafka高性能、高吞吐是怎样做到的？" class="headerlink" title="2.4Kafka高性能、高吞吐是怎样做到的？"></a>2.4Kafka高性能、高吞吐是怎样做到的？</h3><h5 id="顺序追加"><a href="#顺序追加" class="headerlink" title="顺序追加"></a>顺序追加</h5><p>消息顺序的写到磁盘文件中，并使用操作系统的刷盘策略。</p>
+<h3 id="2-4Kafka高性能、高吞吐是怎样做到的？"><a href="#2-4Kafka高性能、高吞吐是怎样做到的？" class="headerlink" title="2.4Kafka高性能、高吞吐是怎样做到的？"></a>2.4Kafka高性能、高吞吐是怎样做到的？</h3><h4 id="顺序追加"><a href="#顺序追加" class="headerlink" title="顺序追加"></a>顺序追加</h4><p>消息顺序的写到磁盘文件中，并使用操作系统的刷盘策略。</p>
 <p>兼顾消息的读写性能与完整性。</p>
-<h5 id="页缓存"><a href="#页缓存" class="headerlink" title="页缓存"></a>页缓存</h5><p>操作系统利用内存加载了大量的磁盘页（即页缓存），使用<strong>预读</strong>和<strong>后写</strong>的方式大大加快了IO效率。</p>
+<h4 id="页缓存"><a href="#页缓存" class="headerlink" title="页缓存"></a>页缓存</h4><p>操作系统利用内存加载了大量的磁盘页（即页缓存），使用<strong>预读</strong>和<strong>后写</strong>的方式大大加快了IO效率。</p>
 <blockquote>
 <p><strong>预读</strong>指读磁盘上的数据时，把后面的一部分数据也读到内存中，这样加快下一次读的效率</p>
 <p><strong>后写</strong>指向磁盘写数据时，只是把数据写入到一个缓冲区中，然后由操作系统决定何时写入磁盘。在用户看来已经写入完毕。</p>
 </blockquote>
-<h5 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h5><p>正常传输流程：</p>
+<h4 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h4><p>正常传输流程：</p>
 <ol>
 <li>从磁盘读数据到内核的READ BUFFER缓冲区中</li>
 <li>数据从内核传输到用户</li>
@@ -400,6 +1622,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -416,10 +1640,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">生产者与消费者实践</a>
-        </h2>
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">Kafka——生产者与消费者实践</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -427,27 +1651,47 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:00:32" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 11:41:51" itemprop="dateModified" datetime="2021-12-17T11:41:51+08:00">2021-12-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" class="post-meta-item leancloud_visitors" data-flag-title="生产者与消费者实践" title="阅读次数">
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" class="post-meta-item leancloud_visitors" data-flag-title="Kafka——生产者与消费者实践" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -597,221 +1841,8 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" class="post-title-link" itemprop="url">生产者与消费者理论</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:00:45" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" class="post-meta-item leancloud_visitors" data-flag-title="生产者与消费者理论" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h1><h2 id="消息分区策略"><a href="#消息分区策略" class="headerlink" title="消息分区策略"></a>消息分区策略</h2><p>问题：当生产者向包含多个分区的Topic发送消息时，消息会发往哪个分区呢？</p>
-<p>解释：</p>
-<ol>
-<li>发送时指定<code>partition</code>：发送到指定分区</li>
-<li>发送时未指定<code>partition</code>：由分区器来决定</li>
-</ol>
-<p>在Kafka生产者中分区器主要有两种，默认分区器和轮询分区器。</p>
-<h3 id="一、默认分区器"><a href="#一、默认分区器" class="headerlink" title="一、默认分区器"></a>一、默认分区器</h3><p>默认分区器利用了<code>粘性分区</code>的思想。</p>
-<blockquote>
-<p><code>粘性分区</code>表示在Kafka一次批量发送消息的过程中，会尽可能的减少分区的分配变动。</p>
-<p>因此分区就是具备粘性的，在同一次批量发送中消息就会分配到同一个分区。</p>
-</blockquote>
-<h5 id="DefaultPartitioner"><a href="#DefaultPartitioner" class="headerlink" title="DefaultPartitioner"></a>DefaultPartitioner</h5><p><code>partition()</code>计算得到要发送的分区号，源码如下：</p>
-<ol>
-<li>未指定key时，用粘性分区缓存来获取分区号</li>
-<li>指定key时，通过计算哈希值并求余的方式得到分区号。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultPartitioner</span> <span class="keyword">implements</span> <span class="title">Partitioner</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Object key, <span class="keyword">byte</span>[] keyBytes, Object value, <span class="keyword">byte</span>[] valueBytes, Cluster cluster,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">int</span> numPartitions)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (keyBytes == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> stickyPartitionCache.partition(topic, cluster);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// hash the keyBytes to choose a partition</span></span><br><span class="line">        <span class="keyword">return</span> Utils.toPositive(Utils.murmur2(keyBytes)) % numPartitions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="StickyPartitionCache"><a href="#StickyPartitionCache" class="headerlink" title="StickyPartitionCache"></a>StickyPartitionCache</h5><p><code>StickyPartitionCache</code>类主要利用利用map记录主题和消息发往的分区号的映射</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StickyPartitionCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConcurrentMap&lt;String, Integer&gt; indexCache;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StickyPartitionCache</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.indexCache = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * partition()返回分区号</span></span><br><span class="line"><span class="comment">    * </span></span><br><span class="line"><span class="comment">    * 如果在map中找到了上次发往某个主题时分配的分区号，就返回该分区号（粘性分区）</span></span><br><span class="line"><span class="comment">    * 如果map中未找到，则调用nextPartition()执行一次重新分配分区号的动作。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Cluster cluster)</span> </span>&#123;</span><br><span class="line">        Integer part = indexCache.get(topic);</span><br><span class="line">        <span class="keyword">if</span> (part == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> nextPartition(topic, cluster, -<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> part;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="二、轮询分区器"><a href="#二、轮询分区器" class="headerlink" title="二、轮询分区器"></a>二、轮询分区器</h3><p>从<code>RoundRobinPartitioner</code>类的注解可以看到，如果希望消息能够分布式的写到不同的分区上，那么就可以使用轮询分区器。</p>
-<p>它具备两个特点：</p>
-<ol>
-<li>平等的写入到每个分区</li>
-<li>消息设置的key不会生效（即不会对它求hash来取值）</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The &quot;Round-Robin&quot; partitioner</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * This partitioning strategy can be used when user wants </span></span><br><span class="line"><span class="comment"> * to distribute the writes to all partitions equally. This</span></span><br><span class="line"><span class="comment"> * is the behaviour regardless of record key hash. </span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RoundRobinPartitioner</span> <span class="keyword">implements</span> <span class="title">Partitioner</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="nextValue"><a href="#nextValue" class="headerlink" title="nextValue()"></a>nextValue()</h5><p>在map寻找topic对应的分区号，未找到则返回0</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">nextValue</span><span class="params">(String topic)</span> </span>&#123;</span><br><span class="line">    AtomicInteger counter = topicCounterMap.computeIfAbsent(topic, k -&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> counter.getAndIncrement();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="partition"><a href="#partition" class="headerlink" title="partition()"></a>partition()</h5><p>借助<code>nextValue()</code>返回的值来求余计算分区号。</p>
-<p>此外，这里还有一些额外的逻辑，如判断是否有可用分区和确保nextValue为正。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Object key, <span class="keyword">byte</span>[] keyBytes, Object value, <span class="keyword">byte</span>[] valueBytes, Cluster cluster)</span> </span>&#123;</span><br><span class="line">    List&lt;PartitionInfo&gt; partitions = cluster.partitionsForTopic(topic);</span><br><span class="line">    <span class="keyword">int</span> numPartitions = partitions.size();</span><br><span class="line">    <span class="keyword">int</span> nextValue = nextValue(topic);</span><br><span class="line">    List&lt;PartitionInfo&gt; availablePartitions = cluster.availablePartitionsForTopic(topic);</span><br><span class="line">    <span class="keyword">if</span> (!availablePartitions.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">int</span> part = Utils.toPositive(nextValue) % availablePartitions.size();</span><br><span class="line">        <span class="keyword">return</span> availablePartitions.get(part).partition();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// no partitions are available, give a non-available partition</span></span><br><span class="line">        <span class="keyword">return</span> Utils.toPositive(nextValue) % numPartitions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="生产者过程分析"><a href="#生产者过程分析" class="headerlink" title="生产者过程分析"></a>生产者过程分析</h2><p>生产者主要使用两个线程：主线程和Sender线程</p>
-<p>主线程调用<code>send()</code>后，依次经过了<code>拦截器-序列化器-分区器</code>，然后被添加到消息累计器中。然后由Sender线程获取消息并发送给broker。</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111211654366.png" alt="image-20211118170513669"></p>
-<h3 id="一、消息累加器"><a href="#一、消息累加器" class="headerlink" title="一、消息累加器"></a>一、消息累加器</h3><p>在消息累加器中，每个分区都会对应一条队列，经过分区器计算或是直接指定分区的消息，便会加入到对应的队列中。</p>
-<p>消息累加器<code>RecordAccumulator</code>使用map存储了某个主题下每个分区和队列的映射关系：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">RecordAccumulator</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ConcurrentMap&lt;TopicPartition, Deque&lt;ProducerBatch&gt;&gt; batches;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>队列中的<code>ProducerBatch</code>对象表示批量的记录，分配消息时会取出队列的最后一条batch记录，并把消息添加在batch中。</p>
-<p>这里对应的就是<code>ProducerBatch</code>类下的tryAppend()方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 检查空间后，调用MemoryRecordsBuilder对象的append方法来向内存中写入新消息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> FutureRecordMetadata <span class="title">tryAppend</span><span class="params">(<span class="keyword">long</span> timestamp, <span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] value, Header[] headers, Callback callback, <span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!recordsBuilder.hasRoomFor(timestamp, key, value, headers)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.recordsBuilder.append(timestamp, key, value, headers); </span><br><span class="line">        <span class="keyword">this</span>.maxRecordSize = Math.max(<span class="keyword">this</span>.maxRecordSize, AbstractRecords.estimateSizeInBytesUpperBound(magic(),</span><br><span class="line">                recordsBuilder.compressionType(), key, value, headers));</span><br><span class="line">        <span class="keyword">this</span>.lastAppendTime = now;</span><br><span class="line">        FutureRecordMetadata future = <span class="keyword">new</span> FutureRecordMetadata(<span class="keyword">this</span>.produceFuture, <span class="keyword">this</span>.recordCount,</span><br><span class="line">                                                               timestamp,</span><br><span class="line">                                                               key == <span class="keyword">null</span> ? -<span class="number">1</span> : key.length,</span><br><span class="line">                                                               value == <span class="keyword">null</span> ? -<span class="number">1</span> : value.length,</span><br><span class="line">                                                               Time.SYSTEM);</span><br><span class="line">        <span class="comment">// we have to keep every future returned to the users in case the batch needs to be</span></span><br><span class="line">        <span class="comment">// split to several new batches and resent.</span></span><br><span class="line">        thunks.add(<span class="keyword">new</span> Thunk(callback, future));</span><br><span class="line">        <span class="keyword">this</span>.recordCount++;</span><br><span class="line">        <span class="keyword">return</span> future;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h1><h2 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h2><h3 id="一、位移提交"><a href="#一、位移提交" class="headerlink" title="一、位移提交"></a>一、位移提交</h3><p><strong>对于Kafka分区而言，它的每条消息都有唯一的offset，用来表示消息在分区中的位置；而消费者也是通过offset来得知上次消费消息的位置。</strong></p>
-<h5 id="那么这个位移存在哪儿？"><a href="#那么这个位移存在哪儿？" class="headerlink" title="那么这个位移存在哪儿？"></a>那么这个位移存在哪儿？</h5><p>旧版存在ZooKeeper中，新版存在Kafka Broker的<code>__consumer_offsets</code>主题中。</p>
-<h5 id="什么是位移提交？为什么要提交位移？"><a href="#什么是位移提交？为什么要提交位移？" class="headerlink" title="什么是位移提交？为什么要提交位移？"></a>什么是位移提交？为什么要提交位移？</h5><p>消费者将消费的位移提交到Kafka Broker的动作，就是<strong>位移提交</strong>。而之所以需要提交，是因为消费者使用拉取消息的方式，Kafka并不知道消费者消费到哪儿了，需要消费者来告诉它。</p>
-<h5 id="怎样进行位移提交"><a href="#怎样进行位移提交" class="headerlink" title="怎样进行位移提交?"></a>怎样进行位移提交?</h5><p>Kafka提供了<strong>自动提交</strong>和<strong>手动提交</strong>两种方式。</p>
-<p>首先，确认一点，提交的位移指的是下一次要消费的消息所在的偏移量。</p>
-<p><strong>自动提交</strong></p>
-<p>自动提交指的是Kafka会定期的提交一次位移，定期由两个参数来配置：</p>
-<ul>
-<li><p><code>enable.auto.commit</code>：是否开启自动提交，默认为true</p>
-</li>
-<li><p><code>auto.commit.interval.ms</code>：自动提交的间隔，默认为5秒</p>
-</li>
-</ul>
-<p>自动提交存在的问题：</p>
-<ol>
-<li><code>重复消费</code>：因为位移是延后提交的，所以存在消费者消费之后，还没来得及提交位移就宕机的可能。</li>
-<li><code>消息丢失</code>：如果消费者端把读到的消息放入队列中等待另一个线程处理，那么有可能提交位移后消费者宕机，处理线程还未处理消息。</li>
-</ol>
-<p><strong>手动提交</strong></p>
-<p>手动提交可以让开发人员根据程序的逻辑在合适的地方提交位移，<strong>注意，采用手动提交时必须关闭自动提交</strong>。</p>
-<p>手动提交的时机非常重要：</p>
-<ol>
-<li>如果先提交再处理消息，消息可能还没处理消费者就宕机了，导致<strong>消息丢失</strong>。</li>
-<li>如果先处理再提交，提交位移前消费者宕机就会造成<strong>重复消费</strong>。</li>
-</ol>
-<p>如果希望消息精确的只被消费一次，可以采用二阶段提交的方式：落表，并在消息处理前判断是否已存在记录。（还是有缺陷？何时落表？）</p>
-<h2 id="分区分配"><a href="#分区分配" class="headerlink" title="分区分配"></a>分区分配</h2><p>分区分配策略：</p>
-<ol>
-<li>决定了处于同一消费者组中的消费者该消费哪个分区</li>
-<li>保证一个分区只能被同一个消费者组中的一个消费者消费</li>
-</ol>
-<p>如果要打破<code>2</code>的限制</p>
-<h3 id="一、RangeAssignor"><a href="#一、RangeAssignor" class="headerlink" title="一、RangeAssignor"></a>一、RangeAssignor</h3><h5 id="1-1分配原理"><a href="#1-1分配原理" class="headerlink" title="1.1分配原理"></a>1.1分配原理</h5><p>对<code>单个主题</code>的所有分区进行平均分配。</p>
-<ul>
-<li>如果分区数与消费者数能够整除，那么每个消费者分配到的分区数量都是一样的。</li>
-<li>如果有余数，那么把余数分区一份份分给靠前（排序后）的消费者</li>
-</ul>
-<h5 id="1-2示例"><a href="#1-2示例" class="headerlink" title="1.2示例"></a>1.2示例</h5><blockquote>
-<p>两个消费者订阅两个主题，每个主题3个分区。</p>
-<p>如主题t0的分区为t0p0、t0p1、t0p2</p>
-</blockquote>
-<p>对于一个主题来说，每个消费者先分配1个分区，然后多余的1个分区分给第一个消费者。</p>
-<p><strong>分配t0后的结果：</strong></p>
-<ul>
-<li>消费者C0：t0p0、t0p1</li>
-<li>消费者C1：t0p2</li>
-</ul>
-<p><strong>然后分配t1后的结果：</strong></p>
-<ul>
-<li>消费者C0：t0p0、t0p1、t1p0、t1p1</li>
-<li>消费者C1：t0p2、t1p2</li>
-</ul>
-<p>设想一下，如果新订阅了第三个主题（分区数为3），那么消费者C0所分配到的分区数还会多两个，<strong>不均衡</strong>的情况会更加严重。</p>
-<h5 id="1-3特点"><a href="#1-3特点" class="headerlink" title="1.3特点"></a>1.3特点</h5><p>通过上述例子可以发现，<code>Range</code>策略可以保证<strong>分配一个主题的分区时每个消费者所分配到的分区数之差在一个以内。</strong></p>
-<p>但是，当订阅多个主题时可能会存在某个消费者过载的问题，并且可能会随着订阅主题数的增加而愈发严重。</p>
-<h3 id="二、RoundRobinAssingor"><a href="#二、RoundRobinAssingor" class="headerlink" title="二、RoundRobinAssingor"></a>二、RoundRobinAssingor</h3><h5 id="2-1分配原理"><a href="#2-1分配原理" class="headerlink" title="2.1分配原理"></a>2.1分配原理</h5><p>对消费者组订阅的<code>所有主题及分区</code>进行排序并依次分配。</p>
-<h5 id="2-2示例1-同上述的例子"><a href="#2-2示例1-同上述的例子" class="headerlink" title="2.2示例1@同上述的例子"></a>2.2示例1<code>@同上述的例子</code></h5><blockquote>
-<p>两个消费者订阅两个主题，每个主题3个分区。</p>
-<p>所有订阅主题的分区排序：t0p0、t0p1、t0p2、t1p0、t1p1、t1p2</p>
-</blockquote>
-<p>分配结果（依次分配给消费者）：</p>
-<ul>
-<li>消费者C0：t0p0、t0p2、t1p1</li>
-<li>消费者C1：t0p1、t1p0、t1p2</li>
-</ul>
-<p>可以看到，如果每个消费者订阅的主题是相同的，那么可以保证尽可能的均匀分配。</p>
-<h5 id="2-3示例2-订阅不同主题"><a href="#2-3示例2-订阅不同主题" class="headerlink" title="2.3示例2@订阅不同主题"></a>2.3示例2<code>@订阅不同主题</code></h5><p>再看这个订阅不同主题的例子：</p>
-<blockquote>
-<p>三个消费者，订阅情况分别是：C0订阅t0，C1订阅t0、t1，C2订阅t0、t1、t2</p>
-<p>主题分别有1，2，3个分区</p>
-</blockquote>
-<p>因为消费者C0和C1没有订阅所有主题，因此并不会参与所有主题分区的分配</p>
-<p>所有分区排序：t0p0、t1p0、t1p1、t2p0、t2p1、t2p2</p>
-<p>分配结果：</p>
-<ul>
-<li>消费者C0：t0p0</li>
-<li>消费者C1：t1p0</li>
-<li>消费者C2：t1p1、t2p0、t2p1、t2p2</li>
-</ul>
-<h5 id="2-4特点"><a href="#2-4特点" class="headerlink" title="2.4特点"></a>2.4特点</h5><p>和<code>RangeAssignor</code>相比，<code>RoundRobinAssignor</code>通过从多主题的角度考虑，保证了当每个消费者订阅相同的主题时的分配均衡（最多差一个）。</p>
-<p>但是订阅的主题不同时，它并没有做到最优分配，例如上述例子中<code>t1p1</code>可以分配给C1</p>
-<h3 id="三、StickyAssingor"><a href="#三、StickyAssingor" class="headerlink" title="三、StickyAssingor"></a>三、StickyAssingor</h3><p>粘性分配的目的：</p>
-<ol>
-<li>与其他分配策略一样，尽量保证分区的分配均衡。</li>
-<li>进行<strong>再分配</strong>时，尽可能的减少分配的变化，即拥有“粘性”</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h3 id="一、消息丢失问题"><a href="#一、消息丢失问题" class="headerlink" title="一、消息丢失问题"></a>一、消息丢失问题</h3><p>Kafka生产者与消费者都有可能存在消息丢失的问题。</p>
-<h5 id="生产者端"><a href="#生产者端" class="headerlink" title="生产者端"></a>生产者端</h5><p>原因在于<code>ack</code>的取值，值为0或1时没有做到所有副本的消息同步，因此副本宕机会造成消息丢失。</p>
-<p><code>ack</code>取-1时所有副本同步后才算消息写入成功，但这样消息吞吐量会有所损失。</p>
-<h5 id="消费者端"><a href="#消费者端" class="headerlink" title="消费者端"></a>消费者端</h5><p>原因可能是开启了自动提交位移，也可能是手动提交位移的情况下先提交再消费。</p>
-<p>如何解决可以看上述的<strong>手动提交</strong>部分。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -828,10 +1859,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">环境搭建</a>
-        </h2>
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">Kafka——环境搭建</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -847,7 +1878,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-21 16:56:18" itemprop="dateModified" datetime="2021-11-21T16:56:18+08:00">2021-11-21</time>
+                <time title="修改时间：2021-12-17 11:42:12" itemprop="dateModified" datetime="2021-12-17T11:42:12+08:00">2021-12-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -855,17 +1886,31 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/" class="post-meta-item leancloud_visitors" data-flag-title="环境搭建" title="阅读次数">
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Kafka——环境搭建" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>694</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -965,624 +2010,7 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/Kafka%E7%89%B9%E6%80%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/Kafka%E7%89%B9%E6%80%A7/" class="post-title-link" itemprop="url">Kafka特性</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:01:04" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/Kafka%E7%89%B9%E6%80%A7/" class="post-meta-item leancloud_visitors" data-flag-title="Kafka特性" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="EOS"><a href="#EOS" class="headerlink" title="EOS"></a>EOS</h3><p><strong>EOS（exactly once semantics）：精确一次处理语义</strong></p>
-<p>Kafka的EOS体现在三个方面：</p>
-<ol>
-<li>幂等：保证消息发到一个分区只会发一次，分区不会有重复消息。</li>
-<li>事务：保证原子性的写入到多个分区，要么全部写入成功，要么全部失败</li>
-<li>流式EOS</li>
-</ol>
-<p><strong>幂等的实现</strong></p>
-<p>引入producer id（pid），每个batch消息包含了pid以及起始和结束的序列号（从0开始递增）</p>
-<p>broker接收消息时，判断是否是同一个生产者发送过的相同消息，就可以实现去重。</p>
-<p>具体的判断逻辑是和上次的batch信息相比，如果pid、初始和结束序列号都相等，则判断为重复。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/docker/" class="post-title-link" itemprop="url">docker使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:09:33" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">虚拟机相关</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/docker/" class="post-meta-item leancloud_visitors" data-flag-title="docker使用" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在传统项目中，开发和运维的对接往往会出现环境不一致的问题，即使能够统一环境，也需要进行很多配置，非常麻烦。</p>
-<p>所以人们就提出一种方式，即</p>
-<blockquote>
-<p>把开发时的环境抽离并保存下来，当其他地方需要运行项目时，直接拉取这个环境，就省去了麻烦的配置过程。</p>
-</blockquote>
-<p>这也就是docker的思想。</p>
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><blockquote>
-<p> docker采用容器的思想，把镜像配置在容器中，当其他人需要运行项目时，只需要从docker仓库中拉去相应的镜像，即可解决环境冲突问题。</p>
-</blockquote>
-<blockquote>
-<p>轻巧，和VM相比，他只需要几兆空间，因为只用到了核心命令等</p>
-</blockquote>
-<h2 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h2><blockquote>
-<p>官网：<a target="_blank" rel="noopener" href="https://docs.docker.com/reference/">https://docs.docker.com/reference/</a></p>
-</blockquote>
-<h3 id="1-检查环境"><a href="#1-检查环境" class="headerlink" title="1.检查环境"></a>1.检查环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname -r              <span class="comment"># 查看内核版本，需要3.1及以上</span></span><br><span class="line">cat /etc/os-release   <span class="comment"># 查看CentOS版本，需要7以上</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-安装"><a href="#2-安装" class="headerlink" title="2.安装"></a>2.安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.install </span></span><br><span class="line">yum install -y yum-utils</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.set repository  not sure</span></span><br><span class="line">yum-config-manager \</span><br><span class="line">--add-repo \</span><br><span class="line">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo </span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.update index</span></span><br><span class="line">yum makecache fast</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.install docker-ce</span></span><br><span class="line">yum install docker-ce docker-ce-cli containerd.io</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5.start docker</span></span><br><span class="line">systemctl start docker</span><br><span class="line"><span class="comment"># sure</span></span><br><span class="line">docker version</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、docker组件介绍"><a href="#三、docker组件介绍" class="headerlink" title="三、docker组件介绍"></a>三、docker组件介绍</h2><p><strong>docker的核心三大组件为：镜像、容器和仓库</strong></p>
-<p>三者的关系如下所示：</p>
-<img data-src="https://gitee.com/aurora1004/pictures/raw/master/docker_component.png" alt="docker_component" style="zoom: 67%;" />
-
-<p>在谈这些之前，我们先要了解下Linux相关的一些基础知识。</p>
-<p>Linux操作系统分为两部分，<strong>内核与用户空间</strong>。Linux真正<strong>核心</strong>部分在于内核，而<strong>用户空间</strong>只是各大厂商在内核基础上添加自己的软件与工具集形成的发布版本。</p>
-<p><strong>镜像</strong></p>
-<blockquote>
-<p>docker镜像实际上是由一层一层的系统文件组成，这种层级的文件系统被称为UnionFS( Union file system  统一文件系统)，镜像可以基于dockerfile构建，dockerfile是一个描述文件，里面包含了若干条密令，每条命令都会对基础文件系统创建新的层次结构。</p>
-</blockquote>
-<p><strong>镜像仓库</strong></p>
-<p>镜像仓库顾名思义便是用来存放镜像的，docker提供了一个注册服务器（register）来保存多个仓库，每个仓库又可以包含多个具备不同tag的镜像，docker运作中使用的默认仓库是docker hub公共仓库。</p>
-<p><strong>容器</strong></p>
-<p>docker容器是由docker镜像创建的运行实例。</p>
-<p>docker容器类似虚拟机，可以执行包含启动，停止，删除等。每个容器间是相互隔离的。</p>
-<p>容器中会运行特定的运用，包含特定应用的代码及所需的依赖文件，因此可以看作是一个简易版的Linux环境（包含root用户权限，进程空间，用户空间和网络空间等）和运行在其中的应用程序。</p>
-<h2 id="四、常用命令"><a href="#四、常用命令" class="headerlink" title="四、常用命令"></a>四、常用命令</h2><h3 id="1-帮助命令"><a href="#1-帮助命令" class="headerlink" title="1.帮助命令"></a>1.帮助命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br><span class="line">docker info    <span class="comment"># 显示系统信息，包括容器和镜像</span></span><br><span class="line">docker 命令 --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-镜像命令"><a href="#2-镜像命令" class="headerlink" title="2.镜像命令"></a>2.镜像命令</h3><h5 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看本地主机上的所有镜像</span></span><br><span class="line">docker images  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 可选项</span></span><br><span class="line">	- a <span class="comment"># all</span></span><br><span class="line">	- q <span class="comment"># 只显示镜像id</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在docker hub中搜索镜像</span></span><br><span class="line">docker search mysql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可选项</span></span><br><span class="line">	--filter	<span class="comment"># 搜索过滤 如 --filter=STARS=3000</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql</span><br><span class="line"><span class="comment"># 拉取结果分析，待补充</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定版本，注意，版本必须是存在的</span></span><br><span class="line">docker pull mysql:5.7</span><br></pre></td></tr></table></figure>
-
-<h5 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全部删除</span></span><br><span class="line">docker rmi -f $(docker images -aq)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定id或名称</span></span><br><span class="line">docker rmi -f id或name</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-容器命令"><a href="#3-容器命令" class="headerlink" title="3.容器命令"></a>3.容器命令</h3><p>首先，需要一个镜像才能运行容器。</p>
-<h5 id="拉取cent-OS镜像"><a href="#拉取cent-OS镜像" class="headerlink" title="拉取cent OS镜像"></a>拉取cent OS镜像</h5><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker pull centOS</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="创建并启动容器"><a href="#创建并启动容器" class="headerlink" title="创建并启动容器"></a>创建并启动容器</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run [可选参数] image</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"> --name=<span class="string">&quot;Name&quot;</span> 用来区分容器</span><br><span class="line"> -d 后台运行</span><br><span class="line"> -it 启动并进入容器</span><br><span class="line"> -p 绑定端口，有多种方式</span><br><span class="line"> 	-p ip:主机端口:容器端口</span><br><span class="line"> 	-p 主机端口:容器端口(最常用)</span><br><span class="line"> 	-p 容器端口</span><br><span class="line"> 	容器端口</span><br><span class="line"> -P 随机指定端口 </span><br></pre></td></tr></table></figure>
-
-<h5 id="查看运行的容器"><a href="#查看运行的容器" class="headerlink" title="查看运行的容器"></a>查看运行的容器</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在运行的容器</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment"># 查看正在运行和历史运行的容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment"># 只显示id</span></span><br><span class="line">docker ps -q</span><br></pre></td></tr></table></figure>
-
-<h5 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果在创建容器时加上了 -it，就会直接进入到容器中</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1.退出，但是容器也会停止</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.退出，容器不停止</span></span><br><span class="line">ctrl + p + q</span><br></pre></td></tr></table></figure>
-
-<h5 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker rm 容器id</span><br><span class="line"></span><br><span class="line">docker rm -f $(docker ps -aq)</span><br><span class="line"></span><br><span class="line">docker ps -aq | xargs docker rm</span><br></pre></td></tr></table></figure>
-
-<h5 id="启动和停止容器"><a href="#启动和停止容器" class="headerlink" title="启动和停止容器"></a>启动和停止容器</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker start   <span class="comment"># 启动</span></span><br><span class="line">docker stop    <span class="comment"># 停止</span></span><br><span class="line">docker <span class="built_in">kill</span>    <span class="comment"># 强制停止</span></span><br><span class="line">docker restart <span class="comment"># 重启</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4-其他命令"><a href="#4-其他命令" class="headerlink" title="4.其他命令"></a>4.其他命令</h3><h5 id="后台启动容器"><a href="#后台启动容器" class="headerlink" title="后台启动容器"></a>后台启动容器</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -d 镜像名</span><br><span class="line"><span class="comment"># 发现容器停止了</span></span><br><span class="line"><span class="comment"># 因为docker必须要有一个前台进程运行着才行</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看指定id的10条日志</span></span><br><span class="line">docker logs -tf --tail 10 容器id</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h5 id="查看容器中进程信息"><a href="#查看容器中进程信息" class="headerlink" title="查看容器中进程信息"></a>查看容器中进程信息</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker top 容器id</span><br></pre></td></tr></table></figure>
-
-<h5 id="查看镜像元数据"><a href="#查看镜像元数据" class="headerlink" title="查看镜像元数据"></a>查看镜像元数据</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 容器id</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">问题总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：19:57:51" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/" itemprop="url" rel="index"><span itemprop="name">谷粒学苑</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" class="post-meta-item leancloud_visitors" data-flag-title="问题总结" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-前端页面展示的日期为空"><a href="#1-前端页面展示的日期为空" class="headerlink" title="1.前端页面展示的日期为空"></a>1.前端页面展示的日期为空</h3><p>前端收到日期数据为空 <code>-&gt;</code> 后端读数据库得到日期为空 <code>-&gt;</code> 数据库中数据正常</p>
-<p>最后定位问题出在实体类这儿：</p>
-<blockquote>
-<p>我用<code>@TableField</code>注解来指定实体类属性与表字段的映射关系，即属性update_time对应表中字段gmt_modified。</p>
-<p>但是mybatis-plus默认会把实体类的属性转化成驼峰形式的<code>updateTime</code>，导致原先的映射对不上了，因此查询为空。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableField(fill = FieldFill.INSERT_UPDATE, value = &quot;gmt_modified&quot;)</span></span><br><span class="line"><span class="keyword">private</span> Date updated_time;</span><br></pre></td></tr></table></figure>
-
-<p><strong>解决方式（二选一!!!）</strong></p>
-<p>①把属性修改成驼峰形式的（讲道理就该写成驼峰式的，当时脑子抽了…）</p>
-<p><code>private Date updatedTime;</code></p>
-<p>②或者关闭自动转驼峰</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># application.yml文件</span></span><br><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">  <span class="attr">configuration:</span></span><br><span class="line">    <span class="attr">map-underscore-to-camel-case:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-枚举类型为空"><a href="#2-枚举类型为空" class="headerlink" title="2.枚举类型为空"></a>2.枚举类型为空</h3><p>同上问，数据库（int）中读出来的数据经mybatis plus转化为枚举后，变为空。</p>
-<p>最后的做法是把表的字段类型由int改为tinyint(4)。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">项目模块</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：19:57:35" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/" itemprop="url" rel="index"><span itemprop="name">谷粒学苑</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97/" class="post-meta-item leancloud_visitors" data-flag-title="项目模块" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="父工程介绍"><a href="#父工程介绍" class="headerlink" title="父工程介绍"></a>父工程介绍</h3><p>父工程的主要特点是：</p>
-<ol>
-<li>父工程使用<code>Spring Intializr</code>创建为SpringBoot项目，</li>
-<li>使用<code>properties</code>和<code>dependencyManagement</code>进行总的依赖和版本管理。</li>
-</ol>
-<p>这样做的好处是可以让所有子模块都使用父工程的依赖和版本，从而<strong>确保各个子模块的依赖和版本保持一致</strong>。</p>
-<p>如果某个子模块需要使用不同于父工程的版本，只需要在自己的模块中声明版本即可，这样就不会继承父工程的版本。</p>
-<h3 id="讲师管理模块"><a href="#讲师管理模块" class="headerlink" title="讲师管理模块"></a>讲师管理模块</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">项目介绍</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：19:57:21" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/" itemprop="url" rel="index"><span itemprop="name">谷粒学苑</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" class="post-meta-item leancloud_visitors" data-flag-title="项目介绍" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p><code>在线教育</code>：以网络为媒介的教学方式</p>
-<p>谷粒学苑是一个在线教育平台，为学员和教师提供了一个学习与授课的平台。它借助互联网打破了时间与空间的限制，使得工作繁忙或是学习时间不固定的群体都能借此来充能。</p>
-<h2 id="项目模块"><a href="#项目模块" class="headerlink" title="项目模块"></a>项目模块</h2><p>项目用户分为两类，管理员和普通用户。</p>
-<p><strong>对于管理员来说，模块有：</strong></p>
-<ol>
-<li>讲师管理</li>
-<li>课程分类管理</li>
-<li>课程管理</li>
-<li>统计分析</li>
-<li>订单管理</li>
-<li>banner</li>
-<li>权限管理</li>
-</ol>
-<p><strong>对于普通用户来说，模块有：</strong></p>
-<ol>
-<li>首页数据展示</li>
-<li>讲师列表和详情</li>
-<li>课程列表和详情<ul>
-<li>视频播放</li>
-</ul>
-</li>
-<li>登录和注册</li>
-<li><code>微信扫码登录</code></li>
-<li><code>微信扫码支付</code></li>
-</ol>
-<h2 id="项目使用技术"><a href="#项目使用技术" class="headerlink" title="项目使用技术"></a>项目使用技术</h2><p><strong>后端</strong></p>
-<ul>
-<li>springboot</li>
-<li>springcloud</li>
-<li>mybatisplus</li>
-<li>springsecurity</li>
-</ul>
-<p><strong>前端</strong></p>
-<ul>
-<li>vue+element-ui+axios+nodejs</li>
-</ul>
-<p><strong>其他</strong></p>
-<ul>
-<li>阿里云oss</li>
-<li>阿里云视频点播服务</li>
-<li>阿里云短信服务</li>
-<li>微信支付</li>
-<li>docker</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">Vue指令学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：19:59:49" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/" class="post-meta-item leancloud_visitors" data-flag-title="Vue指令学习" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Vue指令"><a href="#Vue指令" class="headerlink" title="Vue指令"></a>Vue指令</h3><blockquote>
-<p>代码部分只展示了关键部分</p>
-</blockquote>
-<h5 id="v-text"><a href="#v-text" class="headerlink" title="v-text"></a>v-text</h5><p>通过参数来设置标签内的值</p>
-<p>注意，会覆盖标签内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo&#39; v-text&#x3D;&#39;para&#39;&gt;被覆盖啦呀，真惨&lt;&#x2F;div&gt; </span><br></pre></td></tr></table></figure>
-
-<h5 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h5><p>和 <code>v-text</code> 类似，区别在于 <code>v-html</code> 能解析成HTML，进行赋值</p>
-<h5 id="v-on"><a href="#v-on" class="headerlink" title="v-on"></a>v-on</h5><p>绑定方法，<strong>简写形式如下</strong></p>
-<p>另外，绑定方法可以具体化，如@keyup.enter表示键盘键入回车键后，调用某方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input id&#x3D;&#39;demo&#39; @click&#x3D;&#39;method&#39; type&#x3D;&quot;button&quot; value&#x3D;&quot;按钮&quot;&gt;&lt;&#x2F;input&gt; </span><br></pre></td></tr></table></figure>
-
-<h5 id="v-show"><a href="#v-show" class="headerlink" title="v-show"></a>v-show</h5><p>用来改变元素的属性值，来使它隐藏或出现</p>
-<p>注意，是通过修改属性的方式实现的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo2&#39;&gt;</span><br><span class="line">       &lt;input type&#x3D;&quot;button&quot; value&#x3D;&quot;点击改变&quot; @click&#x3D;&#39;click_it&#39;&gt; </span><br><span class="line">       &lt;p v-show&#x3D;&quot;flag&quot;&gt;嘿嘿，会员内容哦&lt;&#x2F;p&gt;   </span><br><span class="line">   &lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h2><h5 id="v-bind-单向绑定"><a href="#v-bind-单向绑定" class="headerlink" title="v-bind(单向绑定)"></a>v-bind(单向绑定)</h5><p>设置元素的内部属性，如src、<strong>class</strong></p>
-<p><strong>简写形式如下</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo&#39; &gt;</span><br><span class="line">        &lt;img v-bind:src&#x3D;&quot;para&quot;&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 下面的改变class属性比较重要 --&gt;</span><br><span class="line">&lt;div id&#x3D;&#39;demo&#39; &gt;</span><br><span class="line">        &lt;img :class&#x3D;&quot;&#123;clazz_type:isNeedToChange&#125;&quot;  v-bind:src&#x3D;&quot;para&quot;&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">&lt;!-- 一些参数 --&gt;</span><br><span class="line">isNeedToChange: true</span><br><span class="line">.clazz_type &#123; border: 1px solid red; &#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="v-model-双向绑定"><a href="#v-model-双向绑定" class="headerlink" title="v-model(双向绑定)"></a>v-model(双向绑定)</h5><p>页面上的值发生变化时（比如用户输入内容），被绑定的变量也会变化。</p>
-<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><h5 id="v-if"><a href="#v-if" class="headerlink" title="v-if"></a>v-if</h5><p>同样也是用来决定元素的隐藏与出现</p>
-<p>但是它是通过修改DOM树的方式实现的</p>
-<h5 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h5><p>遍历数组中的值，并利用一个模板显示出来</p>
-<p>如下，<strong>li <strong>标签就是所谓的模板，在模板中添加</strong>遍历项student</strong>的名字和年龄</p>
-<p>所以就会输出数组中所有学生的名字和年龄</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id&#x3D;&#39;demo&#39; &gt;</span><br><span class="line">       &lt;ul&gt;</span><br><span class="line">           &lt;li v-for&#x3D;&quot;(student, index) in students&quot;&gt;</span><br><span class="line">               第&#123;&#123; index + 1 &#125;&#125;位同学叫&#123;&#123;student.name&#125;&#125;，年龄&#123;&#123;student.age&#125;&#125;</span><br><span class="line">           &lt;&#x2F;li&gt;</span><br><span class="line">       &lt;&#x2F;ul&gt;</span><br><span class="line">   &lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+  </div>
 
   
   <nav class="pagination">
@@ -1654,20 +2082,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1708,17 +2136,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -1816,6 +2251,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

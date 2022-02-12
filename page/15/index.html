@@ -47,15 +47,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -201,6 +192,646 @@
 
           <div class="content index posts-expand">
             
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/JUC/%E5%B9%B6%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Java/JUC/%E5%B9%B6%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0_1/" class="post-title-link" itemprop="url">并发学习笔记</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-19 14:21:13" itemprop="dateModified" datetime="2021-12-19T14:21:13+08:00">2021-12-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/Java/JUC/%E5%B9%B6%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0_1/" class="post-meta-item leancloud_visitors" data-flag-title="并发学习笔记" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>254</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一、理解"><a href="#一、理解" class="headerlink" title="一、理解"></a>一、理解</h1><h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>最早接触<code>原子性</code>是在事务的四大特性中，当时理解的是事务要么全部完成，要么就失败回滚。</p>
+<p>看了<code>并发编程实战后</code>，看到了对<code>原子性</code>的全新理解</p>
+<blockquote>
+<p>假设有两个操作A和B，从执行A的线程来看，另一个线程执行B时，要么把B全部执行完，要么就完全不执行，那么A和B对彼此来说，都是原子的。</p>
+</blockquote>
+<h2 id="this逃逸"><a href="#this逃逸" class="headerlink" title="this逃逸"></a>this逃逸</h2><blockquote>
+<p>在类的构造方法中，把<strong>this引用</strong>传递出去，就会造成<strong>this逃逸</strong>。</p>
+<p>哪怕逃逸的语句是写在构造方法的最后一行，但因为JVM指令重排序，可能会让它先执行。</p>
+</blockquote>
+<p>一种<strong>常见的情况</strong>就是在构造方法中启动了一个新线程，我们可以使用<strong>工厂方法</strong>来避免。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/JUC/AQS%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Java/JUC/AQS%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">JUC——抽象队列同步器AQS</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-19 16:59:49" itemprop="dateModified" datetime="2021-12-19T16:59:49+08:00">2021-12-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/Java/JUC/AQS%E5%AD%A6%E4%B9%A0/" class="post-meta-item leancloud_visitors" data-flag-title="JUC——抽象队列同步器AQS" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>233</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="了解AQS"><a href="#了解AQS" class="headerlink" title="了解AQS"></a>了解AQS</h2><h3 id="AQS是什么？它是用来做什么的？"><a href="#AQS是什么？它是用来做什么的？" class="headerlink" title="AQS是什么？它是用来做什么的？"></a>AQS是什么？它是用来做什么的？</h3><p>AbstractQueuedSynchronizer（AQS）翻译为<strong>抽象的队列式的同步器</strong>，它是一个用于实现锁和同步器的框架。</p>
+<p>它提供了基本的框架结构<code>@如等待队列的维护</code>，保留了一些细节交由开发者实现<code>@如尝试获取和释放锁</code>。</p>
+<p>因此借助AQS，我们可以较为容易地开发自己的同步器</p>
+<h3 id="AQS核心思想"><a href="#AQS核心思想" class="headerlink" title="AQS核心思想"></a>AQS核心思想</h3><p>将阻塞的线程放入到队列中进行等待，</p>
+<h3 id="AQS的组成"><a href="#AQS的组成" class="headerlink" title="AQS的组成"></a>AQS的组成</h3><p>两个内部类</p>
+<ul>
+<li>Node：双向队列的节点</li>
+<li>ConditionObject：未知</li>
+</ul>
+<p>AQS的</p>
+<h2 id="深入AQS"><a href="#深入AQS" class="headerlink" title="深入AQS"></a>深入AQS</h2><p>AQS加锁</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/" class="post-title-link" itemprop="url">HashMap</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-30 14:25:12" itemprop="dateModified" datetime="2021-09-30T14:25:12+08:00">2021-09-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/HashMap/" class="post-meta-item leancloud_visitors" data-flag-title="HashMap" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h1><p>从<code>加入元素</code>过程开始思考：</p>
+<ul>
+<li>如何计算hash</li>
+<li>定位数组下标的方式，及冲突的解决方式</li>
+<li>树化（变为红黑树）或扩容的条件</li>
+</ul>
+<h2 id="1-计算hash"><a href="#1-计算hash" class="headerlink" title="1. 计算hash"></a>1. 计算hash</h2><p>计算hash主要使用的是Object对象提供的<code>hashCode()</code>方法</p>
+<p>但是，它经过了一次扰动才返回真正的hash值。</p>
+<p><strong>key</strong>的哈希码的高16位与低16位进行<strong>异或</strong>，增加低十六位的<strong>随机性</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h;</span><br><span class="line">        <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-计算数组下标"><a href="#2-计算数组下标" class="headerlink" title="2. 计算数组下标"></a>2. 计算数组下标</h2><p><strong>代码</strong></p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tab[i = (n - <span class="number">1</span>) <span class="meta">&amp; hash]</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以看到，计算下标的方式是<strong>与运算</strong></p>
+<p>简单地说，下标就是扰动后的hash对数组容量求余，得到的<strong>余数</strong></p>
+</blockquote>
+<p><strong>解释</strong></p>
+<p>首先，hashmap通过<code>tableSizeFor</code>方法保证数组大小是2的整数次幂</p>
+<blockquote>
+<p>PS：如果初始化时传入的不是2的整数次幂，会通过该方法调整为大于该数的最小的2的整数次幂。例如传入13，该方法返回16</p>
+</blockquote>
+<p>其次，在n是2的整数次幂的情况下，对n求余可以通过上述<code>与运算</code>进行</p>
+<p>但是，由于<code>n-1</code>的二进制低位全是1，高位全是0。这样它们进行<code>与运算</code>时，可能就只用到了hash的低位（具体用到几位和n-1位数有关）</p>
+<blockquote>
+<p>PS：16 - 1 的二进制有个特点，即<strong>低位全是1，高位全是0</strong></p>
+</blockquote>
+<p><strong>这样出现哈希冲突的可能就会增大，所以就需要扰动函数，来增加低位hash值的随机性</strong></p>
+<h2 id="3-哈希冲突"><a href="#3-哈希冲突" class="headerlink" title="3. 哈希冲突"></a>3. 哈希冲突</h2><p>计算完数组下标后，如果数组上的该位置为空，则直接把节点放入即可。</p>
+<p>如果已经有节点，就意味着发生了<code>哈希冲突</code>。</p>
+<p><strong>解决方式：拉链法或树化</strong></p>
+<p><strong>先直接尾插，然后判断，</strong></p>
+<ol>
+<li>链表长度小于等于8：什么都不做</li>
+<li>链表长度超过8，<strong>尝试</strong>树化，变为红黑树</li>
+</ol>
+<p><strong>为什么说是尝试树化呢？</strong></p>
+<p>因为树化时有一个判断：<strong>如果数组长度小于64，则不会树化，而是先扩容数组然后重新计算哈希</strong></p>
+<h2 id="4-数组扩容机制"><a href="#4-数组扩容机制" class="headerlink" title="4. 数组扩容机制"></a>4. 数组扩容机制</h2><ul>
+<li><strong>capacity：</strong>数组长度，默认为16</li>
+<li><strong>load factor：</strong>负载因子，默认为0.75</li>
+<li><strong>threshold：</strong>数组中存放元素的上限，默认12</li>
+</ul>
+<p><strong>计算公式：</strong>$\quad threshold = capacity * load factor$</p>
+<p>当HashMap中的元素个数**大于临界值(threshold)**时，就会进行扩容：</p>
+<ol>
+<li>把数组容量变为原来的两倍</li>
+<li>重新计算hash(这里是指元素在散列表中的位置，即索引，与数组大小有关，所以发生了变化)</li>
+</ol>
+<h2 id="5-插入过程"><a href="#5-插入过程" class="headerlink" title="5. 插入过程"></a>5. 插入过程</h2><p>插入元素时：</p>
+<ol>
+<li>如果数组索引处节点是空的，就新建一个节点</li>
+<li>如果索引处节点不为空，则插入到链表中（1.7头插法，1.8尾插法）</li>
+<li>如果是树节点，则调用插入树节点的方法</li>
+</ol>
+<p>插入完毕后：</p>
+<p>如果链表长度大于8，则判断数组容量，小于64就进行<strong>resize</strong>，大于64就<strong>由链表</strong>优化成<strong>红黑树</strong></p>
+<h3 id="tableSizeFor"><a href="#tableSizeFor" class="headerlink" title="tableSizeFor"></a>tableSizeFor</h3><p><strong>方法介绍</strong></p>
+<p>传入用户指定的初始容量，然后返回大于该数值的最近的2的幂次</p>
+<p>例如输入11，返回16</p>
+<p><strong>分析</strong></p>
+<ol>
+<li>n = cap - 1</li>
+<li>不考虑边界情况时，n的最高位是1；然后把最高位后的所有位都置为1<ul>
+<li>做法<ul>
+<li>n右移1位，和原数n进行与，使第二位为1</li>
+<li>n右移2位，和原数与，使第三四位为1</li>
+<li>以此类推，将n除去最高位的其他位都设置为1</li>
+</ul>
+</li>
+<li><strong>目的：得到$2^n-1$，最后把1加回来即可得到2的幂次</strong></li>
+</ul>
+</li>
+<li>n + 1</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">tableSizeFor</span><span class="params">(<span class="keyword">int</span> cap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = cap - <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">2</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">4</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">        <span class="keyword">return</span> (n &lt; <span class="number">0</span>) ? <span class="number">1</span> : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="putVal"><a href="#putVal" class="headerlink" title="putVal"></a>putVal</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="keyword">int</span> n, i;</span><br><span class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>) <span class="comment">// 判断数组是否为空或长度为0，然后进行扩容</span></span><br><span class="line">            n = (tab = resize()).length;</span><br><span class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>) <span class="comment">// 数组该下标位置为空，无哈希冲突，则直接插入到数组中</span></span><br><span class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 数组索引处存在节点，发生碰撞</span></span><br><span class="line">            Node&lt;K,V&gt; e; K k;</span><br><span class="line">            <span class="keyword">if</span> (p.hash == hash &amp;&amp;  <span class="comment">// 判断是不是重复元素，如果是的话，会在下面覆盖。</span></span><br><span class="line">                ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                e = p;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</span><br><span class="line">                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</span><br><span class="line">                    <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        p.next = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">                        <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// 尾插后链表长度大于8，尝试树化</span></span><br><span class="line">                            treeifyBin(tab, hash);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                        ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    p = e;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// 覆盖重复元素</span></span><br><span class="line">                V oldValue = e.value;</span><br><span class="line">                <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</span><br><span class="line">                    e.value = value;</span><br><span class="line">                afterNodeAccess(e);</span><br><span class="line">                <span class="keyword">return</span> oldValue; <span class="comment">// 返回旧的value，覆盖相同key的时候才会从这里返回</span></span><br><span class="line">            &#125;					 <span class="comment">// 这里还可以让HashSet的add方法返回false</span></span><br><span class="line">        &#125;						 <span class="comment">// 因为add方法调用了putVal方法，具体返回为 putVal(...) == null</span></span><br><span class="line">        ++modCount;				 <span class="comment">// false则说明在HashMap中遇到并覆盖了重复的元素</span></span><br><span class="line">        <span class="keyword">if</span> (++size &gt; threshold)</span><br><span class="line">            resize();</span><br><span class="line">        afterNodeInsertion(evict);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>HashSet的add方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-补充"><a href="#6-补充" class="headerlink" title="6.补充"></a>6.补充</h2><p><strong>1.判断是否为重复的key</strong></p>
+<p>必须满足两个条件</p>
+<ol>
+<li>两个key的hash值相同</li>
+<li>key的引用地址相同或者equals相等</li>
+</ol>
+<h1 id="其他Hash容器"><a href="#其他Hash容器" class="headerlink" title="其他Hash容器"></a>其他Hash容器</h1><h2 id="1-HashSet"><a href="#1-HashSet" class="headerlink" title="1.HashSet"></a>1.HashSet</h2><p><strong>结构？</strong></p>
+<p>内部就是使用的HasMap</p>
+<p><strong>如何去重？</strong></p>
+<p>利用了HashMap的put方法的返回值。</p>
+<p>put方法返回的值有两种情况</p>
+<ol>
+<li><strong>null</strong>：key为null或者不存在</li>
+<li><strong>非空</strong>：覆盖了已存在key，返回旧key</li>
+</ol>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.<span class="built_in">put</span>(e, PRESENT) == null;</span><br><span class="line">    <span class="comment">// 这里可以看到，HashSet添加元素，是把元素作为map的key,而map的value则是一个常量Object，在最上方定义。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-Hashtable"><a href="#2-Hashtable" class="headerlink" title="2.Hashtable"></a>2.Hashtable</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/ArrayList/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/ArrayList/" class="post-title-link" itemprop="url">ArrayList</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-15 14:14:38" itemprop="dateModified" datetime="2021-04-15T14:14:38+08:00">2021-04-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/Java/Java%E5%AE%B9%E5%99%A8/ArrayList/" class="post-meta-item leancloud_visitors" data-flag-title="ArrayList" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>277</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>谈谈arraylist</p>
+<p>1.底层实现    是对象数组</p>
+<p>2.构造方法   3种</p>
+<p>3.扩容机制</p>
+<p>默认大小是10</p>
+<p>如果不指定大小，会先创建空数组，在添加元素的时候把数组扩容成10，然后放满都不会扩容，直到添加第11个元素</p>
+<p>如果指定大小，比如5，那么放入第六个元素时才会进行扩容</p>
+<p>扩容是每次容量*1.5倍，用了位运算</p>
+<p>4.最大容量</p>
+<p>整型最大值 - 8</p>
+<p>大于这个值，就调用hugeCapacity方法，把容量变成整型的最大值</p>
+<p>如果溢出，就抛出错误。</p>
+<p>5.添加大量元素</p>
+<p>添加大量元素时，arraylist会经过多次扩容，性能较低，这时候可以调用ensureCapacity方法，提前让数组扩容一次，以满足需求</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">基础概念</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-19 17:21:49" itemprop="dateModified" datetime="2021-12-19T17:21:49+08:00">2021-12-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="基础概念" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>250</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h2><p><strong>面向过程</strong>是以过程为中心，把问题分解成一个个步骤，然后按步骤来执行。</p>
+<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><p><strong>面向对象</strong>是一种基于现实世界的概念，以万物皆为对象的思想来解决问题。</p>
+<h3 id="三大特征"><a href="#三大特征" class="headerlink" title="三大特征"></a>三大特征</h3><p><strong>封装：</strong></p>
+<ul>
+<li>描述：提取出事物的特征和行为，封装成对象</li>
+<li>作用：隐藏细节，代码模块化</li>
+</ul>
+<p><strong>继承：</strong></p>
+<ul>
+<li>描述：子类继承父类，从而拥有父类的属性和方法</li>
+<li>作用：在不修改原来类的基础上，可以进行扩展或修改</li>
+<li><strong>补充：一般想要扩展或修改某个类的原有方法，可以使用继承或组合的方式</strong></li>
+</ul>
+<p><strong>多态：</strong></p>
+<ul>
+<li>描述：声明为父类的引用，但是创建为子类的对象实例</li>
+<li>作用：可以用父类的形象去执行，从而屏蔽了不同子类的细节</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -217,10 +848,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
+            <a href="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">Java——常见线程与对象操作</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -236,16 +867,39 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-15 22:09:25" itemprop="dateModified" datetime="2021-10-15T22:09:25+08:00">2021-10-15</time>
+                <time title="修改时间：2021-12-19 18:25:57" itemprop="dateModified" datetime="2021-12-19T18:25:57+08:00">2021-12-19</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+                </span>
+            </span>
 
           
-            <span id="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
+            <span id="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C/" class="post-meta-item leancloud_visitors" data-flag-title="Java——常见线程与对象操作" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>458</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -257,7 +911,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h2 id="wait-notify"><a href="#wait-notify" class="headerlink" title="wait/notify"></a>wait/notify</h2><p><code>wait()</code>和<code>notify()</code>是一组用于实现线程同步的方法。</p>
+<h3 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h3><p><code>wait()</code>的作用是让调用线程进入等待状态，并释放已拥有的锁。</p>
+<p>从Java虚拟机的层面上来看，每个对象都拥有一个监视器<code>monitor</code>。一个对象的监视器在一个时刻只能被一个线程所持有。线程可以通过以下一种方式来获得对象的监视器：</p>
+<ol>
+<li>执行这个对象的同步实例方法</li>
+<li>执行这个对象的同步语句</li>
+<li>执行这个对象所属类的同步静态代码块</li>
+</ol>
+<p>因此<code>wait()</code>方法的实质就是让当前线程放弃对象监视器的所有权，并重新尝试获取，因此造就了当前线程释放锁并陷入等待的局面。</p>
+<p>同理，<code>notify()</code>方法的作用是唤醒一个在等待该锁的线程。更具体的说，就是释放对象的监视器，并把它交给一个线程。（选择哪个线程随实现而定）</p>
+<p>此外，放弃监视器所有权的前提是要拥有监视器，因此执行<code>wait/notify</code>的线程必须通过上述的一种方式来获得监视器，即<strong>wait/notify必须在同步代码块中执行</strong>。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>注意，必须先调用wait()后调用notify()，否则线程会因为wait()而阻塞。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Object object = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TaskThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (object) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;before notify&quot;</span>);</span><br><span class="line">            object.notify();</span><br><span class="line">            System.out.println(<span class="string">&quot;after notify&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    TaskThread thread = <span class="keyword">new</span> TaskThread();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (object) &#123;</span><br><span class="line">        Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        thread.start();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;before wait&quot;</span>);</span><br><span class="line">        object.wait();</span><br><span class="line">        System.out.println(<span class="string">&quot;after wait&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/** result */</span></span><br><span class="line">    <span class="comment">// before wait</span></span><br><span class="line">    <span class="comment">// before notify</span></span><br><span class="line">    <span class="comment">// after notify</span></span><br><span class="line">    <span class="comment">// after wait</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -272,6 +940,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -288,10 +958,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/Java/Java%E5%9F%BA%E7%A1%80/String%E4%B8%8EStringBuffer/" class="post-title-link" itemprop="url">String、StringBuffer</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -307,7 +977,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-28 16:42:49" itemprop="dateModified" datetime="2021-04-28T16:42:49+08:00">2021-04-28</time>
+                <time title="修改时间：2021-12-19 17:21:52" itemprop="dateModified" datetime="2021-12-19T17:21:52+08:00">2021-12-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -315,7 +985,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">基础</span></a>
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
                 </span>
             </span>
 
@@ -326,6 +996,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -495,6 +1179,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -511,10 +1197,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/Go/%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">代码总结</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -549,6 +1235,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -667,6 +1367,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -683,10 +1385,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/Go/gee/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -712,6 +1414,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>665</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -792,6 +1508,7 @@
   
   
 
+  </div>
 
   
   <nav class="pagination">
@@ -863,20 +1580,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -917,17 +1634,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -1025,6 +1749,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<!-- Referrer Policy调整致不蒜子单页面统计出错:https://senorui.top/posts/c33f.html -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="从http的基础知识开始，分析各个http版本的特点，最后再简单介绍了https的握手过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP">
+<meta property="og:url" content="https://aurora-ze.github.io.git/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/index.html">
+<meta property="og:site_name" content="Aurora">
+<meta property="og:description" content="从http的基础知识开始，分析各个http版本的特点，最后再简单介绍了https的握手过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202202121548943.png">
+<meta property="article:published_time" content="2022-02-08T03:07:43.001Z">
+<meta property="article:modified_time" content="2022-02-12T07:49:34.747Z">
+<meta property="article:author" content="aurora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202202121548943.png">
+
+<link rel="canonical" href="https://aurora-ze.github.io.git/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HTTP | Aurora</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Aurora" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Aurora</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">矢志前行，拥抱未来！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HTTP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-08 11:07:43" itemprop="dateCreated datePublished" datetime="2022-02-08T11:07:43+08:00">2022-02-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-12 15:49:34" itemprop="dateModified" datetime="2022-02-12T15:49:34+08:00">2022-02-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" class="post-meta-item leancloud_visitors" data-flag-title="HTTP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+            <div class="post-description">从http的基础知识开始，分析各个http版本的特点，最后再简单介绍了https的握手过程。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、前置概念"><a href="#一、前置概念" class="headerlink" title="一、前置概念"></a>一、前置概念</h2><h3 id="URI、URL和URN"><a href="#URI、URL和URN" class="headerlink" title="URI、URL和URN"></a>URI、URL和URN</h3><p><code>URI</code>(统一资源标识符)泛指独一无二的标识符，用来表示一个资源在互联网上的位置。它有两种具体形式：URL和URN。</p>
+<p><code>URL</code>(统一资源定位符)通过路径的方式来表示资源位置。如<a target="_blank" rel="noopener" href="http://www.joes-hardware.com/specials/saw-blade.gif">http://www.joes-hardware.com/specials/saw-blade.gif</a>。可以看到，URL由<strong>所用协议</strong>、<strong>主机端口</strong>（域名）、<strong>资源具体位置</strong>构成。</p>
+<p>URI是以命名的方式来表示资源位置，目前仍处于试验阶段。</p>
+<h2 id="二、基本介绍"><a href="#二、基本介绍" class="headerlink" title="二、基本介绍"></a>二、基本介绍</h2><p><code>http</code>全称为<code>hypertext transfer protocol</code>，即超文本传输协议。它是一种用于在主机或应用程序间传输数据的协议。</p>
+<h3 id="2-1报文格式"><a href="#2-1报文格式" class="headerlink" title="2.1报文格式"></a>2.1报文格式</h3><h4 id="报文示例"><a href="#报文示例" class="headerlink" title="报文示例"></a>报文示例</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 请求报文</span></span><br><span class="line">GET /teacher/checkExist?teacherId=111 HTTP/1.0</span><br><span class="line">Host: www.test.com</span><br><span class="line">Accept: */*</span><br><span class="line">Date: Tue, 3 Oct 1974 02:16:00 GMT</span><br><span class="line"></span><br><span class="line"><span class="comment"># 响应报文</span></span><br><span class="line">HTTP/1.0 200 OK</span><br><span class="line">Content-type: text/plain</span><br><span class="line">Content-length: 33</span><br><span class="line"></span><br><span class="line">The teahcer with id 111 exists!</span><br></pre></td></tr></table></figure>
+
+<h4 id="报文结构"><a href="#报文结构" class="headerlink" title="报文结构"></a>报文结构</h4><p>报文可以分为三个部分：起始行，首部和实体。</p>
+<h3 id="2-2方法"><a href="#2-2方法" class="headerlink" title="2.2方法"></a>2.2方法</h3><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GET</td>
+<td align="center">从服务器获取资源</td>
+</tr>
+<tr>
+<td align="center">POST</td>
+<td align="center">原意为提交表单资源</td>
+</tr>
+<tr>
+<td align="center">PUT</td>
+<td align="center">将资源写入服务器</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">删除服务器资源</td>
+</tr>
+<tr>
+<td align="center">HEAD</td>
+<td align="center">只返回与GET请求相同的起始行和首部，不返回实体。可以降低传输成本。</td>
+</tr>
+<tr>
+<td align="center">TRACE</td>
+<td align="center">服务器返回时会携带请求报文。方便客户端追踪请求报文的变化，因为传输过程中请求报文可能会被经过的网关、代理等服务器修改。</td>
+</tr>
+<tr>
+<td align="center">OPTIONS</td>
+<td align="center">请求服务器告知它所支持的功能</td>
+</tr>
+</tbody></table>
+<h3 id="2-3状态码"><a href="#2-3状态码" class="headerlink" title="2.3状态码"></a>2.3状态码</h3><p><code>200</code>(OK)表示请求成功，响应报文中包含所请求的资源</p>
+<p><code>201与204</code></p>
+<p>201(Created)表示请求成功并且创建了新的资源，这个资源一般会被返回并显示在用户页面上。</p>
+<p>而204(No Content)表示请求成功且不需要改变当前页面的情况</p>
+<p><code>206</code>(Partial Content)执行成功一部分请求</p>
+<hr>
+<p><code>300</code>(Multiple Choices)指向多个资源时返回选项列表，由客户端再次决定</p>
+<p><code>301与302</code></p>
+<p>301(Moved Permanently)永久重定向，应该使用新的URL来访问资源。新的URL应该放在响应报文中的Location首部</p>
+<p>而302(Found)表示临时重定向，使用Location首部给出的URL来访问</p>
+<p><code>304</code>(Not Modified)表示资源未被修改，可以使用本地的缓存。</p>
+<hr>
+<p><code>400 Bad Request</code>笼统的表示请求发生错误</p>
+<p><code>401与403</code></p>
+<p>401(Unauthorized)表示未认证，响应中会包含如何认证的信息，因此认证后就可以访问。</p>
+<p>而403(Forbidden)表示禁止访问，一般是长期被禁止的一种状态，例如权限不足等。</p>
+<p><code>404与410</code></p>
+<p>404(Not Found)表示未找到该资源，可能是资源丢失或请求的链接错误。</p>
+<p>如果是资源永久性丢失，则应该使用410(Gone)，它表示目标资源永久性的丢失。</p>
+<hr>
+<p><code>500 Internal Server Error</code>笼统的表示服务器内部发生错误。</p>
+<p><code>502 Bad Gateway</code>一般用于网关或代理服务器，表示自身正常，但后端服务器返回的响应无效。</p>
+<p><code>501与503</code></p>
+<p>501(Not Implemented)表示请求的方法服务器不支持。</p>
+<p>而503(Service Unavailable)表示服务器正在维护或者过载，暂时无法响应</p>
+<h2 id="三、演变"><a href="#三、演变" class="headerlink" title="三、演变"></a>三、演变</h2><h3 id="http1-0"><a href="#http1-0" class="headerlink" title="http1.0"></a>http1.0</h3><p><strong>无状态、短连接</strong></p>
+<p><code>无状态</code>是指服务器不会追踪每个客户端，也不会记录之前的请求。我们可以使用cookie或者session技术来解决身份认证和状态记录的问题。</p>
+<p><code>无连接</code>是指客户端与服务器的每次请求都由不同的TCP连接来通信。请求处理完毕后就关闭TCP连接。</p>
+<p><strong>缺陷</strong></p>
+<ol>
+<li>无法复用连接，导致网络利用率特别低。</li>
+<li>队头堵塞。</li>
+</ol>
+<blockquote>
+<p>http1.0规定一个请求发送出去后，下一个请求必须等待上个请求的响应到达才能发出。如果有一个请求的响应一直未到达，就会阻塞后面的请求。</p>
+</blockquote>
+<h3 id="http1-1"><a href="#http1-1" class="headerlink" title="http1.1"></a>http1.1</h3><p><strong>长连接</strong></p>
+<p>默认开启长连接，如果想要关闭连接，可以设置<code>Connection: close</code></p>
+<p><strong>流水线模型</strong></p>
+<p>类似于“并行”的概念，可以发出多个请求，但是它们的响应必须按序到达。其实是由服务器来维护响应队列，保证处理多个响应的按序返回。因此并不是真正意义上的并行。</p>
+<h3 id="http2-0"><a href="#http2-0" class="headerlink" title="http2.0"></a>http2.0</h3><p><strong>头部压缩</strong></p>
+<p>使用哈夫曼编码和索引表来记录首部字段，报文头部只需记录索引号即可。</p>
+<p><strong>二进制分帧</strong></p>
+<p>报文头部和报文实体都采用二进制格式编码，并划分为头信息帧和数据帧。</p>
+<p><strong>多路复用</strong></p>
+<p>在一个TCP连接中又划分出多个虚拟的数据流通道，消息可以在其中传输。而消息是由一个或多个帧乱序组成的。接收方可以根据帧首部的标志来重新组装。</p>
+<p><strong>服务器推送</strong></p>
+<p>在浏览器首次与服务器建立请求时，服务器可以把js、css等静态资源主动发送给客户端。</p>
+<blockquote>
+<p><strong>缺陷</strong>：http2.0复用同一个TCP连接，因此只要触发了TCP的超时重传机制，所有的请求都会被阻塞。</p>
+</blockquote>
+<h3 id="htpp3-0"><a href="#htpp3-0" class="headerlink" title="htpp3.0"></a>htpp3.0</h3><p><strong>QUIC协议</strong></p>
+<ul>
+<li>协议自己实现了一套可靠性传输。当遇到丢包情况时，只会阻塞当前的数据流，其他流可以正常传输。</li>
+<li>将https的六次握手合并成三次</li>
+</ul>
+<h2 id="四、HTTPs"><a href="#四、HTTPs" class="headerlink" title="四、HTTPs"></a>四、HTTPs</h2><h3 id="HTTPs介绍"><a href="#HTTPs介绍" class="headerlink" title="HTTPs介绍"></a>HTTPs介绍</h3><p>HTTPs是一种加密的HTTP协议，它采用混合加密、摘要算法和CA证书来完成加密过程。</p>
+<p><strong>混合加密</strong></p>
+<p>常规加密方式有<code>对称加密</code>和<code>非对称加密</code>。HTTPs的混合加密具体指<strong>先用非对称加密来传输密钥，然后再用此密钥作为对称加密来通信。</strong>这样兼顾了安全性和效率。</p>
+<p><strong>摘要算法</strong></p>
+<p>摘要算法是指发送方对某一内容进行摘要得到指纹，接收方用相同的摘要算法对内容进行摘要，验证指纹是否一致。它的目的是<strong>确保数据的完整性。</strong></p>
+<p><strong>CA证书</strong></p>
+<p>证书就是对混合加密和摘要算法的具体实现。可以看下面服务器申请证书的过程。</p>
+<h3 id="SSL-TLS握手"><a href="#SSL-TLS握手" class="headerlink" title="SSL/TLS握手"></a>SSL/TLS握手</h3><p><strong>准备工作：服务器申请证书</strong></p>
+<ol>
+<li>服务器将自己的公钥S1注册到证书机构（CA）上</li>
+<li>CA机构用自己的私钥加密S1，并对S1生成数字签名。</li>
+<li>CA机构将证书颁发给服务器，证书包含数字签名和被加密的公钥S1</li>
+</ol>
+<p>客户端收到证书后，就可以利用签名来验证证书完整性，利用CA公钥来解密得到服务器公钥。</p>
+<p><strong>基本流程</strong></p>
+<ol>
+<li>客户端向服务器索要并验证服务器的公钥</li>
+<li>双方协商产生「会话密钥」</li>
+<li>双方使用会话密钥通信</li>
+</ol>
+<p><strong>握手流程</strong></p>
+<ol>
+<li>Client Hello：发送随机数C</li>
+<li>Server Hello：发送随机数S</li>
+<li>Client Key Exchange：发送预密钥pre-master</li>
+<li>Finish</li>
+</ol>
+<img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202202121548943.png" alt="97_2_3"  />
+
+<h3 id="与HTTP的区别"><a href="#与HTTP的区别" class="headerlink" title="与HTTP的区别"></a>与HTTP的区别</h3><p><strong>是否加密</strong></p>
+<p>HTTP是明文传输，因此存在报文被拦截、篡改等情况，同时也会造成信息的泄露。</p>
+<p>而HTTPs则是在HTTP与TCP之间加入了<code>SSL/TLS</code>协议来实现加密传输。</p>
+<p><strong>使用端口不同</strong>：80，443</p>
+<p><strong>建立连接次数不同</strong>：HTTPs在TCP三次握手之后，还需要SSL/TLS三次握手</p>
+<p><strong>成本不同</strong>：HTTPs需要申请证书，成本更高</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/17/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringCloud/Nacos/" rel="prev" title="Nacos使用">
+      <i class="fa fa-chevron-left"></i> Nacos使用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E7%BD%AE%E6%A6%82%E5%BF%B5"><span class="nav-text">一、前置概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#URI%E3%80%81URL%E5%92%8CURN"><span class="nav-text">URI、URL和URN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="nav-text">二、基本介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-text">2.1报文格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E7%A4%BA%E4%BE%8B"><span class="nav-text">报文示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84"><span class="nav-text">报文结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E6%96%B9%E6%B3%95"><span class="nav-text">2.2方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-text">2.3状态码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%BC%94%E5%8F%98"><span class="nav-text">三、演变</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#http1-0"><span class="nav-text">http1.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http1-1"><span class="nav-text">http1.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http2-0"><span class="nav-text">http2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#htpp3-0"><span class="nav-text">htpp3.0</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81HTTPs"><span class="nav-text">四、HTTPs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTPs%E4%BB%8B%E7%BB%8D"><span class="nav-text">HTTPs介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSL-TLS%E6%8F%A1%E6%89%8B"><span class="nav-text">SSL&#x2F;TLS握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8EHTTP%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">与HTTP的区别</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aurora"
+      src="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+  <p class="site-author-name" itemprop="name">aurora</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Aurora-Ze" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Aurora-Ze" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:88775682whz@gmail.com" title="E-Mail → mailto:88775682whz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      
+       <div>
+          <iframe class="cc-license motion-element" frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="//music.163.com/outchain/player?type=2&id=3986241&auto=1&height=32"></iframe>
+       </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
+</div>
+
+<!---->
+
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/07/2021 15:54:40");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src=""></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/darkmode-js.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+
+<script>
+var options = {
+  bottom: '64px', // default: '32px'
+  right: 'unset', // default: '32px'
+  left: '32px', // default: 'unset'
+  time: '0.5s', // default: '0.3s'
+  mixColor: 'transparent', // default: '#fff'
+  backgroundColor: 'transparent',  // default: '#fff'
+  buttonColorDark: '#100f2c',  // default: '#100f2c'
+  buttonColorLight: '#fff', // default: '#fff'
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+</script>
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

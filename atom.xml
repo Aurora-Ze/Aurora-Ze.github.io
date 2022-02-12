@@ -6,7 +6,7 @@
   <link href="https://aurora-ze.github.io.git/atom.xml" rel="self"/>
   
   <link href="https://aurora-ze.github.io.git/"/>
-  <updated>2021-12-13T12:03:50.005Z</updated>
+  <updated>2022-02-12T07:49:34.747Z</updated>
   <id>https://aurora-ze.github.io.git/</id>
   
   <author>
@@ -17,20 +17,158 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>HTTP</title>
+    <link href="https://aurora-ze.github.io.git/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/"/>
+    <id>https://aurora-ze.github.io.git/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/</id>
+    <published>2022-02-08T03:07:43.001Z</published>
+    <updated>2022-02-12T07:49:34.747Z</updated>
+    
+    
+    <summary type="html">从http的基础知识开始，分析各个http版本的特点，最后再简单介绍了https的握手过程。</summary>
+    
+    
+    
+    <category term="计算机网络" scheme="https://aurora-ze.github.io.git/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Nacos使用</title>
+    <link href="https://aurora-ze.github.io.git/2022/01/17/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringCloud/Nacos/"/>
+    <id>https://aurora-ze.github.io.git/2022/01/17/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringCloud/Nacos/</id>
+    <published>2022-01-17T06:50:55.222Z</published>
+    <updated>2022-01-17T07:39:21.069Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Nacos&quot;&gt;&lt;a href=&quot;#Nacos&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="SpringCloud" scheme="https://aurora-ze.github.io.git/categories/SpringCloud/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://aurora-ze.github.io.git/2021/12/24/TODO/record/"/>
+    <id>https://aurora-ze.github.io.git/2021/12/24/TODO/record/</id>
+    <published>2021-12-24T07:47:01.751Z</published>
+    <updated>2021-12-25T13:52:01.215Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;文章结构&quot;&gt;&lt;a href=&quot;#文章结构&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>基于容器集群的能源管理系统</title>
+    <link href="https://aurora-ze.github.io.git/2021/12/23/Reading/%E5%9F%BA%E4%BA%8E%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E8%83%BD%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/"/>
+    <id>https://aurora-ze.github.io.git/2021/12/23/Reading/%E5%9F%BA%E4%BA%8E%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E8%83%BD%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</id>
+    <published>2021-12-23T10:28:59.984Z</published>
+    <updated>2021-12-27T07:59:28.953Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h2&gt;&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="阅读" scheme="https://aurora-ze.github.io.git/categories/%E9%98%85%E8%AF%BB/"/>
+    
+    
+    <category term="read" scheme="https://aurora-ze.github.io.git/tags/read/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JUC——LockSupport</title>
+    <link href="https://aurora-ze.github.io.git/2021/12/19/Java/JUC/LockSupport/"/>
+    <id>https://aurora-ze.github.io.git/2021/12/19/Java/JUC/LockSupport/</id>
+    <published>2021-12-19T09:01:43.938Z</published>
+    <updated>2021-12-19T13:15:15.330Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h2&gt;&lt;h3 id=&quot;什么是LockSupport？&quot;&gt;&lt;a href=&quot;#什么是LockSupport？&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="多线程" scheme="https://aurora-ze.github.io.git/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    
+    <category term="Java" scheme="https://aurora-ze.github.io.git/tags/Java/"/>
+    
+    <category term="JUC" scheme="https://aurora-ze.github.io.git/tags/JUC/"/>
+    
+    <category term="多线程" scheme="https://aurora-ze.github.io.git/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JUC——原子类</title>
+    <link href="https://aurora-ze.github.io.git/2021/12/18/Java/JUC/%E5%8E%9F%E5%AD%90%E7%B1%BB/"/>
+    <id>https://aurora-ze.github.io.git/2021/12/18/Java/JUC/%E5%8E%9F%E5%AD%90%E7%B1%BB/</id>
+    <published>2021-12-18T03:22:21.180Z</published>
+    <updated>2021-12-19T09:00:45.790Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h2&gt;&lt;h3 id=&quot;前置概念&quot;&gt;&lt;a href=&quot;#前置概念&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="多线程" scheme="https://aurora-ze.github.io.git/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    
+    <category term="Java" scheme="https://aurora-ze.github.io.git/tags/Java/"/>
+    
+    <category term="JUC" scheme="https://aurora-ze.github.io.git/tags/JUC/"/>
+    
+    <category term="多线程" scheme="https://aurora-ze.github.io.git/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Hello World</title>
     <link href="https://aurora-ze.github.io.git/2021/12/13/HelloWorld/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/HelloWorld/</id>
     <published>2021-12-13T12:06:09.881Z</published>
-    <updated>2021-12-13T12:03:50.005Z</updated>
+    <updated>2022-02-12T05:55:51.614Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;记录博客用法&quot;&gt;&lt;a href=&quot;#记录博客用法&quot; class=&quot;headerlink&quot; title=&quot;记录博客用法&quot;&gt;&lt;/a&gt;记录博客用法&lt;/h1&gt;&lt;h2 id=&quot;一、按钮&quot;&gt;&lt;a href=&quot;#一、按钮&quot; class=&quot;headerlink&quot;</summary>
-        
-      
+    <summary type="html">记录hexo命令以及写博客常用语法、快捷键等。</summary>
     
     
     
@@ -88,7 +226,7 @@
     <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</id>
     <published>2021-12-13T12:06:09.875Z</published>
-    <updated>2021-12-13T12:08:13.719Z</updated>
+    <updated>2022-01-06T04:39:57.717Z</updated>
     
     
       
@@ -225,11 +363,11 @@
   </entry>
   
   <entry>
-    <title>消息存储</title>
+    <title>Kafka——消息存储</title>
     <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E5%9B%9B%E3%80%81%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/</id>
     <published>2021-12-13T12:06:09.849Z</published>
-    <updated>2021-12-13T12:00:54.604Z</updated>
+    <updated>2021-12-17T03:42:03.885Z</updated>
     
     
       
@@ -242,17 +380,19 @@
     
     
     
-    <category term="消息队列" scheme="https://aurora-ze.github.io.git/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    <category term="中间件" scheme="https://aurora-ze.github.io.git/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
+    
+    <category term="kafka" scheme="https://aurora-ze.github.io.git/tags/kafka/"/>
     
   </entry>
   
   <entry>
-    <title>生产者与消费者实践</title>
+    <title>Kafka——生产者与消费者实践</title>
     <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/</id>
     <published>2021-12-13T12:06:09.847Z</published>
-    <updated>2021-12-13T12:00:32.855Z</updated>
+    <updated>2021-12-17T03:41:51.417Z</updated>
     
     
       
@@ -269,40 +409,38 @@
     
     
     
-    <category term="消息队列" scheme="https://aurora-ze.github.io.git/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    <category term="中间件" scheme="https://aurora-ze.github.io.git/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
+    
+    <category term="kafka" scheme="https://aurora-ze.github.io.git/tags/kafka/"/>
     
   </entry>
   
   <entry>
-    <title>生产者与消费者理论</title>
+    <title>Kafka——生产者与消费者理论</title>
     <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/</id>
     <published>2021-12-13T12:06:09.846Z</published>
-    <updated>2021-12-13T12:00:45.477Z</updated>
+    <updated>2022-02-12T07:59:12.078Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;生产者&quot;&gt;&lt;a href=&quot;#生产者&quot; class=&quot;headerlink&quot; title=&quot;生产者&quot;&gt;&lt;/a&gt;生产者&lt;/h1&gt;&lt;h2 id=&quot;消息分区策略&quot;&gt;&lt;a href=&quot;#消息分区策略&quot; class=&quot;headerlink&quot;</summary>
-        
-      
+    <summary type="html">本文介绍了Kafka生产者与消费者的基础概念，如消息分区、位移提交等。通过这篇文章，我们可以更好的了解到从生产者发出消息，再到消费者消费消息这一过程消息的流动。</summary>
     
     
     
-    <category term="消息队列" scheme="https://aurora-ze.github.io.git/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    <category term="中间件" scheme="https://aurora-ze.github.io.git/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
+    
+    <category term="kafka" scheme="https://aurora-ze.github.io.git/tags/kafka/"/>
     
   </entry>
   
   <entry>
-    <title>环境搭建</title>
+    <title>Kafka——环境搭建</title>
     <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/</id>
     <published>2021-12-13T12:06:09.844Z</published>
-    <updated>2021-11-21T08:56:18.329Z</updated>
+    <updated>2021-12-17T03:42:12.369Z</updated>
     
     
       
@@ -315,17 +453,19 @@
     
     
     
-    <category term="消息队列" scheme="https://aurora-ze.github.io.git/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    <category term="中间件" scheme="https://aurora-ze.github.io.git/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
+    
+    <category term="kafka" scheme="https://aurora-ze.github.io.git/tags/kafka/"/>
     
   </entry>
   
   <entry>
-    <title>Kafka特性</title>
+    <title>Kafka——特性</title>
     <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/Kafka%E7%89%B9%E6%80%A7/"/>
     <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/Kafka%E7%89%B9%E6%80%A7/</id>
     <published>2021-12-13T12:06:09.843Z</published>
-    <updated>2021-12-13T12:01:04.633Z</updated>
+    <updated>2021-12-17T03:42:22.199Z</updated>
     
     
       
@@ -338,153 +478,10 @@
     
     
     
-    <category term="消息队列" scheme="https://aurora-ze.github.io.git/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    <category term="中间件" scheme="https://aurora-ze.github.io.git/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
     
-  </entry>
-  
-  <entry>
-    <title>docker使用</title>
-    <link href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/docker/"/>
-    <id>https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/docker/</id>
-    <published>2021-12-13T12:06:09.839Z</published>
-    <updated>2021-12-13T12:09:33.441Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;Docker&quot;&gt;&lt;a href=&quot;#Docker&quot; class=&quot;headerlink&quot; title=&quot;Docker&quot;&gt;&lt;/a&gt;Docker&lt;/h1&gt;&lt;h2 id=&quot;一、简介&quot;&gt;&lt;a href=&quot;#一、简介&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="虚拟机相关" scheme="https://aurora-ze.github.io.git/categories/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="docker" scheme="https://aurora-ze.github.io.git/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>问题总结</title>
-    <link href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"/>
-    <id>https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</id>
-    <published>2021-12-13T12:06:09.832Z</published>
-    <updated>2021-12-13T11:57:51.450Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h3 id=&quot;1-前端页面展示的日期为空&quot;&gt;&lt;a href=&quot;#1-前端页面展示的日期为空&quot; class=&quot;headerlink&quot; title=&quot;1.前端页面展示的日期为空&quot;&gt;&lt;/a&gt;1.前端页面展示的日期为空&lt;/h3&gt;&lt;p&gt;前端收到日期数据为空</summary>
-        
-      
-    
-    
-    
-    <category term="谷粒学苑" scheme="https://aurora-ze.github.io.git/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>项目模块</title>
-    <link href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97/"/>
-    <id>https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97/</id>
-    <published>2021-12-13T12:06:09.831Z</published>
-    <updated>2021-12-13T11:57:35.987Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h3 id=&quot;父工程介绍&quot;&gt;&lt;a href=&quot;#父工程介绍&quot; class=&quot;headerlink&quot; title=&quot;父工程介绍&quot;&gt;&lt;/a&gt;父工程介绍&lt;/h3&gt;&lt;p&gt;父工程的主要特点是：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;父工程使用&lt;code&gt;Spring</summary>
-        
-      
-    
-    
-    
-    <category term="谷粒学苑" scheme="https://aurora-ze.github.io.git/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>项目介绍</title>
-    <link href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/"/>
-    <id>https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/</id>
-    <published>2021-12-13T12:06:09.830Z</published>
-    <updated>2021-12-13T11:57:21.282Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;项目背景&quot;&gt;&lt;a href=&quot;#项目背景&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="谷粒学苑" scheme="https://aurora-ze.github.io.git/categories/%E8%B0%B7%E7%B2%92%E5%AD%A6%E8%8B%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Vue指令学习</title>
-    <link href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/"/>
-    <id>https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/Vue/%E6%8C%87%E4%BB%A4/</id>
-    <published>2021-12-13T12:06:09.825Z</published>
-    <updated>2021-12-13T11:59:49.954Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h3 id=&quot;Vue指令&quot;&gt;&lt;a href=&quot;#Vue指令&quot; class=&quot;headerlink&quot; title=&quot;Vue指令&quot;&gt;&lt;/a&gt;Vue指令&lt;/h3&gt;&lt;blockquote&gt;
-&lt;p&gt;代码部分只展示了关键部分&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h5</summary>
-        
-      
-    
-    
-    
-    <category term="Vue" scheme="https://aurora-ze.github.io.git/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>全局异常处理</title>
-    <link href="https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringBoot/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
-    <id>https://aurora-ze.github.io.git/2021/12/13/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringBoot/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</id>
-    <published>2021-12-13T12:06:09.821Z</published>
-    <updated>2021-12-13T11:58:43.300Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;全局异常处理&quot;&gt;&lt;a href=&quot;#全局异常处理&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="SpringBoot" scheme="https://aurora-ze.github.io.git/categories/SpringBoot/"/>
-    
+    <category term="kafka" scheme="https://aurora-ze.github.io.git/tags/kafka/"/>
     
   </entry>
   

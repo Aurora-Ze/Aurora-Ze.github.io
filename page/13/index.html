@@ -47,15 +47,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -201,6 +192,541 @@
 
           <div class="content index posts-expand">
             
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/16_%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/16_%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0/" class="post-title-link" itemprop="url">删除排序链表中的重复元素</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-13 12:57:02" itemprop="dateModified" datetime="2021-05-13T12:57:02+08:00">2021-05-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/16_%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0/" class="post-meta-item leancloud_visitors" data-flag-title="删除排序链表中的重复元素" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>183</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="删除排序链表中的重复元素"><a href="#删除排序链表中的重复元素" class="headerlink" title="删除排序链表中的重复元素"></a>删除排序链表中的重复元素</h1><p>链接直达：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/">83. 删除排序链表中的重复元素 - 力扣（LeetCode） (leetcode-cn.com)</a></p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
+<li>维持一个<code>cur</code>指针，表示当前节点</li>
+<li>循环结束条件：<code>cur</code>或<code>cur.next</code>指向空，表示遍历到链表尾部</li>
+<li>$cur.val == cur.next.val$<ul>
+<li>跳过<code>next</code>节点</li>
+</ul>
+</li>
+<li>$cur.val != cur.next.val$<ul>
+<li>更新<code>cur</code>指针，指向下一个节点</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">deleteDuplicates</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">    ListNode cur = head;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span> &amp;&amp; cur.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cur.val == cur.next.val) &#123;</span><br><span class="line">            cur.next = cur.next.next;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/15_%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E2%85%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/15_%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E2%85%A1/" class="post-title-link" itemprop="url">环形链表Ⅱ</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-13 12:51:01" itemprop="dateModified" datetime="2021-05-13T12:51:01+08:00">2021-05-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/15_%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E2%85%A1/" class="post-meta-item leancloud_visitors" data-flag-title="环形链表Ⅱ" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>163</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="环形链表Ⅱ"><a href="#环形链表Ⅱ" class="headerlink" title="环形链表Ⅱ"></a>环形链表Ⅱ</h1><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle-ii/">142. 环形链表 II - 力扣（LeetCode） (leetcode-cn.com)</a></p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>给定链表，返回链表中第一个环节点，如果无环，返回null</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题是环形链表的变形题，在原先基础上，还要找到环节点。</p>
+<p>思路依旧是快慢指针，第一次相遇后，让快指针从头开始，一步一步走，慢指针保持不变；然后它们再次相遇时，就在环节点处。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">    ListNode slow = head;</span><br><span class="line">    ListNode fast = head;</span><br><span class="line">    <span class="comment">// 第一次相交</span></span><br><span class="line">    <span class="keyword">while</span> (fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fast = fast.next.next;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 判断是否是空</span></span><br><span class="line">    <span class="keyword">if</span> (fast == <span class="keyword">null</span> || fast.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// 第二次相交</span></span><br><span class="line">    fast = head;</span><br><span class="line">    <span class="keyword">while</span> (fast != slow) &#123;</span><br><span class="line">        fast = fast.next;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fast;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/14_%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/14_%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/" class="post-title-link" itemprop="url">有效的括号</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-02 20:16:40" itemprop="dateModified" datetime="2021-05-02T20:16:40+08:00">2021-05-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/14_%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/" class="post-meta-item leancloud_visitors" data-flag-title="有效的括号" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>97</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="有效的括号"><a href="#有效的括号" class="headerlink" title="有效的括号"></a>有效的括号</h1><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/valid-parentheses/">20. 有效的括号 - 力扣（LeetCode） (leetcode-cn.com)</a></p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>给定一串括号序列，判断它是否可以正确闭合。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>利用栈先入后出的特点来存储左括号，遇到右括号就取出来比较。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    LinkedList&lt;Integer&gt; stack = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i ++) &#123;</span><br><span class="line">        j = handler(s.charAt(i));</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            stack.push(j);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (stack.isEmpty() || stack.poll() + j != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">handler</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ch) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;(&#x27;</span> :</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;[&#x27;</span> :</span><br><span class="line">            <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;&#123;&#x27;</span> :</span><br><span class="line">            <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;)&#x27;</span> :</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;]&#x27;</span> :</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;&#125;&#x27;</span> :</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/13_%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/13_%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">合并两个有序数组</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-30 16:11:42" itemprop="dateModified" datetime="2021-04-30T16:11:42+08:00">2021-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/13_%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="post-meta-item leancloud_visitors" data-flag-title="合并两个有序数组" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>135</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="合并两个有序数组"><a href="#合并两个有序数组" class="headerlink" title="合并两个有序数组"></a>合并两个有序数组</h1><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-sorted-array/">88. 合并两个有序数组 - 力扣（LeetCode） (leetcode-cn.com)</a></p>
+<h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>给定两个<code>有序数组</code>nums1和nums2，把两个数组合并成nums1数组。</p>
+<p>假定nums1数组容量够大</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>从nums1数组的最后开始填充，并用双指针来标记取元素的位置。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span> m, <span class="keyword">int</span>[] nums2, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 从有序数组末尾开始向前遍历</span></span><br><span class="line">        <span class="keyword">int</span> p = m - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> q = n - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> end = m + n - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (q != -<span class="number">1</span>  &amp;&amp; p != -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums1[p] &lt; nums2[q]) &#123;</span><br><span class="line">                nums1[end] = nums2[q];</span><br><span class="line">                q --;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                nums1[end] = nums1[p];</span><br><span class="line">                p --;</span><br><span class="line">            &#125;</span><br><span class="line">            end --;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (p != -<span class="number">1</span>) &#123;</span><br><span class="line">            nums1[end] = nums1[p];</span><br><span class="line">            end --;</span><br><span class="line">            p --;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (q != -<span class="number">1</span>) &#123;</span><br><span class="line">            nums1[end] = nums2[q];</span><br><span class="line">            end --;</span><br><span class="line">            q --;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/LeetCode/12_%E4%BA%8C%E5%8F%89%E6%A0%91%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/LeetCode/12_%E4%BA%8C%E5%8F%89%E6%A0%91%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="post-title-link" itemprop="url">二叉树最近公共祖先</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-27 13:06:19" itemprop="dateModified" datetime="2021-04-27T13:06:19+08:00">2021-04-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/LeetCode/12_%E4%BA%8C%E5%8F%89%E6%A0%91%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="post-meta-item leancloud_visitors" data-flag-title="二叉树最近公共祖先" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>344</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="最近公共祖先"><a href="#最近公共祖先" class="headerlink" title="最近公共祖先"></a>最近公共祖先</h1><p>题目请看这里：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/">236. 二叉树的最近公共祖先</a></p>
+<p>思路参考了大佬的题解：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/solution/236-er-cha-shu-de-zui-jin-gong-gong-zu-xian-hou-xu/">后序遍历 DFS ，清晰图解</a></p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>给定两个节点p，q，在它们的公共祖先中找出最近的一个（包含自己）。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-27_11-23-17.png"></p>
+<p>这类题可以用递归方式求解，那么具体怎么递归呢？</p>
+<p>我们可以先处理左右子节点，然后根据左右子节点的情况，递推到父节点，这就是<code>后序遍历</code>的思想</p>
+<p><strong>现在假设root是当前节点，left是子节点，right是右节点</strong></p>
+<p><strong>递归终止条件：</strong></p>
+<ul>
+<li>遍历到叶子节点</li>
+<li>遇到目标节点</li>
+</ul>
+<p><strong>递归过程：</strong></p>
+<p>对<code>left</code>和<code>right</code>采取递归，得到返回值</p>
+<p><strong>递归返回值（核心）：</strong></p>
+<ul>
+<li><code>left</code>为空且<code>right</code>为空，说明当前节点的子树不存在目标节点，返回<code>null</code></li>
+<li><code>left</code>不为空且<code>right</code>不为空，说明目标节点分布在子树两侧，返回<code>root</code></li>
+<li><code>left</code>和<code>right</code>只有一个不为空，返回不为空的那个</li>
+</ul>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> TreeNode <span class="title">lowestCommonAncestor</span><span class="params">(TreeNode root, TreeNode p, TreeNode q)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span> || root == p || root == q) &#123;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode left = lowestCommonAncestor(root.left, p, q);</span><br><span class="line">        TreeNode right = lowestCommonAncestor(root.right, p, q);</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">if</span> (left == <span class="keyword">null</span> &amp;&amp; right == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (left == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> right;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (right == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -217,10 +743,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/LeetCode/11_%E4%BA%8C%E5%8F%89%E6%A0%91%E9%94%AF%E9%BD%BF%E5%BD%A2%E9%81%8D%E5%8E%86/" class="post-title-link" itemprop="url">二叉树锯齿形遍历</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -255,6 +781,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>98</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -286,6 +826,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -302,10 +844,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/LeetCode/10_%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/" class="post-title-link" itemprop="url">二叉树层序遍历</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -340,6 +882,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>88</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -372,11 +928,13 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/JUC/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
@@ -388,10 +946,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/" class="post-title-link" itemprop="url">(四).阻塞队列介绍</a>
-        </h2>
+            <a href="/2021/12/13/Java/JUC/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/" class="post-title-link" itemprop="url">JUC——阻塞队列</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -407,7 +965,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-08 19:33:08" itemprop="dateModified" datetime="2021-04-08T19:33:08+08:00">2021-04-08</time>
+                <time title="修改时间：2021-12-19 15:49:24" itemprop="dateModified" datetime="2021-12-19T15:49:24+08:00">2021-12-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -415,17 +973,31 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">线程和线程池</span></a>
+                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/" class="post-meta-item leancloud_visitors" data-flag-title="(四).阻塞队列介绍" title="阅读次数">
+            <span id="/2021/12/13/Java/JUC/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/" class="post-meta-item leancloud_visitors" data-flag-title="JUC——阻塞队列" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -437,16 +1009,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="一、回顾"><a href="#一、回顾" class="headerlink" title="一、回顾"></a>一、回顾</h3><p>从上一篇笔记中，我们了解了线程池对线程的复用机制，就让我们再好好回顾下吧。</p>
+          <h2 id="一、回顾"><a href="#一、回顾" class="headerlink" title="一、回顾"></a>一、回顾</h2><p>从上一篇笔记中，我们了解了线程池对线程的复用机制，就让我们再好好回顾下吧。</p>
 <blockquote>
 <p>Executor中的线程在执行完自己的任务后，还会通过getTask()方法主动向阻塞队列获取任务</p>
 <p>对于核心线程来说，它是用take()来阻塞地获取任务</p>
 <p>而非核心线程是通过poll()来获取任务，如果超时，则放弃获取</p>
 </blockquote>
 <p>正是这样的机制，才使得核心线程一直存在于线程池中，而非核心线程空闲到了存活时间就会被销毁。</p>
-<h3 id="二、架构分析"><a href="#二、架构分析" class="headerlink" title="二、架构分析"></a>二、架构分析</h3><p>上面还涉及到了一个很重要的问题，就是从阻塞队列获取任务。</p>
+<h2 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h2><p>上面还涉及到了一个很重要的问题，就是从阻塞队列获取任务。</p>
 <p><strong>那么阻塞队列是怎样设计的呢？就让我们来看看它的结构吧</strong></p>
-<h4 id="1-BlockingQueue"><a href="#1-BlockingQueue" class="headerlink" title="1.BlockingQueue"></a>1.BlockingQueue</h4><p>可以看到，它继承了Queue接口，那肯定少不了队列的一些常规方法</p>
+<h3 id="1-BlockingQueue"><a href="#1-BlockingQueue" class="headerlink" title="1.BlockingQueue"></a>1.BlockingQueue</h3><p>可以看到，它继承了Queue接口，那肯定少不了队列的一些常规方法</p>
 <p>但我们要看的是阻塞队列提供的一些其他方法，下面一一介绍</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlockingQueue</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Queue</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//省略队列的一些常规方法，如add()、offer()等</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 放入元素，会阻塞</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">put</span><span class="params">(E e)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="comment">// 放入元素，超时后放弃</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e, <span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取元素,会阻塞</span></span><br><span class="line">	<span class="function">E <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;   </span><br><span class="line">    <span class="comment">// 获取元素，超时后放弃</span></span><br><span class="line">    <span class="function">E <span class="title">poll</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回队列剩余大小 </span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">remainingCapacity</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 删除队列中的所有元素，并移动到指定集合</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">drainTo</span><span class="params">(Collection&lt;? <span class="keyword">super</span> E&gt; c)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -480,14 +1052,11 @@
 </tr>
 </tbody></table>
 <p>上面的<strong>BlockingQueue</strong>只是定义了接口，那么我们看看它是具体怎么实现的吧</p>
-<p>从下图中我们发现有许多队列实现了<strong>BlockingQueue</strong>，下面我们挑几个讲讲</p>
-<p><img data-src="/images/blocking_queue_1.PNG"></p>
-<hr>
-<h4 id="2-ArrayBlockingQueue"><a href="#2-ArrayBlockingQueue" class="headerlink" title="2.ArrayBlockingQueue"></a>2.ArrayBlockingQueue</h4><h5 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a><strong>构造方法</strong></h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(capacity, <span class="keyword">false</span>);		<span class="comment">// 默认创建的锁是非公平的</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair)</span> </span>&#123; <span class="comment">// fair表示锁是否公平</span></span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.items = <span class="keyword">new</span> Object[capacity];</span><br><span class="line">    lock = <span class="keyword">new</span> ReentrantLock(fair);</span><br><span class="line">    notEmpty = lock.newCondition();</span><br><span class="line">    notFull =  lock.newCondition();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair,</span></span></span><br><span class="line"><span class="function"><span class="params">                          Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(capacity, fair);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;                 <span class="comment">// 把给定集合中的元素添加到数组中</span></span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">                checkNotNull(e);</span><br><span class="line">                items[i++] = e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ArrayIndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">        &#125;</span><br><span class="line">        count = i;</span><br><span class="line">        putIndex = (i == capacity) ? <span class="number">0</span> : i;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-ArrayBlockingQueue"><a href="#2-ArrayBlockingQueue" class="headerlink" title="2.ArrayBlockingQueue"></a>2.ArrayBlockingQueue</h3><h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(capacity, <span class="keyword">false</span>);		<span class="comment">// 默认创建的锁是非公平的</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair)</span> </span>&#123; <span class="comment">// fair表示锁是否公平</span></span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.items = <span class="keyword">new</span> Object[capacity];</span><br><span class="line">    lock = <span class="keyword">new</span> ReentrantLock(fair);</span><br><span class="line">    notEmpty = lock.newCondition();</span><br><span class="line">    notFull =  lock.newCondition();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair,</span></span></span><br><span class="line"><span class="function"><span class="params">                          Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(capacity, fair);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;                 <span class="comment">// 把给定集合中的元素添加到数组中</span></span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">                checkNotNull(e);</span><br><span class="line">                items[i++] = e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ArrayIndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">        &#125;</span><br><span class="line">        count = i;</span><br><span class="line">        putIndex = (i == capacity) ? <span class="number">0</span> : i;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a><strong>成员变量</strong></h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用数组来存放元素</span></span><br><span class="line"><span class="keyword">final</span> Object[] items;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 表示队列头部的下标，每次取元素时用。</span></span><br><span class="line"><span class="comment">// take, poll, peek or remove</span></span><br><span class="line"><span class="keyword">int</span> takeIndex;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 表示插入新元素所在的下标</span></span><br><span class="line"><span class="comment">// put, offer, or add</span></span><br><span class="line"><span class="keyword">int</span> putIndex;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** 使用经典的教科书式的 two-condition 算法 | 但我不会啊，我又没看过  */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> ReentrantLock lock;</span><br><span class="line"><span class="comment">// 取元素时的条件</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty;</span><br><span class="line"><span class="comment">// 放元素时的条件</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当前迭代器的共享状态</span></span><br><span class="line"><span class="keyword">transient</span> Itrs itrs = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用数组来存放元素</span></span><br><span class="line"><span class="keyword">final</span> Object[] items;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 表示队列头部的下标，每次取元素时用。</span></span><br><span class="line"><span class="comment">// take, poll, peek or remove</span></span><br><span class="line"><span class="keyword">int</span> takeIndex;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 表示插入新元素所在的下标</span></span><br><span class="line"><span class="comment">// put, offer, or add</span></span><br><span class="line"><span class="keyword">int</span> putIndex;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** 使用经典的教科书式的 two-condition 算法 | 但我不会啊，我又没看过  */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> ReentrantLock lock;</span><br><span class="line"><span class="comment">// 取元素时的条件</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty;</span><br><span class="line"><span class="comment">// 放元素时的条件</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当前迭代器的共享状态</span></span><br><span class="line"><span class="keyword">transient</span> Itrs itrs = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
 
-<h5 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h5><p><strong>首先，对外的添加元素方法有</strong></p>
+<h4 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h4><p><strong>首先，对外的添加元素方法有</strong></p>
 <ol>
 <li>add(E) </li>
 <li>offer(E) </li>
@@ -514,7 +1083,7 @@
 <p>和put()相比，offer()在循环体中加入了是否超时的判断</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(E e)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    checkNotNull(e);</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lockInterruptibly();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (count == items.length)</span><br><span class="line">            notFull.await(); </span><br><span class="line">        enqueue(e); </span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e, <span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    checkNotNull(e);</span><br><span class="line">    <span class="keyword">long</span> nanos = unit.toNanos(timeout); <span class="comment">// 根据超时的时间长度和单位，换算成纳秒级别</span></span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lockInterruptibly();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (count == items.length) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nanos &lt;= <span class="number">0</span>)             <span class="comment">// 判断是否超时</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            nanos = notFull.awaitNanos(nanos);</span><br><span class="line">        &#125;</span><br><span class="line">        enqueue(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h5><p>老规矩，先介绍下对外方法</p>
+<h4 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h4><p>老规矩，先介绍下对外方法</p>
 <ol>
 <li>peek()</li>
 <li>remove(Object)</li>
@@ -538,7 +1107,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">poll</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> nanos = unit.toNanos(timeout);</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lockInterruptibly();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (count == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nanos &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            nanos = notEmpty.awaitNanos(nanos);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dequeue();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h4 id="3-DelayQueue"><a href="#3-DelayQueue" class="headerlink" title="3.DelayQueue"></a>3.DelayQueue</h4><h5 id="构造方法及属性"><a href="#构造方法及属性" class="headerlink" title="构造方法及属性"></a>构造方法及属性</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DelayQueue</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DelayQueue</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.addAll(c);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> Thread leader = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">transient</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> PriorityQueue&lt;E&gt; q = <span class="keyword">new</span> PriorityQueue&lt;E&gt;();</span><br></pre></td></tr></table></figure>
+<h3 id="3-DelayQueue"><a href="#3-DelayQueue" class="headerlink" title="3.DelayQueue"></a>3.DelayQueue</h3><h4 id="构造方法及属性"><a href="#构造方法及属性" class="headerlink" title="构造方法及属性"></a>构造方法及属性</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DelayQueue</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DelayQueue</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.addAll(c);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> Thread leader = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">transient</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> PriorityQueue&lt;E&gt; q = <span class="keyword">new</span> PriorityQueue&lt;E&gt;();</span><br></pre></td></tr></table></figure>
 
 <p>可以发现，<strong>DelayQueue</strong>的一些特点</p>
 <ul>
@@ -560,11 +1129,13 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/JUC/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
@@ -576,10 +1147,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/" class="post-title-link" itemprop="url">(二).线程的返回结果</a>
-        </h2>
+            <a href="/2021/12/13/Java/JUC/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/" class="post-title-link" itemprop="url">线程的返回结果</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -595,7 +1166,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-12 11:32:00" itemprop="dateModified" datetime="2021-04-12T11:32:00+08:00">2021-04-12</time>
+                <time title="修改时间：2021-12-19 17:01:34" itemprop="dateModified" datetime="2021-12-19T17:01:34+08:00">2021-12-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -603,17 +1174,31 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">线程和线程池</span></a>
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/" class="post-meta-item leancloud_visitors" data-flag-title="(二).线程的返回结果" title="阅读次数">
+            <span id="/2021/12/13/Java/JUC/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/" class="post-meta-item leancloud_visitors" data-flag-title="线程的返回结果" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>755</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -625,15 +1210,47 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>介绍了Java的线程的返回结果</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <p><strong>严肃脸.jpg</strong>: Java实现线程三种方式是哪三种？</p>
+<p><strong>答</strong>: Thread、Runnable、Callable</p>
+<p>其中Runnable接口定义的run方法是没有返回参数的，那么这样看来：</p>
+<p><strong>Java的线程想要返回结果，就需要用到实现Callable接口的对象。</strong></p>
+<p>那我们来看看这个接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Callable</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Computes a result, or throws an exception if unable to do so.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> computed result</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception if unable to compute a result</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">V <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>里面只定义了一个call()方法，返回的是泛型。</p>
+<p>注释里提到，既可以是<strong>返回结果</strong>，也可以是<strong>抛出异常</strong></p>
+<hr>
+<p><img data-src="/images/executor_1.PNG"></p>
+<p><strong>上面这张图能够方便我们了解线程池各类的关系。</strong></p>
+<p>另外，我们一般是用线程池的方式来创建线程执行任务。</p>
+<p><strong>所以再来看看线程池提供的方法吧</strong></p>
+<p>如果看过上一篇笔记，我们就可以知道：线程池提供了submit()方法</p>
+<ul>
+<li>它是由<strong>ExecutorService</strong>接口定义的具有返回值的方法</li>
+<li>并且返回值是<strong>Future</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span></span>;</span><br><span class="line"></span><br><span class="line">&lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Runnable task, T result)</span></span>;</span><br><span class="line"></span><br><span class="line">Future&lt;?&gt; submit(Runnable task);</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，该接口定义了三个submit()方法</p>
+<p>有没有发现特别的地方，就是它居然能传进来<strong>Runnable</strong>对象！而我们之前所了解到的是Runnable对象是无法返回结果的。</p>
+<p><strong>那么它是怎么做到的呢？</strong></p>
+<p>那就要来到<strong>ExecutorService</strong>的实现类了，即<strong>AbstractExecutorService</strong></p>
+<p>我们就随便挑一个传Runnable对象的方法<del>（总共不是有两个嘛）</del></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Future&lt;?&gt; submit(Runnable task) &#123;</span><br><span class="line">    <span class="keyword">if</span> (task == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    RunnableFuture&lt;Void&gt; ftask = newTaskFor(task, <span class="keyword">null</span>);</span><br><span class="line">    execute(ftask);</span><br><span class="line">    <span class="keyword">return</span> ftask;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，里面创建了一个<strong>RunnableFuture</strong>对象，接下来让我<strong>无脑推理一波：</strong></p>
+<p>$RunnableFuture = Runnable + Future$</p>
+<p>所以这个类就是实现了两个接口，那么它既能被当作<strong>Runnable</strong>对象去执行，又能当作<strong>Future</strong>对象来返回</p>
+<p>这样子就说得通了。</p>
+<p><strong>既然Future是返回结果类型，那么我们再去看看它是咋样的吧</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">cancel</span><span class="params">(<span class="keyword">boolean</span> mayInterruptIfRunning)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isCancelled</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isDone</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">V <span class="title">get</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, ExecutionException</span>;</span><br><span class="line"></span><br><span class="line"><span class="function">V <span class="title">get</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> InterruptedException, ExecutionException, TimeoutException</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，里面就只有5个方法，这可太简单了是不是</p>
+<p>而且这些方法看方法名就知道它是干啥了，就不用我多说了吧</p>
+<p><strong>这里就讲一点：</strong></p>
+<p>无参数的get()会一直阻塞地等待返回结果</p>
+<p>有参数的，则会在超时时间后放弃等待</p>
+
       
     </div>
 
@@ -648,11 +1265,13 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E5%B9%B6%E5%8F%91%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/JUC/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
@@ -664,10 +1283,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E5%B9%B6%E5%8F%91%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89/" class="post-title-link" itemprop="url">并发(待完善)</a>
-        </h2>
+            <a href="/2021/12/13/Java/JUC/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="post-title-link" itemprop="url">JUC——线程池Executor</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -683,7 +1302,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-16 23:25:01" itemprop="dateModified" datetime="2021-08-16T23:25:01+08:00">2021-08-16</time>
+                <time title="修改时间：2021-12-18 21:42:00" itemprop="dateModified" datetime="2021-12-18T21:42:00+08:00">2021-12-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -691,17 +1310,31 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">线程和线程池</span></a>
+                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E5%B9%B6%E5%8F%91%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89/" class="post-meta-item leancloud_visitors" data-flag-title="并发(待完善)" title="阅读次数">
+            <span id="/2021/12/13/Java/JUC/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="post-meta-item leancloud_visitors" data-flag-title="JUC——线程池Executor" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -713,938 +1346,290 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Java并发"><a href="#Java并发" class="headerlink" title="Java并发"></a>Java并发</h1><h4 id="一、多线程的优缺点"><a href="#一、多线程的优缺点" class="headerlink" title="一、多线程的优缺点"></a>一、多线程的优缺点</h4><ul>
-<li><strong>优点</strong></li>
-</ul>
-<p>和进程相比，线程的调度和切换成本更小。</p>
-<p>多核CPU能够让多个线程同时运行，还能减少线程上下文切换的开销，提高CPU利用率</p>
-<ul>
-<li><strong>缺点</strong></li>
-</ul>
-<p>可能会遇到<strong>内存泄漏、死锁、线程不安全</strong>的情况</p>
-<ul>
-<li><strong>补充</strong></li>
-</ul>
-<p>Java内存泄漏：主要是由于长生命周期的对象持有短生命周期的引用，如集合里存放类对象</p>
-<h4 id="二、死锁"><a href="#二、死锁" class="headerlink" title="二、死锁"></a>二、死锁</h4><ul>
-<li>互斥性</li>
-</ul>
-<blockquote>
-<p>同一时间只能有一个线程持有某个对象的锁</p>
-</blockquote>
-<ul>
-<li>可见性</li>
-</ul>
-<blockquote>
-<p>锁释放之前，共享变量的修改要对其他线程可见</p>
-</blockquote>
-<hr>
-<p><strong>Java内存模型：</strong></p>
-<p>内存分为<code>主内存</code>和<code>工作内存</code></p>
-<p><code>主内存</code>是所有线程共享的，如<strong>堆、方法区</strong></p>
-<p><code>工作内存</code>是线程私有的区域，如<strong>虚拟机栈、程序计数器</strong>等</p>
-<hr>
-<p><strong>volatile</strong>关键字的作用：</p>
+          <h2 id="一、线程池介绍"><a href="#一、线程池介绍" class="headerlink" title="一、线程池介绍"></a>一、线程池介绍</h2><p>Executor是Java JUC包提供的一系列线程池框架</p>
+<p>首先，介绍一下使用线程池的好处：</p>
 <ol>
-<li><strong>保证线程间变量的可见性</strong></li>
+<li>降低资源消耗</li>
+<li>提高响应速度</li>
+<li>提高线程的可管理性</li>
 </ol>
-<p>一个变量如果用<strong>volatile</strong>修饰，那么：</p>
-<p>①某个线程修改变量后，要写回主内存中</p>
-<p>②某个线程要读取该变量时，要从主内存中读，而不是缓存</p>
+<p>另外，还能避免<strong>this逃逸问题</strong></p>
+<blockquote>
+<p>即在构造器完成构造前，将自身的<strong>this</strong>引用向外抛出，并被其他线程获取到，这样其他线程有可能<strong>访问</strong>还<strong>未初始化</strong>的变量</p>
+<p>详情请转至<a target="_blank" rel="noopener" href="https://www.cnblogs.com/jian0110/p/9369096.html">https://www.cnblogs.com/jian0110/p/9369096.html</a></p>
+</blockquote>
+<h2 id="二、概念介绍"><a href="#二、概念介绍" class="headerlink" title="二、概念介绍"></a>二、概念介绍</h2><h3 id="1-任务"><a href="#1-任务" class="headerlink" title="1.任务"></a>1.任务</h3><p>任务就是指交给线程池去执行的一件件事。它通常是一个实现<code>Runnable</code>或<code>Callable</code>接口的对象。</p>
+<p>这个可以理解为接口赋予了对象某些能力，如实现<code>Runnable</code>或<code>Callable</code>接口的对象即可运行或可被调用的对象，也正是任务的特性。</p>
+<h3 id="2-提交任务"><a href="#2-提交任务" class="headerlink" title="2.提交任务"></a>2.提交任务</h3><p>把任务对象提交给线程池，通常有两种方式：</p>
+<ol>
+<li><code>execute</code></li>
+<li><code>submit</code></li>
+</ol>
+<p>这两者的区别是<code>submit</code>方式可以返回一个<code>future</code>对象作为任务的执行结果。但其实执行的都是<code>execute</code>。</p>
+<p>然后我们可以在主线程显式的调用<code>future.get()</code>来获取结果，但因为任务可能仍在线程池中等待执行，因此该方法会导致主线程阻塞。另一种更好的做法将在示例中介绍。</p>
+<h2 id="三、执行过程说明"><a href="#三、执行过程说明" class="headerlink" title="三、执行过程说明"></a>三、执行过程说明</h2><p>忽略任务在线程池中的行为，线程池的使用过程将如下所示：</p>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/20210430161525.png" alt="executor_2"></p>
+<p>1.主线程创建一个<code>Runnable</code>或<code>Callable</code>的任务</p>
+<p>2.把任务以<code>submit</code>或<code>execute</code>的方式提交给线程池</p>
+<p>3.在主线程阻塞的等待结果（可选）</p>
+<h2 id="四、线程池示例"><a href="#四、线程池示例" class="headerlink" title="四、线程池示例"></a>四、线程池示例</h2><h3 id="1-代码"><a href="#1-代码" class="headerlink" title="1.代码"></a>1.代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// STEP1</span></span><br><span class="line">ExecutorService pool = Executors.newFixedThreadPool(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// STEP2</span></span><br><span class="line">Future&lt;String&gt; future = pool.submit(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;task execute&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;finish&quot;</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// STEP3</span></span><br><span class="line">ExecutorService resultHandler = Executors.newCachedThreadPool();</span><br><span class="line">resultHandler.execute(() -&gt; &#123;</span><br><span class="line">    String result;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        result = future.get();</span><br><span class="line">        System.out.println(<span class="string">&quot;get result: &quot;</span> + result);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">pool.shutdown();</span><br><span class="line">resultHandler.shutdown();</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-分析"><a href="#2-分析" class="headerlink" title="2.分析"></a>2.分析</h3><p><strong>STEP 1</strong></p>
+<p>我们利用<code>Executors</code>工具类创建了一个固定大小的线程池。当熟悉线程池之后，更推荐的做法是手动的创建一个<code>ThreadPoolExecutor</code>对象并配置参数。</p>
+<p><strong>STEP 2</strong></p>
+<p>提交一个任务，并得到<code>future</code>对象。</p>
+<p><strong>STEP 3</strong></p>
+<p>又开了一个线程池，并提交任务。这个新任务主要目的是获取future对象中的结果，这样异步的获取可以防止主线程阻塞。</p>
+<h3 id="3-工具类创建线程池"><a href="#3-工具类创建线程池" class="headerlink" title="3.工具类创建线程池"></a>3.工具类创建线程池</h3><p>Java提供了Executors工具类来快捷的创建线程池，但这是<strong>不推荐</strong>的做法。</p>
+<table>
+<thead>
+<tr>
+<th align="left">线程池</th>
+<th align="left">描述</th>
+<th align="center">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">①newFixedThreadPool</td>
+<td align="left">固定大小，当线程不够时，任务就会放入到队列中等待</td>
+<td align="center">队列容量大，线程一直存在，直到显式的调用shutdown</td>
+</tr>
+<tr>
+<td align="left">②newSingleThreadExecutor</td>
+<td align="left">只有一个线程存在，当它终止时，就会产生一个新的线程去代替它</td>
+<td align="center">队列容量大</td>
+</tr>
+<tr>
+<td align="left">③newScheduledThreadPool</td>
+<td align="left">可以指定一段延迟时间，来让线程执行</td>
+<td align="center">允许创建的线程数大</td>
+</tr>
+<tr>
+<td align="left">④newCachedThreadPool</td>
+<td align="left">根据需要创建线程，没有使用的线程在60秒后会终止并移出线程池</td>
+<td align="center">允许创建的线程数大</td>
+</tr>
+</tbody></table>
+<p>从上面可以看出：</p>
+<ul>
+<li>①②的工作队列容量是Integer.MAX_VALUE，当任务较多时可能会出现OOM</li>
+<li>③④允许创建的线程数量为Integer.MAX_VALUE，创建线程较多时，会出现OOM</li>
+</ul>
+<p>其实<strong>Executors</strong>提供的<strong>四种创建</strong>线程池的方法，实际上是调用的<strong>ThreadPoolExecutor</strong>的构造方法</p>
+<p>所以推荐使用<strong>ThreadPoolExecutor</strong>来<strong>手动配置</strong>线程池参数。</p>
+<h2 id="五、ThreadPoolExecutor类介绍"><a href="#五、ThreadPoolExecutor类介绍" class="headerlink" title="五、ThreadPoolExecutor类介绍"></a>五、ThreadPoolExecutor类介绍</h2><p><strong>类继承结构</strong></p>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/20210430161315.PNG" alt="executor_1"></p>
+<p><strong>线程池实现类 <code>ThreadPoolExecutor</code> 是 <code>Executor</code> 框架最核心的类。</strong></p>
+<h3 id="1-构造方法"><a href="#1-构造方法" class="headerlink" title="1.构造方法"></a>1.构造方法</h3><p>共有四个构造方法，内部实际上都是用的同一个，如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,      // 核心线程数  一旦超过这个数，任务就会被添加到队列中等待</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">int</span> maximumPoolSize,   // 最大线程数</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">long</span> keepAliveTime,    // 存活的最长时间（指核心线程数之外的线程空闲后的存活时间）</span></span></span><br><span class="line"><span class="function"><span class="params">                          TimeUnit unit,		 // 时间单位</span></span></span><br><span class="line"><span class="function"><span class="params">                          BlockingQueue&lt;Runnable&gt; workQueue, // 阻塞队列</span></span></span><br><span class="line"><span class="function"><span class="params">                          ThreadFactory threadFactory, // 工厂</span></span></span><br><span class="line"><span class="function"><span class="params">                          RejectedExecutionHandler handler)</span> </span>&#123; <span class="comment">//拒绝策略</span></span><br><span class="line">                          <span class="comment">// ......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">corePoolSize</td>
+<td align="center">核心线程数</td>
+</tr>
+<tr>
+<td align="center">maximumPoolSize</td>
+<td align="center">线程池最大线程数，当阻塞队列满时，线程数会从核心线程数变成最大线程数</td>
+</tr>
+<tr>
+<td align="center">keepAliveTime</td>
+<td align="center">非核心线程没有任务执行时的存活时间</td>
+</tr>
+<tr>
+<td align="center">unit</td>
+<td align="center">存活时间的单位</td>
+</tr>
+<tr>
+<td align="center">workQueue</td>
+<td align="center">阻塞队列</td>
+</tr>
+<tr>
+<td align="center">threadFactory</td>
+<td align="center">线程工厂，默认是Executors工具类提供的默认工厂，也可以自己实现ThreadFactory接口</td>
+</tr>
+<tr>
+<td align="center">handler</td>
+<td align="center">拒绝策略</td>
+</tr>
+</tbody></table>
+<h3 id="2-状态"><a href="#2-状态" class="headerlink" title="2.状态"></a>2.状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> COUNT_BITS = Integer.SIZE - <span class="number">3</span>;      <span class="comment">// 32 - 3 = 29</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CAPACITY   = (<span class="number">1</span> &lt;&lt; COUNT_BITS) - <span class="number">1</span>; <span class="comment">// 2^29 - 1，即左边29个1</span></span><br><span class="line"><span class="comment">// 可以看出，状态是有序的，从小到大</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RUNNING    = -<span class="number">1</span> &lt;&lt; COUNT_BITS;   <span class="comment">// -1补码表示为 111 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHUTDOWN   =  <span class="number">0</span> &lt;&lt; COUNT_BITS;	  <span class="comment">//  0补码表示为 000 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP       =  <span class="number">1</span> &lt;&lt; COUNT_BITS;   <span class="comment">//  1补码表示为 001 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TIDYING    =  <span class="number">2</span> &lt;&lt; COUNT_BITS;   <span class="comment">//  2补码表示为 010 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TERMINATED =  <span class="number">3</span> &lt;&lt; COUNT_BITS;   <span class="comment">//  3补码表示为 011 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// int共有32位</span></span><br><span class="line"><span class="comment">// 前3位表示状态，后29位表示线程数量</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>状态说明如下</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">状态</th>
+<th align="center">描述</th>
+<th align="center">数值</th>
+<th>结构</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>Running</strong></td>
+<td align="center">接受新任务并处理工作队列中的任务</td>
+<td align="center">$-2^{29}$</td>
+<td>$111+29个0$</td>
+</tr>
+<tr>
+<td align="center"><strong>Shutdown</strong></td>
+<td align="center">不接受新任务，但仍处理队列中的任务</td>
+<td align="center">$0$</td>
+<td>$000+29个0$</td>
+</tr>
+<tr>
+<td align="center"><strong>Stop</strong></td>
+<td align="center">不接受新任务，也不处理队列中的任务，中断正在执行的任务</td>
+<td align="center">$2^{29}$</td>
+<td>$001+29个0$</td>
+</tr>
+<tr>
+<td align="center"><strong>Tidying</strong></td>
+<td align="center">任务已经终止，正在工作的线程数为0。线程来到这个状态时，会执行terminated()</td>
+<td align="center">$2^{30}$</td>
+<td>$010+29个0$</td>
+</tr>
+<tr>
+<td align="center"><strong>Terminated</strong></td>
+<td align="center">完成terminated()后进入此状态</td>
+<td align="center">$3\times2^{29}$</td>
+<td>${011}+29个0$</td>
+</tr>
+</tbody></table>
+<h2 id="六、线程池大小"><a href="#六、线程池大小" class="headerlink" title="六、线程池大小"></a>六、线程池大小</h2><p>上面我们知道了应该<strong>手动创建</strong>线程池，那么线程池的大小该如何选择呢？</p>
+<p>在这之前先介绍一下<strong>上下文切换</strong>的概念</p>
+<h3 id="1-上下文切换"><a href="#1-上下文切换" class="headerlink" title="1.上下文切换"></a>1.上下文切换</h3><p><strong>背景</strong></p>
+<p>一个<code>CPU核心</code>在任意一个时刻只能由一个线程使用，而线程的数量一般比CPU核心数要多。所以我们通常采取的策略是<code>时间片轮转</code>来为每个线程执行。</p>
+<p><strong>定义</strong></p>
+<blockquote>
+<p>当一个线程的时间片用完后，就会把CPU让给其他线程执行。在切换的过程中，我们需要保存当前任务的状态，以便下次切换回来时，可以很快地加载状态，这就是<strong>上下文切换</strong>。</p>
+</blockquote>
+<p><strong>那么<code>上下文切换</code>和线程池的大小有什么关系呢？</strong></p>
+<p>如果线程数<code>过大</code>，就会存在许多线程竞争CPU资源，从而产生频繁的切换上下文的开销。</p>
+<p>如果线程数<code>过少</code>，那么CPU就可能空闲，同时也不利于任务陡增的情形。</p>
+<h3 id="2-简单的公式"><a href="#2-简单的公式" class="headerlink" title="2.简单的公式"></a>2.简单的公式</h3><p>假设 <code>n</code> 表示<strong>CPU</strong>核心数</p>
+<ul>
+<li>CPU密集型任务 $n+1$ </li>
+</ul>
+<p>这些任务主要消耗的是CPU的计算资源（计算、排序等），把线程池大小设置成核心数加1</p>
+<p>这样可以防止某个线程暂停时，CPU空闲下来的情况，或者是防止线程偶发的缺页中断。</p>
+<ul>
+<li>I/O密集型任务 $2n$</li>
+</ul>
+<p>这类任务大部分时间都在进行I/O操作，在这段时间内，CPU可以交给其他线程去执行，所以可以多配一些线程</p>
+<p>因为如果线程数较小的话，可能大部分线程都在执行I/O，那么CPU利用率就会降低。</p>
+<h2 id="七、线程复用（源码分析）"><a href="#七、线程复用（源码分析）" class="headerlink" title="七、线程复用（源码分析）"></a>七、线程复用（源码分析）</h2><h3 id="什么是线程复用？"><a href="#什么是线程复用？" class="headerlink" title="什么是线程复用？"></a>什么是线程复用？</h3><blockquote>
+<p>以前使用Thread类去创建线程时，当线程执行完任务后，就会被销毁，就算把它挂起了，也处理不了其他任务。</p>
+<p>而Executor框架提供的线程池，可以让一个线程在执行完任务后，再去执行其他任务，这就叫做<strong>线程复用</strong>。</p>
+</blockquote>
+<p>ThreadPoolExecutor的一大特点就是<strong>线程复用</strong>。</p>
+<h3 id="线程池添加任务过程"><a href="#线程池添加任务过程" class="headerlink" title="线程池添加任务过程"></a>线程池添加任务过程</h3><ol>
+<li><strong>工作线程数小于核心线程数</strong><ul>
+<li>创建一个<code>核心线程</code>去执行该任务。</li>
+</ul>
+</li>
+</ol>
 <ol start="2">
-<li><strong>禁止指令重排序</strong></li>
-</ol>
-<p>注意：volatile不保证原子性</p>
-<h4 id="三、锁"><a href="#三、锁" class="headerlink" title="三、锁"></a>三、锁</h4><ol>
-<li><strong>互斥锁</strong></li>
-<li><strong>偏向锁</strong></li>
-</ol>
-<p>背景：在多数情况下，锁不仅不存在多线程竞争，而且还总是由同一线程多次获得</p>
-<p>目的：让线程获得锁的代价更低</p>
-<p>实现：</p>
-<p>一个线程想要获取对象锁时，先查看对象头的锁记录里是否有线程ID</p>
-<p>如果有，直接获取锁</p>
-<p>如果设置了，说明是其他线程获得了锁，就发起竞争，由<strong>偏向锁</strong>变为<strong>轻量级锁</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/Java%E7%BA%BF%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/Java%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">(一).Java线程的简单介绍</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-04 19:48:04" itemprop="dateModified" datetime="2021-05-04T19:48:04+08:00">2021-05-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">线程和线程池</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/Java%E7%BA%BF%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="(一).Java线程的简单介绍" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="1-Java实现线程的三种方式"><a href="#1-Java实现线程的三种方式" class="headerlink" title="1. Java实现线程的三种方式"></a>1. Java实现线程的三种方式</h4><ul>
-<li>继承Thread类</li>
+<li><strong>工作线程数大于等于核心线程数</strong><ul>
+<li>把任务添加到<code>阻塞队列</code>中</li>
 </ul>
-<p>查看Thread的源码，可以发现，它是实现了 <code>Runnable</code> 接口</p>
-<p>因此也是通过调用 <code>run</code> 方法来运行的</p>
-<ul>
-<li>实现Runnable接口</li>
-</ul>
-<p>是一个接口，定义了run方法。</p>
-<ul>
-<li>实现Callable接口</li>
-</ul>
-<p>第三种比较特殊，是用于需要线程返回信息的情况。</p>
-<h4 id="2-线程的生命周期"><a href="#2-线程的生命周期" class="headerlink" title="2. 线程的生命周期"></a>2. 线程的生命周期</h4><p>线程池管理着多个线程的创建与销毁</p>
-<p>那么线程的生命周期是怎样的呢，让我们来一探究竟！</p>
-<ul>
-<li>新建（new）</li>
-</ul>
-<p>使用 <code>new</code> 关键字创建线程后，就处于 <code>新建</code> 状态，JVM为线程分配内存空间，并初始化成员变量</p>
-<ul>
-<li><p>就绪（runnable）</p>
-<p>调用 <code>start</code> 方法后，处于 <code>就绪</code> 状态，JVM为它创建方法栈和程序计数器</p>
 </li>
-<li><p>运行（running）</p>
-</li>
-</ul>
-<p>得到CPU时间片后，开始执行 <code>run</code> 方法体</p>
+</ol>
+<ol start="3">
+<li><p><strong>阻塞队列满了</strong></p>
 <ul>
-<li>阻塞（blocked）</li>
+<li>创建一个<code>非核心线程</code>去执行任务</li>
 </ul>
-<p>线程因某种原因放弃了CPU，进入阻塞</p>
+</li>
+<li><p><strong>非核心线程数量也达到上限</strong></p>
+<ul>
+<li>执行<code>拒绝策略</code></li>
+</ul>
+</li>
+</ol>
+<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/20210430161844.png" alt="executor_3"></p>
+<p>既然想了解它的线程复用原理，就免不了看源码的过程，下面放出了一些关键方法。</p>
+<h3 id="1-execute"><a href="#1-execute" class="headerlink" title="1.execute()"></a>1.execute()</h3><p>之前提到，不管是用execute()还是submit()来执行任务，<strong>实质</strong>都是调用execute()来执行的</p>
+<p>下面就来看看execute()的核心源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> c = ctl.get();</span><br><span class="line"><span class="comment">/** 1.如果工作线程数小于核心线程数，就调用addWorker()创建一个核心线程执行任务 */</span></span><br><span class="line"><span class="keyword">if</span> (workerCountOf(c) &lt; corePoolSize) &#123;  </span><br><span class="line">    <span class="keyword">if</span> (addWorker(command, <span class="keyword">true</span>))        </span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    c = ctl.get();</span><br><span class="line">&#125;			</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 2.工作线程数大于等于核心线程数，且入队成功 */</span></span><br><span class="line"><span class="keyword">if</span> (isRunning(c) &amp;&amp; workQueue.offer(command)) &#123;   </span><br><span class="line">    <span class="keyword">int</span> recheck = ctl.get(); <span class="comment">// 进行检查后决定是要采取拒绝策略还是正常入队等待                     </span></span><br><span class="line">    <span class="keyword">if</span> (! isRunning(recheck) &amp;&amp; remove(command)) </span><br><span class="line">        reject(command);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (workerCountOf(recheck) == <span class="number">0</span>)		</span><br><span class="line">        addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 3.阻塞队列满或状态非Running，创建非核心线程去执行任务 */</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (!addWorker(command, <span class="keyword">false</span>)) </span><br><span class="line">    reject(command);                   <span class="comment">// 如果失败就采用拒绝策略</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以发现，execute()调用了多次<code>addWorker()</code>和<code>reject()</code>，其中</p>
+<p><code>addWorker(Runnable firstTask, boolean core)</code>代表的含义随传参而变化。第一个参数表示任务，第二个参数表示是否为核心线程。</p>
+<p><code>reject(Runnable command)</code>表示采取拒绝策略。</p>
+<h3 id="2-reject"><a href="#2-reject" class="headerlink" title="2.reject()"></a>2.reject()</h3><p>主要是调用处理器去拒绝该任务，具体策略有四种</p>
+<p>在创建线程池时，会添加默认的处理器defaultHandler，它采取的是<strong>AbortPolicy</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> RejectedExecutionHandler handler;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> RejectedExecutionHandler defaultHandler = <span class="keyword">new</span> AbortPolicy();</span><br><span class="line"><span class="comment">// 在构造方法里，会默认让 handler = defaultHandler</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">reject</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">    handler.rejectedExecution(command, <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>具体策略：</strong></p>
 <table>
 <thead>
 <tr>
-<th align="center">阻塞类型</th>
+<th align="center">拒绝策略</th>
 <th align="center">描述</th>
-<th align="center">结果</th>
+<th align="center">应用场景</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="center">等待阻塞</td>
-<td align="center">执行wait方法</td>
-<td align="center">进入等待队列中（waiting queue）</td>
+<td align="center"><strong>AbortPolicy</strong></td>
+<td align="center">拒绝任务并抛出异常RejectedExecutionException</td>
+<td align="center">捕获异常进行处理</td>
 </tr>
 <tr>
-<td align="center">同步阻塞</td>
-<td align="center">获取锁失败</td>
-<td align="center">进入锁池（lock pool）</td>
+<td align="center"><strong>CallerRunsPolicy</strong></td>
+<td align="center">让调用的线程去执行任务</td>
+<td align="center">并发量低时，可以使用这种</td>
 </tr>
 <tr>
-<td align="center">其他阻塞</td>
-<td align="center">执行sleep或join或IO请求</td>
-<td align="center">状态置为阻塞</td>
+<td align="center"><strong>DiscardPolicy</strong></td>
+<td align="center">拒绝并丢弃任务</td>
+<td align="center">当前任务不重要</td>
+</tr>
+<tr>
+<td align="center"><strong>DiscardOldestPolicy</strong></td>
+<td align="center">丢弃最久未处理的工作，然后再次尝试execute()</td>
+<td align="center">之前的任务不是很重要，就可以用这种策略</td>
 </tr>
 </tbody></table>
-<ul>
-<li>死亡（dead）</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">正常死亡</td>
-<td align="center">执行完方法体</td>
-</tr>
-<tr>
-<td align="center">异常结束</td>
-<td align="center">抛出异常</td>
-</tr>
-<tr>
-<td align="center">调用stop</td>
-<td align="center">直接调用stop来结束该线程（可能会出问题）</td>
-</tr>
-</tbody></table>
+<p><strong>具体应用1：</strong></p>
+<p><strong>场景：</strong>用户支付后，把消息发送给用户，我们希望这个消息无论如何都能够发出去。</p>
+<p><strong>解决：</strong>使用线程池来执行任务。如果并发量很大，导致线程池的阻塞队列满了，可以采用<code>AbortPolicy</code>策略，抛出异常，然后在外部捕获异常。捕获异常后把任务存到<code>redis</code>中，另外使用一个定时器，每隔一秒去redis中异步获取任务，再次添加到线程池。</p>
+<p><strong>优化版：</strong>自定义拒绝策略，在里面把任务存到<code>redis</code>中，以此封装逻辑。</p>
+<p><strong>具体应用2：</strong></p>
+<p><strong>场景：</strong>推送，上游生产，下游消费；我们希望下游消费得比较慢时，就不要再推送。</p>
+<p><strong>解决：</strong>开一个异步线程去获取任务，然后把任务放入到线程池中去执行推送；当阻塞队列满时，采取<code>CallerRunsPolicy</code>策略，让主线程去执行推送，这样主线程既不会空闲下来，也不会再去获取任务。</p>
+<h3 id="3-addWorker"><a href="#3-addWorker" class="headerlink" title="3.addWorker()"></a>3.addWorker()</h3><p>这里主要是把任务<strong>包装</strong>成Worker对象，然后<strong>新建</strong>线程（由工厂新建）去执行任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">addWorker</span><span class="params">(Runnable firstTask, <span class="keyword">boolean</span> core)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 省略前面的一些判断和处理</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	<span class="keyword">boolean</span> workerStarted = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">boolean</span> workerAdded = <span class="keyword">false</span>;</span><br><span class="line">    Worker w = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        w = <span class="keyword">new</span> Worker(firstTask); <span class="comment">// 创建Worker对象时，内部通过工厂获得了一个线程</span></span><br><span class="line">        <span class="keyword">final</span> Thread t = w.thread; <span class="comment">// 使用线程</span></span><br><span class="line">        <span class="keyword">if</span> (t != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> ReentrantLock mainLock = <span class="keyword">this</span>.mainLock;<span class="comment">// 加锁</span></span><br><span class="line">            mainLock.lock();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> rs = runStateOf(ctl.get());  <span class="comment">// 进行检查，如果状态是Running</span></span><br><span class="line"> 												 <span class="comment">// 如果状态是Shutdown 且firstTask是空</span></span><br><span class="line">                <span class="keyword">if</span> (rs &lt; SHUTDOWN ||			 <span class="comment">// 就把任务添加到HashSet中</span></span><br><span class="line">                    (rs == SHUTDOWN &amp;&amp; firstTask == <span class="keyword">null</span>)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (t.isAlive()) <span class="comment">// precheck that t is startable</span></span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalThreadStateException();</span><br><span class="line">                    workers.add(w);</span><br><span class="line">                    <span class="keyword">int</span> s = workers.size();      <span class="comment">// 判断大小</span></span><br><span class="line">                    <span class="keyword">if</span> (s &gt; largestPoolSize)</span><br><span class="line">                        largestPoolSize = s;</span><br><span class="line">                    workerAdded = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                mainLock.unlock(); <span class="comment">// 解锁</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (workerAdded) &#123;</span><br><span class="line">                t.start();         <span class="comment">// 启动线程</span></span><br><span class="line">                workerStarted = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (! workerStarted)</span><br><span class="line">            addWorkerFailed(w);    <span class="comment">// 调用失败的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> workerStarted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<p>看了上面的源码，我们可以发现<strong>线程池</strong>是通过<strong>创建Worker</strong>来执行任务的，同时<strong>线程</strong>也在Worker对象中。</p>
+<p>那么我们再看看<strong>Worker</strong>类</p>
+<h3 id="4-Worker"><a href="#4-Worker" class="headerlink" title="4.Worker"></a>4.Worker</h3><p>Worker类实现了Runnable接口，重写了run()</p>
+<p>里面调用了**runWorker()**，那么这个方法才是真正执行任务的！</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 构造方法</span></span><br><span class="line">    Worker(Runnable firstTask) &#123;</span><br><span class="line">            setState(-<span class="number">1</span>); <span class="comment">// inhibit interrupts until runWorker</span></span><br><span class="line">            <span class="keyword">this</span>.firstTask = firstTask;</span><br><span class="line">            <span class="keyword">this</span>.thread = getThreadFactory().newThread(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            runWorker(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+<h3 id="5-runWorker"><a href="#5-runWorker" class="headerlink" title="5.runWorker()"></a>5.runWorker()</h3><p>我们可以清楚地看到，当任务不为空时，就调用run()执行。</p>
+<p>这里也是线程复用的实现：</p>
+<p>当一个线程 <strong>执行完 firstTask <strong>后，它会通过getTask()主动去阻塞队列中</strong>获取</strong>任务来执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">runWorker</span><span class="params">(Worker w)</span> </span>&#123;</span><br><span class="line">    Thread wt = Thread.currentThread();</span><br><span class="line">    Runnable task = w.firstTask;</span><br><span class="line">    w.firstTask = <span class="keyword">null</span>;</span><br><span class="line">    w.unlock(); <span class="comment">// allow interrupts</span></span><br><span class="line">    <span class="keyword">boolean</span> completedAbruptly = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;														<span class="comment">// 重点，获得任务的方式有两种</span></span><br><span class="line">        <span class="keyword">while</span> (task != <span class="keyword">null</span> || (task = getTask()) != <span class="keyword">null</span>) &#123;  	<span class="comment">// 1.从Worker对象中得到任务</span></span><br><span class="line">            w.lock();											<span class="comment">// 2.如果Worker对象中的任务完成了</span></span><br><span class="line">         														<span class="comment">// 就通过getTask()方法去获取</span></span><br><span class="line">          	<span class="comment">/* 省略一些中断处理和判断... */</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                beforeExecute(wt, task);</span><br><span class="line">                Throwable thrown = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    task.run();       <span class="comment">// 前面获取到了任务，就在这里运行</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (RuntimeException x) &#123;</span><br><span class="line">                    thrown = x; <span class="keyword">throw</span> x;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Error x) &#123;</span><br><span class="line">                    thrown = x; <span class="keyword">throw</span> x;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Throwable x) &#123;</span><br><span class="line">                    thrown = x; <span class="keyword">throw</span> <span class="keyword">new</span> Error(x);</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    afterExecute(task, thrown);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                task = <span class="keyword">null</span>;</span><br><span class="line">                w.completedTasks++;</span><br><span class="line">                w.unlock();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        completedAbruptly = <span class="keyword">false</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        processWorkerExit(w, completedAbruptly);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">类文件结构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-16 18:52:50" itemprop="dateModified" datetime="2021-12-16T18:52:50+08:00">2021-12-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" class="post-meta-item leancloud_visitors" data-flag-title="类文件结构" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h2><h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><p>我们所写的程序想要被计算机执行，有两种方式，第一种是<strong>编译成由0和1组成的二进制格式，让计算机执行。</strong></p>
-<p>而随着虚拟机的蓬勃发展，大量的程序语言建立在虚拟机的基础上，所以产生了第二种编译方式，即：</p>
-<p><strong>编译成与操作系统和机器指令集无关的、平台中立的文件存储格式</strong></p>
-<p>这也正是<code>字节码</code>文件的由来。</p>
-<h3 id="二、介绍"><a href="#二、介绍" class="headerlink" title="二、介绍"></a>二、介绍</h3><p>Java文件通过编译器编译，得到**Class文件(字节码文件)**，然后再通过JVM来执行。</p>
-<p>但是为了让虚拟机知道这是字节码文件，就需要严格定义字节码文件的格式</p>
-<p>因此在Class文件中，它的每个数据项的顺序和数量，甚至存储的字节序（统一使用Big Endian），都是被严格限定的。</p>
-<p>下面我们将介绍字节码文件的具体结构。</p>
-<h3 id="三、文件格式"><a href="#三、文件格式" class="headerlink" title="三、文件格式"></a>三、文件格式</h3><h5 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h5><p><strong>「Class文件」</strong>采用一种类似于C语言结构体的伪结构来存储数据。</p>
-<p>数据类型只有两种，「无符号数」和「表」</p>
-<ul>
-<li><p>无符号数</p>
-<p>用<code>u1,u2,u4,u8</code>分别来表示<code>1，2，4，8</code>个字节</p>
-<p>可以用来描述<strong>数字、索引引用、数量值或UTF-8编码的字符串值</strong></p>
-</li>
-<li><p>表</p>
-<p>由多个无符号数或表构成的复合数据类型</p>
-<p>为便于区分，表名一般以<code>_info</code>结尾</p>
-</li>
-</ul>
-<p>因为存在同一类型但数量不确定的数据，所以一般会用一个前置的容量计数器来表示数量。</p>
-<h3 id="四、详细介绍"><a href="#四、详细介绍" class="headerlink" title="四、详细介绍"></a>四、详细介绍</h3><h5 id="①魔数"><a href="#①魔数" class="headerlink" title="①魔数"></a>①魔数</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u4</td>
-<td align="center">magic</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>Class文件的头四个字节称为<strong>Magic Number</strong>，用来<strong>确认文件是否是JVM所能接收的Class文件</strong></p>
-<p>使用魔数的方式来区分文件类型，这种方式在GIF和JPEG中也可以看到。</p>
-<p>至于使用头字节而不是文件的扩展名来判断文件类型，主要还是为了安全考虑，毕竟啥文件改了后缀也能变成Class文件。</p>
-<p>Class文件魔数的具体取值为<code>0xCAFEBABE</code>，即咖啡宝贝</p>
-<h5 id="②主版本号和次版本号"><a href="#②主版本号和次版本号" class="headerlink" title="②主版本号和次版本号"></a>②主版本号和次版本号</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">minor_version</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">major_version</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>紧跟着魔数的四个字节分别表示<strong>Minor Version</strong>和<strong>Major Version</strong></p>
-<p>JDK1.1以后，每个大版本都会让主版本号加一。</p>
-<p>高版本的JDK能向下兼容低版本的Class文件，但是版本比它高的Class就不行，因为《Java虚拟机规范》要求了虚拟机必须拒绝执行超过其版本号的Class文件。</p>
-<h5 id="③常量池"><a href="#③常量池" class="headerlink" title="③常量池"></a>③常量池</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">constant_pool_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">cp_info</td>
-<td align="center">constant_pool</td>
-<td align="center">constant_pool_count - 1</td>
-</tr>
-</tbody></table>
-<p>由<code>constant_pool_count</code>和<code>constant_pool</code>构成。</p>
-<p><strong>constant_pool_count（u2类型）</strong></p>
-<p>因为常量池的容量是不固定的，所以入口处有u2类型的数据，来表示「常量池的容量」。</p>
-<p>注意，它是从1开始计数的，所以常量数量为$count - 1$</p>
-<p>这样做的原因，据设计者说，是为了<strong>能够让以后某些指向常量池的索引值的数据表达“不引用任何一个常量池项目”的含义。</strong></p>
-<p><strong>constant_pool（cp_info类型）</strong></p>
-<p>常量池中主要存放两大类常量：<strong>字面量</strong>和<strong>符号引用</strong></p>
-<ul>
-<li><p><strong>字面量</strong></p>
-<p>文本字符串，声明为final的常量值等</p>
-</li>
-<li><p><strong>符号引用</strong></p>
-<p>类、接口的全限定名</p>
-<p>字段的名称和描述符</p>
-<p>方法的名称和描述符等</p>
-</li>
-</ul>
-<p>常量池中的每个常量都是一个表，截至JDK13，共有17种不同类型的常量。</p>
-<p>这17类表有一个共同特点，即<strong>第一个字节都表示tag标志位，代表当前常量属于哪个常量表</strong>，后面的字节根据不同的表而变化。</p>
-<h5 id="④访问标志"><a href="#④访问标志" class="headerlink" title="④访问标志"></a>④访问标志</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">access_flags</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>常量池结束之后的两个字节，用来表示类或接口的访问标志</p>
-<p>可以取的值有：public、final、super、interface等共9个</p>
-<h5 id="⑤索引集合"><a href="#⑤索引集合" class="headerlink" title="⑤索引集合"></a>⑤索引集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">this_class</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">super_class</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">interfaces_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">interfaces</td>
-<td align="center">interfaces_count</td>
-</tr>
-</tbody></table>
-<p>类索引和父类索引都占两个字节，而接口索引是一组数据的集合。</p>
-<p>这些索引用来确认类的全限定名、父类的全限定名以及实现的接口的名称。</p>
-<p><strong>具体确认过程如下：</strong></p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/Snipaste_2021-04-25_17-01-01.png" alt="Snipaste_2021-04-25_17-01-01"></p>
-<h5 id="⑥字段表集合"><a href="#⑥字段表集合" class="headerlink" title="⑥字段表集合"></a>⑥字段表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">fields_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">field_info</td>
-<td align="center">fields</td>
-<td align="center">fields_count</td>
-</tr>
-</tbody></table>
-<p>包含了类或接口声明的类级变量（static）和实例变量，但不包含方法内的局部变量。</p>
-<p>我们可以先思考下，一个字段拥有什么属性？</p>
-<ul>
-<li>修饰符，public、static、volatile等</li>
-<li>名称，字段名</li>
-<li>类型，是什么数据类型</li>
-<li>属性，如果是集合类型，里面包含的其他属性</li>
-</ul>
-<p>根据上面罗列出来的信息，我们可以总结出字段表的内部结构</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">access_flags</td>
-<td align="center">1</td>
-<td align="center">字段修饰符</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">name_index</td>
-<td align="center">1</td>
-<td align="center">简单名称</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">descriptor_index</td>
-<td align="center">1</td>
-<td align="center">描述符</td>
-</tr>
-<tr>
-<td align="center">u2</td>
-<td align="center">attributes_count</td>
-<td align="center">1</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">attribute_info</td>
-<td align="center">attributes</td>
-<td align="center">attributes_count</td>
-<td align="center"></td>
-</tr>
-</tbody></table>
-<p>这里解释下前面提到过的三个名词，全限定名、简单名称和描述符。</p>
-<ul>
-<li><p><strong>全限定名</strong></p>
-<p>com/edu/neu/TestApplication;</p>
-<p>代表类的全限定名</p>
-</li>
-<li><p><strong>简单名称</strong></p>
-<p>sort：sort()方法的简单名称</p>
-<p>arr：arr字段的简单名称</p>
-</li>
-<li><p><strong>描述符</strong></p>
-<p>描述符和上述两者相比更加复杂一些。它是用来描述<strong>字段的数据类型</strong>、<strong>方法的参数列表</strong>和<strong>返回值</strong>。</p>
-</li>
-</ul>
-<p><strong>描述字段时</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">标识字符</th>
-<th align="center">含义</th>
-<th align="center">标识字符</th>
-<th align="center">含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">B</td>
-<td align="center">基本类型byte</td>
-<td align="center">J</td>
-<td align="center">基本类型long</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">基本类型char</td>
-<td align="center">S</td>
-<td align="center">基本类型short</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">基本类型double</td>
-<td align="center">Z</td>
-<td align="center">基本类型boolean</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">基本类型float</td>
-<td align="center">V</td>
-<td align="center">特殊类型void</td>
-</tr>
-<tr>
-<td align="center">I</td>
-<td align="center">基本类型int</td>
-<td align="center">L</td>
-<td align="center">对象类型，如Ljava/lang/Object;</td>
-</tr>
-</tbody></table>
-<p><strong>基本数据类型和void都用大写字母来表示，对象类型则用L加上对象的全限定名来表示，数组类型在最前面加上若干个[</strong></p>
-<p>对于<code>java.lang.String[][]</code>类型，它的描述符将是<code>[[Ljava/lang/String;</code></p>
-<p>对于<code>int[]</code>，它的描述符将是<code>[I</code></p>
-<p><strong>描述方法时</strong></p>
-<p>按照<strong>先参数列表</strong>、<strong>后返回值</strong>的顺序进行描述，参数列表要放在<code>()</code>中。</p>
-<p>对于<code>int indexOf(char[] source, int srcOffset, int srcCount, char[] target, int tarOffset, int tarCount, int fromIndex)</code>，描述符将是<code>([CII[CIII)I</code></p>
-<h5 id="⑦方法表集合"><a href="#⑦方法表集合" class="headerlink" title="⑦方法表集合"></a>⑦方法表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">methods_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">method_info</td>
-<td align="center">methods</td>
-<td align="center">methods_count</td>
-</tr>
-</tbody></table>
-<p>方法表和上述字段表集合几乎一致，所以关于表结构这部分不再介绍。</p>
-<p>但是如果只是和字段一样的话，那么它的代码怎么保存呢？</p>
-<p>事实上，方法体经过编译器编译成字节码指令后，存放在方法的属性表集合中一个名为<code>Code</code>的属性里，我们在将属性表时，会介绍这些。</p>
-<h5 id="⑧属性表集合"><a href="#⑧属性表集合" class="headerlink" title="⑧属性表集合"></a>⑧属性表集合</h5><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">attributes_count</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">attribute_info</td>
-<td align="center">attributes</td>
-<td align="center">attributes_count</td>
-</tr>
-</tbody></table>
-<p>与Class文件中其他的数据项目要求严格的顺序、长度和内容不同，属性表集合的限制稍微宽松一些，不再要求各个属性表具有严格顺序。</p>
-<p>在最新的《Java虚拟机规范》的JavaSE12版本中，预定义属性达到29项。可想而知，它的内容非常多。</p>
-<p>下面我们介绍下属性表的基本结构</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">名称</th>
-<th align="center">数量</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">u2</td>
-<td align="center">attribute_name_index</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u4</td>
-<td align="center">attribute_length</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">u1</td>
-<td align="center">info</td>
-<td align="center">attribute_length</td>
-</tr>
-</tbody></table>
-<p>一个符合规范的属性表，它的属性名应该从常量池中引用<code>CONSTANT_Utf8_info</code>类型的常量来表示，而属性值的结构是完全自定义的，只需要通过一个<code>u4</code>长度属性去说明属性值所占用的位数即可。</p>
-<p>至于具体的属性值结构，可参考《深入理解Java虚拟机》P233。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">类加载过程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-07 13:43:14" itemprop="dateModified" datetime="2021-05-07T13:43:14+08:00">2021-05-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="类加载过程" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、类加载过程"><a href="#一、类加载过程" class="headerlink" title="一、类加载过程"></a>一、类加载过程</h2><p>要把一个类的Class文件加载到Java虚拟机中，大致分为三个步骤：<strong>加载、连接和初始化</strong></p>
-<h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>把字节流中的静态数据结构，加载到JVM中，形成运行时的数据结构</p>
-<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p>连接又可以细分成：验证、准备和解析。</p>
-<h4 id="1-验证"><a href="#1-验证" class="headerlink" title="1.验证"></a>1.验证</h4><p>即验证Class文件是否符合规范，同时对语义进行确认</p>
-<h4 id="2-准备"><a href="#2-准备" class="headerlink" title="2.准备"></a>2.准备</h4><p>为类级变量分配内存空间，并设置初始值。</p>
-<p>PS：实例变量并不分配，因为它是和对象实例绑定在一起的，要在实例化对象的时候才会进行内存分配。</p>
-<h4 id="3-解析"><a href="#3-解析" class="headerlink" title="3.解析"></a>3.解析</h4><p>把常量池中符号引用解析成指针或者偏移量。</p>
-<p>PS：不然光靠一个名称去找它，多累啊；还是知道准确地址好点。</p>
-<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>遇到四个关键字时，对类进行初始化操作。</p>
-<h2 id="二、加载机制"><a href="#二、加载机制" class="headerlink" title="二、加载机制"></a>二、加载机制</h2><p>类的加载是通过<strong>加载器</strong>来完成的，具体的加载机制是<strong>双亲委派机制</strong></p>
-<h3 id="加载器"><a href="#加载器" class="headerlink" title="加载器"></a>加载器</h3><p>Java自带的有3种，<strong>引导类加载器、扩展类加载器</strong>和<strong>应用程序类加载器</strong></p>
-<p>这三者的关系是祖孙三代的关系，来张图表示下吧</p>
-<img data-src="https://gitee.com/aurora1004/pictures/raw/master/classloader.png" alt="classloader_WPS图片" style="zoom:67%;" />
-
-<h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p>双亲委派机制，就是指要加载某个类时，向上传递请求，一直到启动类加载器</p>
-<p>然后依次判断能不能加载，不能的话再往下传。</p>
-<h3 id="为什么要这样做呢？"><a href="#为什么要这样做呢？" class="headerlink" title="为什么要这样做呢？"></a>为什么要这样做呢？</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">字节码指令</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-16 18:52:07" itemprop="dateModified" datetime="2021-12-16T18:52:07+08:00">2021-12-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" class="post-meta-item leancloud_visitors" data-flag-title="字节码指令" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="字节码指令"><a href="#字节码指令" class="headerlink" title="字节码指令"></a>字节码指令</h1><h2 id="一、结构"><a href="#一、结构" class="headerlink" title="一、结构"></a>一、结构</h2><h3 id="1-1-简单定义"><a href="#1-1-简单定义" class="headerlink" title="1.1 简单定义"></a>1.1 简单定义</h3><blockquote>
-<p>Java虚拟机的指令是由<strong>一个字节长度</strong>的、<strong>代表着某种特定操作</strong>含义的数字（称为操作码，Opcode）以及跟随其后的零至多个代表此操作所需的参数（称为操作数，Operand）构成。</p>
-</blockquote>
-<p>简单来说，指令就是由一个字节的<strong>操作码</strong>和若干个<strong>参数</strong>构成。</p>
-<p>另外， 因为Java虚拟机采用的是<strong>面向操作数栈</strong>的架构，所以大多数指令只有一个操作码，而操作数被放在了操作数栈中。</p>
-<h3 id="1-2-特点"><a href="#1-2-特点" class="headerlink" title="1.2 特点"></a>1.2 特点</h3><p>从上面的定义中，我们可以发现，</p>
-<ul>
-<li><p>操作码总数不能超过256</p>
-<p>既然操作码只占了一个字节，那么<code>1字节 = 8比特，2^8 = 256</code>，即最多能表示<code>256</code>条指令</p>
-</li>
-<li><p>编译后Class文件中代码的操作数长度不对齐</p>
-</li>
-</ul>
-<p>这种字节码结构有着明显的优势和劣势：</p>
-<ul>
-<li><p>优势</p>
-<p>省略了大量的填充和间隔符号，编译代码更加精简</p>
-</li>
-<li><p>劣势</p>
-<p>处理超过一个字节的数据时，会因为重建而损失性能</p>
-</li>
-</ul>
-<h3 id="1-3-执行模型"><a href="#1-3-执行模型" class="headerlink" title="1.3 执行模型"></a>1.3 执行模型</h3><p>不考虑异常处理的话，可以用以下代码来表示Java虚拟机的解释器的执行过程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">	自动计算PC寄存器的值加<span class="number">1</span></span><br><span class="line">	根据PC寄存器指示的位置，从字节码流中取出操作码</span><br><span class="line">	<span class="keyword">if</span> (字节码存在操作数) &#123;</span><br><span class="line">		从字节码流中取出操作数</span><br><span class="line">	&#125;</span><br><span class="line">	执行操作码所定义的操作</span><br><span class="line">&#125; <span class="keyword">while</span> (字节码流的长度 &gt; <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、类别"><a href="#二、类别" class="headerlink" title="二、类别"></a>二、类别</h2><p>在Java虚拟机的指令集中，大多数指令都包含其操作所对应的数据类型信息。</p>
-<p>前面我们知道了指令集不能超过256条，而Java的数据类型有很多，如果针对每一种类型，都划分出专门的指令去操作它，可能就会溢出。</p>
-<p>那么Java虚拟机是怎么做的呢？</p>
-<p>在将这些之前，我们先要了解两个概念。</p>
-<h3 id="2-1-符号扩展和零位扩展"><a href="#2-1-符号扩展和零位扩展" class="headerlink" title="2.1 符号扩展和零位扩展"></a>2.1 符号扩展和零位扩展</h3><ul>
-<li><p>符号扩展，扩展时，前面全部补上符号位</p>
-</li>
-<li><p>零位扩展，扩展时前面全部补零</p>
-</li>
-</ul>
-<p>我们用一个例子来表示说明一下这两个概念，假设现在有两个数<code>+3</code>和<code>-3</code></p>
-<p>它们用8位的原码表示分别是<code>00000011</code>和<code>10000011</code></p>
-<p>现在我们要把它扩展到用16位来表示，就会产生如下结果</p>
-<table>
-<thead>
-<tr>
-<th align="center">数字</th>
-<th align="center">符号扩展</th>
-<th align="center">零位扩展</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">+3</td>
-<td align="center">0000000000000011</td>
-<td align="center">0000000000000011</td>
-</tr>
-<tr>
-<td align="center">-3</td>
-<td align="center">1111111110000011</td>
-<td align="center">0000000010000011</td>
-</tr>
-</tbody></table>
-<p>我们可以看到，对于正数而言，符号扩展和零位扩展是没有区别的；而负数的话就是扩展的数字不同。</p>
-<p>这两个概念和我们所说的溢出又有什么关系呢？</p>
-<p><strong>其实设计者为了让指令集不会溢出（或者说，复用一些指令），就让编译器在编译或运行时期，把byte和short类型的数据带符号扩展为int类型，把boolean和char类型数据零位扩展成int类型。</strong></p>
-<p>这样就不必对这四个类型单独再分配一些指令来处理了。</p>
-<h3 id="2-2-加载和存储指令"><a href="#2-2-加载和存储指令" class="headerlink" title="2.2 加载和存储指令"></a>2.2 加载和存储指令</h3><p>加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈之间来回传输。例如：</p>
-<ul>
-<li>把一个局部变量加载到操作栈中：iload，fload，dload</li>
-<li>把一个数值从操作数栈存储到局部变量表中：istore，lstore</li>
-<li>把一个常量加载到操作数栈：bipush，sipush</li>
-</ul>
-<h3 id="2-3-运算指令"><a href="#2-3-运算指令" class="headerlink" title="2.3 运算指令"></a>2.3 运算指令</h3><p>算术指令用于对操作数栈上的两个值进行某种特定运算，并把结果重新存入到操作栈顶。</p>
-<p>这里有两个<strong>注意点</strong>，</p>
-<p><strong>一是之前提过的byte，short，char，boolean是用int类型指令操作的</strong></p>
-<p><strong>二是计算浮点数时，会碰到取舍的问题</strong></p>
-<p>先介绍下<strong>两种舍入模式</strong>：</p>
+<h3 id="6-getTask"><a href="#6-getTask" class="headerlink" title="6.getTask()"></a>6.getTask()</h3><p>通过死循环来获取任务，任务是从阻塞队列中获取的</p>
 <ol>
-<li>向最接近数舍入</li>
-<li>向零舍入</li>
+<li>工作线程数 &gt; 核心线程数 使用poll()</li>
+<li>工作线程数 &lt;= 核心线程数 使用take()</li>
 </ol>
-<p>浮点数之间的计算，采用第一种向最接近数舍入，如果是浮点数转整型，采用向零舍入模式</p>
-<p>我们可以回想下，Java中浮点数之间计算后，结果并不是严格准确的；浮点数转整型，会丢弃小数部分；</p>
-<p>这些都和舍入模式相匹配。</p>
-<h3 id="2-4-类型转换指令"><a href="#2-4-类型转换指令" class="headerlink" title="2.4 类型转换指令"></a>2.4 类型转换指令</h3><p>用于对类型的<strong>显式转换</strong>；如果是隐式的（如int转long）就不用这些指令，因为虚拟机直接支持。</p>
-<p>注意，转换时可能会出现不同的正负号，因为long转int是简单的丢弃多余的高位部分，所以如果原来是负数，转换后可能就是正数了。</p>
-<p>对于浮点型的转换，</p>
-<ul>
-<li>如果是NaN，则转成int或long的0</li>
-<li>如果不是无穷大，则按向零舍入来取整<ul>
-<li>如果取整后在范围内，则直接用</li>
-<li>如果不在范围内，根据符号取边界值</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-5-对象创建与访问指令"><a href="#2-5-对象创建与访问指令" class="headerlink" title="2.5 对象创建与访问指令"></a>2.5 对象创建与访问指令</h3><p>Java中的对象包括类实例和数组，创建他们所采用的字节码并不同。</p>
-<p>对象创建完毕后，可以通过访问指令来获取对象实例（或数组实例）中的字段（或数组元素）。</p>
-<h3 id="2-6-操作数栈管理指令"><a href="#2-6-操作数栈管理指令" class="headerlink" title="2.6 操作数栈管理指令"></a>2.6 操作数栈管理指令</h3><p>用于管理操作数栈中的元素</p>
-<h3 id="2-7-控制转移指令"><a href="#2-7-控制转移指令" class="headerlink" title="2.7 控制转移指令"></a>2.7 控制转移指令</h3><p>控制转移指令可以让Java虚拟机有条件或无条件地从指定位置指令的下一条指令继续执行程序。</p>
-<h3 id="2-8-方法调用和返回指令"><a href="#2-8-方法调用和返回指令" class="headerlink" title="2.8 方法调用和返回指令"></a>2.8 方法调用和返回指令</h3><p>方法调用（分派、执行过程）将会在以后介绍。</p>
-<p>方法调用有一系列以”invoke”开头的指令</p>
-<p>返回有一系列以“return”结尾的指令</p>
-<h3 id="2-9-异常处理指令"><a href="#2-9-异常处理指令" class="headerlink" title="2.9 异常处理指令"></a>2.9 异常处理指令</h3><p>关于异常，有三种来源：</p>
-<ul>
-<li>Java程序显式抛出，由athrow指令实现</li>
-<li>Java程序try catch处理，用<code>异常表</code>来完成</li>
-<li>程序发生异常状况，自动抛出</li>
-</ul>
-<h3 id="2-10-同步指令"><a href="#2-10-同步指令" class="headerlink" title="2.10 同步指令"></a>2.10 同步指令</h3><p>Java虚拟机支持两种同步：<strong>方法级的同步</strong>和方法内部<strong>一段指令序列</strong>的同步。</p>
-<p>这两种同步都是靠管程（或者说锁）来实现的</p>
-<h4 id="对于方法级的同步"><a href="#对于方法级的同步" class="headerlink" title="对于方法级的同步"></a>对于方法级的同步</h4><p>它是隐式的，不用字节码指令来控制</p>
-<p>因为方法的访问标志里如果声明了<code>ACC_SYNCHRONIZED</code>，就能够表示它是同步方法</p>
-<p>然后在方法<strong>执行线程</strong>就要<strong>先获取管程，才能执行方法</strong>，方法结束后就会释放管程</p>
-<h4 id="对于指令序列的同步"><a href="#对于指令序列的同步" class="headerlink" title="对于指令序列的同步"></a>对于指令序列的同步</h4><p>它通常是由<code>synchronized</code>关键字声明的</p>
-<p>Java虚拟机的指令集中有<code>monitorenter</code>和<code>monitorexit</code>两条指令来支持<code>synchronized</code></p>
-<p><strong>实现<code>synchronized</code>指令，是<code>Javac编译器</code>和<code>Java虚拟机</code>共同协作的结果</strong></p>
-<p>怎么理解这句话呢？</p>
-<p>这就要谈谈这两个指令的用法了，这<strong>两条指令</strong>是加在同步指令序列的<strong>两端</strong>（开始和结束处），来<strong>保证同步性</strong>。</p>
-<p><strong>如果指令正常执行，毫无疑问能配对成功。</strong></p>
-<p><strong>如果执行到一般发生异常了，这时候被迫跳出同步指令序列，即只执行了<code>monitorenter</code>，而没有执行到<code>monitorexit</code></strong></p>
-<p>那怎么办呢？这就要看编译器了</p>
-<blockquote>
-<p>在编译时，为了保证方法异常时，monitorenter和monitorexit指令仍能够配对，编译器自动生成一个异常处理程序，声明可处理所有的异常，然后只要在monitorexit后面再来条相同的指令，就能成功配对了。</p>
-</blockquote>
+<p>poll()和take()的区别在于，poll可以传递放弃等待的时间参数，超过这个时间就放弃获取</p>
+<p>take()如果获取不到就会阻塞，一直等待（因为这时候工作线程数量少，你获取不到任务就会空闲，所以要一直阻塞，直到任务来了）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Runnable <span class="title">getTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> timedOut = <span class="keyword">false</span>; <span class="comment">// Did the last poll() time out?</span></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;<span class="comment">// 通过死循环获取任务</span></span><br><span class="line">        <span class="comment">// 省略检查线程池状态和队列为空的判断</span></span><br><span class="line">        <span class="keyword">int</span> wc = workerCountOf(c);</span><br><span class="line">        <span class="comment">// 工作线程数 &gt; 核心线程数，就是true</span></span><br><span class="line">        <span class="keyword">boolean</span> timed = allowCoreThreadTimeOut || wc &gt; corePoolSize;</span><br><span class="line">       <span class="comment">// 省略超时和容量上限判断</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runnable r = timed ?                                      <span class="comment">// 1.工作线程数 &gt; 核心线程数 用poll()</span></span><br><span class="line">                workQueue.poll(keepAliveTime, TimeUnit.NANOSECONDS) : <span class="comment">// 2.反之，就用take()</span></span><br><span class="line">                workQueue.take();									  <span class="comment">// 区别在于take()会阻塞地获取任务 </span></span><br><span class="line">            <span class="keyword">if</span> (r != <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> r;</span><br><span class="line">            timedOut = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException retry) &#123;</span><br><span class="line">            timedOut = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7.总结"></a>7.总结</h3><p>Executor的线程复用，是让线程在完成任务后，不断地向阻塞队列获取任务</p>
+<p>对于核心线程来说，用take方法，获取不到就会阻塞，从而保证它永远不会因为存活时间而过期销毁</p>
+<p>而非核心线程，用poll方法，在超时时间内获取不到任务，就会放弃，从而会因为存活时间到期而销毁。</p>
 
       
     </div>
@@ -1660,130 +1645,7 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E9%94%81%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E9%94%81%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">Java锁机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-11 20:37:11" itemprop="dateModified" datetime="2021-10-11T20:37:11+08:00">2021-10-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/Java%E9%94%81%E6%9C%BA%E5%88%B6/" class="post-meta-item leancloud_visitors" data-flag-title="Java锁机制" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一、同步方式"><a href="#一、同步方式" class="headerlink" title="一、同步方式"></a>一、同步方式</h1><p>涉及到线程安全的问题时，往往有两种方式进行数据的同步，即<code>互斥同步</code>和<code>非阻塞同步</code>。</p>
-<ul>
-<li><p>互斥同步</p>
-<p>悲观的思想，认为<code>加锁</code>才能保证数据的线程安全性</p>
-<p>线程挂起、唤醒的操作需要由操作系统来进行，因此互斥同步需要在用户态和内核态切换，开销较大</p>
-</li>
-<li><p>非阻塞访问</p>
-<p>乐观思想，当获取不到锁时，重复地去获取</p>
-<p>这是基于硬件指令集的发展而来的，因为有了<code>Compare-and-Swap</code>指令</p>
-</li>
-</ul>
-<h1 id="二、锁优化"><a href="#二、锁优化" class="headerlink" title="二、锁优化"></a>二、锁优化</h1><p>在这里，锁不仅仅指互斥同步的锁，还包含了一些不用互斥、阻塞的锁。</p>
-<h3 id="自旋锁与自适应自旋"><a href="#自旋锁与自适应自旋" class="headerlink" title="自旋锁与自适应自旋"></a>自旋锁与自适应自旋</h3><p>当一个线程获取不到锁时，会在处理器中自旋一段时间，避免频繁地挂起、阻塞。</p>
-<p><strong>优化版：根据上次情况，适当改变自旋次数</strong></p>
-<p>如果上次获取过这个对象的锁，那么这次获取的机会也大，自旋次数可以增加一些</p>
-<h3 id="锁消除"><a href="#锁消除" class="headerlink" title="锁消除"></a>锁消除</h3><p>检测到持有锁的对象没有发生逃逸，不会存在竞争关系，可以消除当前对象的锁</p>
-<h3 id="锁粗化"><a href="#锁粗化" class="headerlink" title="锁粗化"></a>锁粗化</h3><p>多个锁变为一个锁</p>
-<hr>
-<p>后面的锁会提到底层实现，所以先需要了解一些前缀知识。</p>
-<h3 id="知识"><a href="#知识" class="headerlink" title="知识"></a>知识</h3><p>对象头包含<code>mark word</code>和标记，其中<code>mark word</code>包含了对象的哈希码、回收年龄等。</p>
-<h3 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h3><p>前面提到互斥锁需要切换到内核态，开销较大。所以我们思考，能不能用非阻塞的方式来实现锁机制。</p>
-<p>而轻量级锁就是一种基于<code>CAS</code>的锁机制。</p>
-<p><strong>加锁过程</strong></p>
-<ol>
-<li><p>在线程的栈帧中开辟<code>Lock Record</code>空间，记录对象头中<code>mark word</code>内容</p>
-</li>
-<li><p>用<code>CAS</code>操作把指向<code>Lock Record</code>的指针替换对象头中的<code>mark word</code></p>
-<p>如果成功，则表示获取到锁，可以执行同步代码块</p>
-<p>如果失败，检验一下指针是不是指向自己栈帧的，来判断锁是不是自己的        </p>
-</li>
-</ol>
-<p><strong>释放锁过程</strong></p>
-<ol>
-<li><p>用<code>CAS</code>操作尝试把<code>Lock Record</code>的内容覆盖到<code>对象头</code>中</p>
-<p>如果成功，释放成功</p>
-<p>如果失败，释放并唤醒其他线程???</p>
-</li>
-</ol>
-<p>如果有两个以上线程竞争，就会进行<code>锁膨胀</code>，变为重量级锁</p>
-<p>轻量级锁在有竞争时，既有互斥的开销，还要进行CAS，所以存在竞争时性能较差</p>
-<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>思想：绝大多数情况下，资源都不存在竞争。</p>
-<p>偏向锁使用了更加轻量级的方式，它连CAS都不用进行，直接令当前线程获取锁。</p>
-<p>但是一旦发生了竞争，就要根据是否加锁，来变为<code>无锁</code>或<code>轻量级锁</code>状态</p>
-<h3 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a>重量级锁</h3><p>多个线程竞争时，轻量级锁会膨胀为重量级锁，它就表示以前的互斥锁。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+  </div>
 
   
   <nav class="pagination">
@@ -1855,20 +1717,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1909,17 +1771,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -2017,6 +1886,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

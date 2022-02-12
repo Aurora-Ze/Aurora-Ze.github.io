@@ -47,15 +47,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -201,6 +192,705 @@
 
           <div class="content index posts-expand">
             
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="post-title-link" itemprop="url">二分查找</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-13 10:42:50" itemprop="dateModified" datetime="2021-05-13T10:42:50+08:00">2021-05-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="post-meta-item leancloud_visitors" data-flag-title="二分查找" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>288</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h1><h3 id="一、最基础版"><a href="#一、最基础版" class="headerlink" title="一、最基础版"></a>一、最基础版</h3><p>特点</p>
+<ul>
+<li><p>循环条件：$left &lt;= right，即left = right + 1时退出循环$</p>
+</li>
+<li><p>命中<code>target</code>直接返回，退出循环就说明没找到</p>
+</li>
+</ul>
+<p>这样的二分查找有个缺点，无法找到相同数字的边界，只能看情况找。</p>
+<p><strong>例如数组[1,2,2,2,3]，查找2的话会命中中间的，无法处理边界。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) &#123;</span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、搜索左侧边界"><a href="#二、搜索左侧边界" class="headerlink" title="二、搜索左侧边界"></a>二、搜索左侧边界</h3><p><strong>特点</strong></p>
+<ul>
+<li><strong>找到相同元素时收缩右侧边界，目的在于向左侧靠拢</strong></li>
+<li>退出循环时$left = right + 1$，此时<ul>
+<li><code>target</code>大于所有元素，会发生越界，返回<code>-1</code></li>
+<li><code>left</code>没有命中，返回<code>-1</code></li>
+<li><code>left</code>命中元素，返回<code>left</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</span><br><span class="line">           left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) &#123;</span><br><span class="line">            right = mid - <span class="number">1</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] == target) &#123;<span class="comment">//注意点1:收缩右侧边界</span></span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//注意点2:判断越界、命中情况</span></span><br><span class="line">    <span class="keyword">if</span> (left == nums.length || nums[left] != target) &#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、搜索右侧边界"><a href="#三、搜索右侧边界" class="headerlink" title="三、搜索右侧边界"></a>三、搜索右侧边界</h3><p><strong>和左侧边界的方法类似，区别在于命中时要收缩左侧边界，即向右侧靠拢。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</span><br><span class="line">           left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) &#123;</span><br><span class="line">            right = mid - <span class="number">1</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] == target) &#123;<span class="comment">//注意点1:收缩右侧边界</span></span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//注意点2:判断越界、命中情况</span></span><br><span class="line">    <span class="keyword">if</span> (left == nums.length || nums[left] != target) &#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8/" class="post-title-link" itemprop="url">迭代器模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-14 22:02:09" itemprop="dateModified" datetime="2021-11-14T22:02:09+08:00">2021-11-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="迭代器模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>109</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>提供一种顺序访问聚合对象元素的方法，并且不暴露聚合对象的内部表示。</p>
+<p><strong>主要元素</strong></p>
+<ul>
+<li><p><strong>Aggregate</strong></p>
+<p>提供接口创建迭代器</p>
+</li>
+<li><p><strong>Iterator</strong></p>
+<p>迭代器接口，拥有<code>next()</code>和<code>hasNext()</code>方法</p>
+</li>
+</ul>
+<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/image-20201102012333804.png" alt="image-20191130164425351"></p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>手动构建一个迭代器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Iterator</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Aggregate</span> </span>&#123;</span><br><span class="line">        <span class="function">MyIterator <span class="title">createIterator</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">MyIterator</span>&lt;<span class="title">Item</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function">Item <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConcreteAggregate</span> <span class="keyword">implements</span> <span class="title">Aggregate</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> Integer[] items;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** 初始化数据 */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            items = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> MyIterator <span class="title">createIterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteIterator&lt;&gt;(items);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConcreteIterator</span>&lt;<span class="title">Item</span>&gt; <span class="keyword">implements</span> <span class="title">MyIterator</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> Item[] items;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> position;</span><br><span class="line"></span><br><span class="line">        ConcreteIterator (Item[] items) &#123;</span><br><span class="line">            <span class="keyword">this</span>.items = items;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> items[position++];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> position &lt; items.length;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        ConcreteAggregate aggregate = <span class="keyword">new</span> ConcreteAggregate();</span><br><span class="line">        aggregate.initData();</span><br><span class="line">        MyIterator iterator = aggregate.createIterator();</span><br><span class="line">        <span class="keyword">while</span>(iterator.hasNext()) &#123;</span><br><span class="line">            System.out.println(iterator.next());;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%B4%A3%E4%BB%BB%E9%93%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%B4%A3%E4%BB%BB%E9%93%BE/" class="post-title-link" itemprop="url">责任链模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 15:05:18" itemprop="dateModified" datetime="2021-12-17T15:05:18+08:00">2021-12-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%B4%A3%E4%BB%BB%E9%93%BE/" class="post-meta-item leancloud_visitors" data-flag-title="责任链模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>538</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p><strong>定义</strong></p>
+<blockquote>
+<p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。</p>
+<p>将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
+</blockquote>
+<p><strong>解释</strong></p>
+<p>当请求有可能经过多个对象处理时，并且它们之间存在逻辑上的先后顺序时，不要把条件和具体的处理逻辑耦合在一起。</p>
+<p>比较好的做法是定义成内部的链式传递，客户端只能感知到与它最近的一端。</p>
+<p><strong>主要对象</strong></p>
+<ul>
+<li><strong>Handler接口</strong><ul>
+<li>处理请求的接口，包含当前节点的处理方法以及继任者。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Client</strong><ul>
+<li>客户端，调用Handler来处理请求</li>
+</ul>
+</li>
+</ul>
+<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/ca9f23bf-55a4-47b2-9534-a28e35397988.png" alt="img"></p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>某公司职员想要申请聚餐费用，申请需经过<code>项目经理 - 部门经理 - 总经理</code>。其中，具体的逻辑为：</p>
+<ol>
+<li>项目经理负责500元以下的审批，超过则上报给部门经理审批</li>
+<li>部门经理负责1000元以下的审批，超过则上报给总经理审批</li>
+<li>总经理会对超过2000元的审批直接拒绝</li>
+<li>此外，每个经理都会进行能否通过审批的判断。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ze.aurora.behaviour;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 责任链</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 申请聚餐费用时，可能会经过“项目经理 - 部门经理 - 总经理”这样的审批顺序</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Aurora</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/12/17 14:14</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainOfResponsibility</span> </span>&#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="keyword">protected</span> Handler successor = <span class="keyword">null</span>;</span><br><span class="line">        <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> count)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ProjectManagerHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> someCondition = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSuccessor</span><span class="params">(Handler successor)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.successor = successor;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (count &lt; <span class="number">500</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (someCondition) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;项目经理审批通过&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;项目经理拒绝审批&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;项目经理 -&gt; 部门经理&quot;</span>);</span><br><span class="line">                successor.handle(count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">DepartmentManagerHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> someCondition = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSuccessor</span><span class="params">(Handler successor)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.successor = successor;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (count &lt; <span class="number">1000</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (someCondition) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;部门经理审批通过&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;部门经理拒绝审批&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;部门经理 -&gt; 总经理&quot;</span>);</span><br><span class="line">                successor.handle(count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">GeneralManagerHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> someCondition = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSuccessor</span><span class="params">(Handler successor)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.successor = successor;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (count &lt; <span class="number">2000</span> &amp;&amp; someCondition) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;总经理审批通过&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;总经理拒绝审批&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/** 构造责任链 */</span></span><br><span class="line">        ProjectManagerHandler projectManagerHandler = <span class="keyword">new</span> ProjectManagerHandler();</span><br><span class="line">        DepartmentManagerHandler departmentManagerHandler = <span class="keyword">new</span> DepartmentManagerHandler();</span><br><span class="line">        GeneralManagerHandler generalManagerHandler = <span class="keyword">new</span> GeneralManagerHandler();</span><br><span class="line"></span><br><span class="line">        projectManagerHandler.setSuccessor(departmentManagerHandler);</span><br><span class="line">        departmentManagerHandler.setSuccessor(generalManagerHandler);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** 费用申请 */</span></span><br><span class="line">        projectManagerHandler.handle(<span class="number">1200</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="特点分析"><a href="#特点分析" class="headerlink" title="特点分析"></a>特点分析</h4><p><strong>符合单一职责原则</strong>。</p>
+<ul>
+<li>责任链模式将调用链上的每个角色的职责划分的更加清晰。如果某一角色的处理逻辑发生变化，我们可以很快的定位并进行改动。</li>
+</ul>
+<p><strong>符合迪米特法则</strong></p>
+<ul>
+<li>调用方与处理方解耦，调用方不清楚是谁处理了请求，它只需接收最后处理的结果即可。</li>
+</ul>
+<p><strong>动态的构造责任链</strong></p>
+<ul>
+<li>一旦传递过程发生了改变，我们可以灵活的改变责任链的传递，并且调用方也无需感知。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85/" class="post-title-link" itemprop="url">访问者模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-17 22:37:35" itemprop="dateModified" datetime="2021-11-17T22:37:35+08:00">2021-11-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85/" class="post-meta-item leancloud_visitors" data-flag-title="访问者模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>311</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="访问者模式"><a href="#访问者模式" class="headerlink" title="访问者模式"></a>访问者模式</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p><strong>定义</strong></p>
+<blockquote>
+<p>当想要为一个对象的组合增加新的能力时，且这个组合的封装并不重要，那么就可以使用访问者模式。</p>
+</blockquote>
+<p><strong>解释</strong></p>
+<p>例如为String类添加功能，我们可以在自定义的类中组合String对象，实现新功能。</p>
+<p>这么做的话，不需要修改原来的String类就能做到扩展或修改功能，但是原先String类的封装就会变得不是很完美（因为新功能没有写在里面）。</p>
+<p><strong>主要元素</strong></p>
+<ul>
+<li><strong>Visitor</strong>：访问者接口，定义<code>visit()</code>方法对某一元素进行访问。</li>
+<li><strong>Element</strong>：被访问的元素接口，定义<code>accept()</code>接受访问者</li>
+<li><strong>ObjectStructure</strong>：对象结构，通常是对所有元素进行遍历访问</li>
+</ul>
+<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/79c6f036-bde6-4393-85a3-ef36a0327bd2.png" alt="img"></p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>顾客想要获取菜单或原料的一些信息，但是菜单和原料很有可能会变化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Visitor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IVisitor</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">visitMenu</span><span class="params">(MenuItem element)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">visitMaterial</span><span class="params">(Material element)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConcreteVisitor</span> <span class="keyword">implements</span> <span class="title">IVisitor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitMenu</span><span class="params">(MenuItem element)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// visitor add ...</span></span><br><span class="line">            element.getState();</span><br><span class="line">            <span class="comment">// visitor add ...</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitMaterial</span><span class="params">(Material element)</span> </span>&#123;</span><br><span class="line">            element.getState();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Element</span> </span>&#123;</span><br><span class="line">        String name;</span><br><span class="line"></span><br><span class="line">        Element(String name) &#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor visitor)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">getState</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MenuItem</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        MenuItem(String name) &#123;</span><br><span class="line">            <span class="keyword">super</span>(name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor visitor)</span> </span>&#123;</span><br><span class="line">            visitor.visitMenu(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(name + <span class="string">&quot;的营养价值为10&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Material</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Material(String name) &#123;</span><br><span class="line">            <span class="keyword">super</span>(name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor visitor)</span> </span>&#123;</span><br><span class="line">            visitor.visitMaterial(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(name + <span class="string">&quot;的营养价值为5&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ObjectStructure</span> </span>&#123;</span><br><span class="line">        List&lt;Element&gt; lists;</span><br><span class="line"></span><br><span class="line">        ObjectStructure() &#123;</span><br><span class="line">            <span class="keyword">this</span>.lists = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">addElement</span><span class="params">(Element element)</span> </span>&#123;</span><br><span class="line">            lists.add(element);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">recurse</span><span class="params">(IVisitor visitor)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(Element e : lists) &#123;</span><br><span class="line">                e.accept(visitor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ObjectStructure obj = <span class="keyword">new</span> ObjectStructure();</span><br><span class="line">        obj.addElement(<span class="keyword">new</span> MenuItem(<span class="string">&quot;宫爆鸡丁&quot;</span>));</span><br><span class="line">        obj.addElement(<span class="keyword">new</span> Material(<span class="string">&quot;鸡肉&quot;</span>));</span><br><span class="line"></span><br><span class="line">        obj.recurse(<span class="keyword">new</span> ConcreteVisitor());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8/" class="post-title-link" itemprop="url">解释器模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-20 10:17:18" itemprop="dateModified" datetime="2021-11-20T10:17:18+08:00">2021-11-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="解释器模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>134</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="解释器模式"><a href="#解释器模式" class="headerlink" title="解释器模式"></a>解释器模式</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>为语言创建解释器，通常由语言的语法和语法分析来定义。</p>
+<p><strong>主要元素</strong></p>
+<ul>
+<li><p><strong>AbstractExpression</strong></p>
+<p>抽象类，提供抽象方法<code>interpret()</code></p>
+</li>
+<li><p><strong>Context</strong></p>
+<p>表达式上下文，对多个解释器共享。</p>
+</li>
+</ul>
+<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/2b125bcd-1b36-43be-9b78-d90b076be549.png" alt="img"></p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>实现一个能够处理and和or逻辑的解释器，并对字符串进行匹配。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Interpreter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractExpression</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">interpret</span><span class="params">(String exp)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">AndExpression</span> <span class="keyword">extends</span> <span class="title">AbstractExpression</span></span>&#123;</span><br><span class="line">        AbstractExpression expression1;</span><br><span class="line">        AbstractExpression expression2;</span><br><span class="line"></span><br><span class="line">        AndExpression(AbstractExpression expression1, AbstractExpression expression2) &#123;</span><br><span class="line">            <span class="keyword">this</span>.expression1 = expression1;</span><br><span class="line">            <span class="keyword">this</span>.expression2 = expression2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">interpret</span><span class="params">(String exp)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> expression1.interpret(exp) &amp;&amp; expression2.interpret(exp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">OrExpression</span> <span class="keyword">extends</span> <span class="title">AbstractExpression</span></span>&#123;</span><br><span class="line">        AbstractExpression expression1;</span><br><span class="line">        AbstractExpression expression2;</span><br><span class="line"></span><br><span class="line">        OrExpression(AbstractExpression expression1, AbstractExpression expression2) &#123;</span><br><span class="line">            <span class="keyword">this</span>.expression1 = expression1;</span><br><span class="line">            <span class="keyword">this</span>.expression2 = expression2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">interpret</span><span class="params">(String exp)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> expression1.interpret(exp) || expression2.interpret(exp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TerminalExpression</span> <span class="keyword">extends</span> <span class="title">AbstractExpression</span></span>&#123;</span><br><span class="line">        String letter;</span><br><span class="line"></span><br><span class="line">        TerminalExpression(String letter) &#123;</span><br><span class="line">            <span class="keyword">this</span>.letter = letter;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">interpret</span><span class="params">(String exp)</span> </span>&#123;</span><br><span class="line">            StringTokenizer tokenizer = <span class="keyword">new</span> StringTokenizer(exp);</span><br><span class="line">            <span class="keyword">while</span>(tokenizer.hasMoreTokens()) &#123;</span><br><span class="line">                String next = tokenizer.nextToken();</span><br><span class="line">                <span class="keyword">if</span> (letter.equals(next)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        AbstractExpression A = <span class="keyword">new</span> TerminalExpression(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">        AbstractExpression B = <span class="keyword">new</span> TerminalExpression(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">        AbstractExpression C = <span class="keyword">new</span> TerminalExpression(<span class="string">&quot;C&quot;</span>);</span><br><span class="line">        AbstractExpression D = <span class="keyword">new</span> TerminalExpression(<span class="string">&quot;D&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 构造表达式 D and (A or (B or C))</span></span><br><span class="line">        AbstractExpression BC = <span class="keyword">new</span> OrExpression(B, C);</span><br><span class="line">        AbstractExpression exp = <span class="keyword">new</span> OrExpression(A, BC);</span><br><span class="line">        AbstractExpression exp1 = <span class="keyword">new</span> AndExpression(D, exp);</span><br><span class="line"></span><br><span class="line">        System.out.println(exp1.interpret(<span class="string">&quot;D A&quot;</span>));;</span><br><span class="line">        System.out.println(exp1.interpret(<span class="string">&quot;A B&quot;</span>));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85/" class="post-title-link" itemprop="url">观察者模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-14 21:39:32" itemprop="dateModified" datetime="2021-11-14T21:39:32+08:00">2021-11-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85/" class="post-meta-item leancloud_visitors" data-flag-title="观察者模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>137</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
+<p>主题（Subject）是被观察的对象，而其所有依赖者（Observer）称为观察者。</p>
+<p><strong>主要元素</strong></p>
+<ul>
+<li><p><strong>Subject</strong></p>
+<p>主题接口</p>
+</li>
+<li><p><strong>Observer</strong></p>
+<p>观察者接口</p>
+</li>
+</ul>
+<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/a8c8f894-a712-447c-9906-5caef6a016e3.png" alt="img"></p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>多个观察者观察天气变化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">addObserver</span><span class="params">(Observable observer)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">deleteObserver</span><span class="params">(Observable observer)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">notifyAllObservers</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Observable</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">WeatherCenter</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Observable&gt; observers;</span><br><span class="line"></span><br><span class="line">        WeatherCenter() &#123;</span><br><span class="line">            observers = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addObserver</span><span class="params">(Observable observer)</span> </span>&#123;</span><br><span class="line">            observers.add(observer);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteObserver</span><span class="params">(Observable observer)</span> </span>&#123;</span><br><span class="line">            observers.remove(observer);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyAllObservers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (Observable observer: observers) &#123;</span><br><span class="line">                observer.update();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">WeatherObserver</span> <span class="keyword">implements</span> <span class="title">Observable</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="keyword">this</span>.toString() + <span class="string">&quot; find that weather has changed&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        WeatherCenter sub = <span class="keyword">new</span> WeatherCenter();</span><br><span class="line">        sub.addObserver(<span class="keyword">new</span> WeatherObserver());</span><br><span class="line">        sub.addObserver(<span class="keyword">new</span> WeatherObserver());</span><br><span class="line"></span><br><span class="line">        sub.notifyAllObservers();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -217,10 +907,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">策略模式</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -255,6 +945,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>50</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -284,6 +988,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -300,10 +1006,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81/" class="post-title-link" itemprop="url">状态模式</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -338,6 +1044,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>270</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -389,6 +1109,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -405,10 +1127,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -424,7 +1146,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 21:37:15" itemprop="dateModified" datetime="2021-11-09T21:37:15+08:00">2021-11-09</time>
+                <time title="修改时间：2021-12-19 15:53:00" itemprop="dateModified" datetime="2021-12-19T15:53:00+08:00">2021-12-19</time>
               </span>
 
           
@@ -434,6 +1156,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>634</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -511,6 +1247,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -527,10 +1265,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E4%B8%8E%E7%A9%BA%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">命令模式</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -565,6 +1303,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>397</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -608,615 +1360,7 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0/" class="post-title-link" itemprop="url">装饰模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-17 22:38:04" itemprop="dateModified" datetime="2021-11-17T22:38:04+08:00">2021-11-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0/" class="post-meta-item leancloud_visitors" data-flag-title="装饰模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="装饰"><a href="#装饰" class="headerlink" title="装饰"></a>装饰</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>为对象动态地添加功能。</p>
-<p><strong>主要元素</strong></p>
-<ul>
-<li><p><strong>组件</strong></p>
-<p>接口，提供简单方法</p>
-</li>
-<li><p><strong>装饰者</strong></p>
-<p>抽象类，实现组件接口，<strong>可以不实现接口方法</strong></p>
-</li>
-<li><p><strong>具体装饰者</strong></p>
-<p>继承装饰者类，并提供额外方法（和组件方法相比）</p>
-</li>
-</ul>
-<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/6b833bc2-517a-4270-8a5e-0a5f6df8cd96.png" alt="img"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E7%94%9F%E6%88%90%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E7%94%9F%E6%88%90%E5%99%A8/" class="post-title-link" itemprop="url">生成器模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-11 15:31:54" itemprop="dateModified" datetime="2021-11-11T15:31:54+08:00">2021-11-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E7%94%9F%E6%88%90%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="生成器模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="生成器模式"><a href="#生成器模式" class="headerlink" title="生成器模式"></a>生成器模式</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>对于一个<code>复杂对象</code>的构造过程，可以使用builder来实现每一步逻辑，然后由director指导进行整体组装（实际调用builder对象的方法）。</p>
-<h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/db5e376d-0b3e-490e-a43a-3231914b6668.png" alt="img"></p>
-<p>具体代码可查看<code>StringBuilder</code>类，它便是采用了生成器模式。</p>
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Director</span> </span>&#123;</span><br><span class="line">        FileBuilder builder;</span><br><span class="line">        </span><br><span class="line">        Director(FileBuilder builder) &#123;</span><br><span class="line">            <span class="keyword">this</span>.builder = builder;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            builder.buildHeader();</span><br><span class="line">            builder.buildBody();</span><br><span class="line">            builder.buildFooter();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">FileBuilder</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">buildHeader</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">buildBody</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">buildFooter</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TXTBuilder</span> <span class="keyword">implements</span> <span class="title">FileBuilder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildHeader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;TXT header&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildBody</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;TXT body&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildFooter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;TXT footer&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">XMLBuilder</span> <span class="keyword">implements</span> <span class="title">FileBuilder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildHeader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;XML header&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildBody</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;XML body&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildFooter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;XML footer&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        FileBuilder builder = <span class="keyword">new</span> XMLBuilder();</span><br><span class="line">        Director director = <span class="keyword">new</span> Director(builder);</span><br><span class="line">        director.construct();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="生成器与模板方法"><a href="#生成器与模板方法" class="headerlink" title="生成器与模板方法"></a>生成器与模板方法</h2><ol>
-<li>目的不同<ul>
-<li>生成器的目的是为了构建一个复杂对象，而模板方法是实现一套完整的算法框架</li>
-</ul>
-</li>
-<li>方式不同<ul>
-<li>生成器通过director组合builder的方式架构，而模板方法主要使用的是继承</li>
-</ul>
-</li>
-<li>但两者都能实现整体算法步骤与某些具体步骤实现的分离</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">工厂模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-11 15:10:47" itemprop="dateModified" datetime="2021-11-11T15:10:47+08:00">2021-11-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="工厂模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简单工厂"><a href="#简单工厂" class="headerlink" title="简单工厂"></a>简单工厂</h2><h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>在创建一个对象时不向客户暴露内部细节，并提供一个创建对象的通用接口。</p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/40c0c17e-bba6-4493-9857-147c0044a018.png" alt="img"></p>
-<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Product <span class="title">createProduct</span><span class="params">(<span class="keyword">int</span> type)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (type == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProduct1();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProduct2();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProduct();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SimpleFactory simpleFactory = <span class="keyword">new</span> SimpleFactory();</span><br><span class="line">        Product product = simpleFactory.createProduct(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h2><h4 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h4><p>在工厂中，具体的获取方法延迟到子类去实现，然后通过不同的工厂来获得不同产品。</p>
-<p>和简单工厂相比，它的特点是由调用方决定创建什么工厂，以此来获得产品。</p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/f4d0afd0-8e78-4914-9e60-4366eaf065b5.png" alt="img"></p>
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryMethod</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Product</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Milk</span> <span class="keyword">implements</span> <span class="title">Product</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Tea</span> <span class="keyword">implements</span> <span class="title">Product</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 具体方法交给子类延迟实现*/</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> Product <span class="title">createProduct</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MilkFactory</span> <span class="keyword">extends</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Product <span class="title">createProduct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Milk();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TeaFactory</span> <span class="keyword">extends</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Product <span class="title">createProduct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Tea();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Factory factory = <span class="keyword">new</span> TeaFactory();</span><br><span class="line">        Product product = factory.createProduct();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h2><h4 id="描述-2"><a href="#描述-2" class="headerlink" title="描述"></a>描述</h4><p>一个工厂提供多个方法来创建组成产品的不同部分，因此它实际创建了一系列产品，即<code>产品簇</code>。</p>
-<p>而抽象工厂的多个实现类则代表了不同型号的产品簇。</p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/e2190c36-8b27-4690-bde5-9911020a1294.png" alt="img"></p>
-<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">CPU</span> </span>&#123;&#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">IntelCPU</span> <span class="keyword">extends</span> <span class="title">CPU</span> </span>&#123;&#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">AMDCPU</span> <span class="keyword">extends</span> <span class="title">CPU</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Memory</span> </span>&#123;&#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">SamsungMemory</span> <span class="keyword">extends</span> <span class="title">Memory</span> </span>&#123;&#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TOSHIBAMemory</span> <span class="keyword">extends</span> <span class="title">Memory</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">ComputerFactory</span> </span>&#123;</span><br><span class="line">        <span class="function">CPU <span class="title">createCPU</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function">Memory <span class="title">createMemory</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFactory1</span> <span class="keyword">implements</span> <span class="title">ComputerFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> CPU <span class="title">createCPU</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> IntelCPU();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Memory <span class="title">createMemory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SamsungMemory();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFactory2</span> <span class="keyword">implements</span> <span class="title">ComputerFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> CPU <span class="title">createCPU</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> AMDCPU();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Memory <span class="title">createMemory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> TOSHIBAMemory();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ComputerFactory factory = <span class="keyword">new</span> ConcreteFactory1();</span><br><span class="line">        <span class="comment">// cpu和memory作为一个产品整体，不可随意搭配</span></span><br><span class="line">        factory.createCPU();</span><br><span class="line">        factory.createMemory();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="三种工厂模式的优缺点"><a href="#三种工厂模式的优缺点" class="headerlink" title="三种工厂模式的优缺点"></a>三种工厂模式的优缺点</h2><p><strong>简单工厂</strong></p>
-<ol>
-<li>将创建对象的逻辑分离开</li>
-<li>违背开放-封闭原则（增加产品时需要修改工厂类）</li>
-</ol>
-<p><strong>工厂方法</strong></p>
-<ol>
-<li>满足开放-封闭原则（增加产品时再写一个工厂实现类即可）</li>
-<li>将决定某个产品的逻辑交给了客户来执行</li>
-</ol>
-<p><strong>抽象工厂</strong></p>
-<ol>
-<li>方便产品簇之间的切换（取决于用户使用哪个工厂实现类）</li>
-<li>增加产品时要在抽象工厂中新增方法，然后所有实现类可能都要增加新产品的实现</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8E%9F%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8E%9F%E5%9E%8B/" class="post-title-link" itemprop="url">原型模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 18:41:42" itemprop="dateModified" datetime="2021-11-09T18:41:42+08:00">2021-11-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8E%9F%E5%9E%8B/" class="post-meta-item leancloud_visitors" data-flag-title="原型模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><h2 id="原型模式描述"><a href="#原型模式描述" class="headerlink" title="原型模式描述"></a>原型模式描述</h2><p>要求某个对象提供自身的<code>拷贝方法</code>，能够返回一个全新的具有相同类型和属性的对象。</p>
-<p>这样做可以防止将多种对象的复制操作硬编码在业务逻辑中，造成耦合。</p>
-<h2 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h2><p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/b8922f8c-95e6-4187-be85-572a509afb71.png" alt="img"></p>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p><strong>场景：学生和老师实现<code>Prototype</code>接口，实现自己的克隆方法。</strong></p>
-<p><strong>代码：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">Prototype <span class="title">clone</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line">        String name;</span><br><span class="line">        String id;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Prototype <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Student student = <span class="keyword">new</span> Student();</span><br><span class="line">            student.name = <span class="keyword">this</span>.name;</span><br><span class="line">            student.id = <span class="keyword">this</span>.id;</span><br><span class="line">            <span class="keyword">return</span> student;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Teacher</span> <span class="keyword">implements</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line">        String name;</span><br><span class="line">        String department;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Prototype <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Teacher teacher = <span class="keyword">new</span> Teacher();</span><br><span class="line">            teacher.name = <span class="keyword">this</span>.name;</span><br><span class="line">            teacher.department = <span class="keyword">this</span>.department;</span><br><span class="line">            <span class="keyword">return</span> teacher;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://www.pdai.tech/md/dev-spec/pattern/7_prototype.html">https://www.pdai.tech/md/dev-spec/pattern/7_prototype.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1638e7b068c1">https://www.jianshu.com/p/1638e7b068c1</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 19:54:29" itemprop="dateModified" datetime="2021-11-09T19:54:29+08:00">2021-11-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="单例模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>确保类只有一个实例</p>
-<p><img data-src="https://gitee.com/aurora1004/pictures/raw/master/eca1f422-8381-409b-ad04-98ef39ae38ba.png" alt="img"></p>
-<h3 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h3><p>把构造方法变为私有，通过静态方法来获取静态对象实例。</p>
-<p>只有在用到对象时，才进行创建，节省了资源。</p>
-<p><strong>但是，多个线程同时进入判断后，会实例化多个对象，所以线程不安全。</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getUniqueInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            uniqueInstance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><p>直接把对象实例化，但这样丢失了节省资源的好处。</p>
-<p>这样不会有线程不安全的风险。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton uniqueInstance = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="title">Singleton</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="function"><span class="title">getUniqueInstance</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="双重校验锁"><a href="#双重校验锁" class="headerlink" title="双重校验锁"></a>双重校验锁</h3><p>我们可以只对判断语句内部加锁，这样只有对象还没被实例化过，才会进行加锁并创建对象。</p>
-<p>如果对象被实例化过，其他线程就不会阻塞，直接得到对象。</p>
-<p><strong>注意</strong></p>
-<p><strong>1.这里要用到两个if判断，如果只有外层一个判断，仍然会有多个线程进入判断内部，依次执行实例化操作</strong></p>
-<p><strong>2.uniqueInstance使用volatile修饰，防止指令重排序</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getUniqueInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        	<span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">        		<span class="keyword">if</span> (uniqueInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        			uniqueInstance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        		&#125;</span><br><span class="line">    		&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><p>加载外部类时，内部类并不会被加载到内存中。</p>
-<p>只有调用<code>getUniqueInstance()</code>，触发了<code>SingletonHolder.INSTANCE</code>后，才会加载内部类，并实例化对象。</p>
-<p>这种实现不仅具有延迟初始化，还利用了JVM提供对线程安全的支持。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getUniqueInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="枚举类"><a href="#枚举类" class="headerlink" title="枚举类"></a>枚举类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	Singleton firstSingleton = Singleton.INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 21:49:07" itemprop="dateModified" datetime="2021-11-09T21:49:07+08:00">2021-11-09</time>
-              </span>
-
-          
-            <span id="/2021/12/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>常见的原则有7个，如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">原则</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">单一职责</td>
-<td align="center">一个类、模块应该负责<strong>一项职责</strong></td>
-</tr>
-<tr>
-<td align="center">里氏替换原则</td>
-<td align="center">父类的引用可以被子类替换，这样说明子类只是<strong>对父类的扩展</strong>，尽量不要替换父类的功能</td>
-</tr>
-<tr>
-<td align="center">依赖倒置原则</td>
-<td align="center">上层模块不依赖于底层模块，两者都应该依赖于抽象；抽象不依赖于细节，细节应该依赖抽象；它的实质就是<strong>针对接口编程</strong></td>
-</tr>
-<tr>
-<td align="center">接口隔离原则</td>
-<td align="center">接口应该尽量细化，不能过于臃肿，防止强迫客户使用某些接口</td>
-</tr>
-<tr>
-<td align="center">迪米特法则</td>
-<td align="center">一个对象应该对其他对象尽可能少的了解，减少类之间的耦合</td>
-</tr>
-<tr>
-<td align="center">开放-封闭原则</td>
-<td align="center">模块对扩展开放，对修改封闭</td>
-</tr>
-<tr>
-<td align="center">组合/聚合原则</td>
-<td align="center">多使用组合/聚合的方式来完成某些行为、动作，而不是继承的方式</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+  </div>
 
   
   <nav class="pagination">
@@ -1288,20 +1432,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1342,17 +1486,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -1450,6 +1601,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

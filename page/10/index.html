@@ -47,15 +47,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -201,6 +192,1194 @@
 
           <div class="content index posts-expand">
             
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/" class="post-title-link" itemprop="url">操作系统——IO及磁盘</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 10:13:33" itemprop="dateModified" datetime="2021-12-17T10:13:33+08:00">2021-12-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%93%E4%B8%9A%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">专业基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%BA%8C%E3%80%81IO%E5%8F%8A%E7%A3%81%E7%9B%98/" class="post-meta-item leancloud_visitors" data-flag-title="操作系统——IO及磁盘" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、I-O和缓冲区介绍"><a href="#一、I-O和缓冲区介绍" class="headerlink" title="一、I/O和缓冲区介绍"></a>一、I/O和缓冲区介绍</h2><h3 id="1-1抛出问题"><a href="#1-1抛出问题" class="headerlink" title="1.1抛出问题"></a>1.1抛出问题</h3><ol>
+<li>什么是IO，有哪些IO类型</li>
+<li>进程发起IO请求的过程是怎样的</li>
+<li>操作系统怎样处理IO，对IO做了哪些优化</li>
+</ol>
+<h3 id="1-2阅读文章"><a href="#1-2阅读文章" class="headerlink" title="1.2阅读文章"></a>1.2阅读文章</h3><p><a target="_blank" rel="noopener" href="https://houbb.github.io/2020/10/04/os-15-io-cache-buffer">磁盘高速缓存——各类缓冲区介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/406991">缓存IO与直接IO</a></p>
+<h3 id="1-3理解"><a href="#1-3理解" class="headerlink" title="1.3理解"></a>1.3理解</h3><p>进程在执行时可能需要读取键盘输入、或向磁盘输出数据，这些操作都属于I/O</p>
+<p>IO类型：用户（键盘鼠标交互）、磁盘等外设、网络通信</p>
+<h4 id="I-O控制"><a href="#I-O控制" class="headerlink" title="I/O控制"></a>I/O控制</h4><p>最开始是由CPU直接向IO设备下达指令，并且要阻塞等待IO操作完成</p>
+<p>后来：</p>
+<ul>
+<li><strong>IO模块</strong>封装各类IO的细节，向上层提供api。</li>
+<li><strong>中断指令</strong>可以让CPU执行其他进程，IO操作结束后发送中断指令给CPU，再让其切换到发起IO操作的进行来执行。<ul>
+<li><code>问题</code>中断指令是怎么发起的，是硬件提供的，还是操作系统提供的？</li>
+</ul>
+</li>
+<li><strong>DMA模块</strong><code>直接存储访问</code>可以让内存与IO模块直接进行数据传输，CPU只需要在IO开始和结束时进行干涉。</li>
+</ul>
+<h4 id="I-O缓冲"><a href="#I-O缓冲" class="headerlink" title="I/O缓冲"></a>I/O缓冲</h4><p><strong>局限性</strong></p>
+<p>我们都知道读写IO的速度是比CPU执行速度慢很多的，所以当一个进程在读取磁盘上的数据块时，它会挂起（切换其他进程执行）或一直等待。</p>
+<p>但是因为数据会读到进程的工作空间，所以这个进程的工作空间会被锁住，确保在等待IO期间不被换下（例如分页中的页置换）。</p>
+<p>所以说操作IO的快慢影响着操作系统的其他特性。</p>
+<p><strong>优化</strong></p>
+<p>操作系统提供I/O缓冲区，实现<strong>预读</strong>和<strong>后写</strong>功能。</p>
+<ul>
+<li>预读：预先把接下来的数据读取到缓冲中，下次直接从缓冲区中读。</li>
+<li>后写：写入磁盘时先写入到IO缓冲区，然后交由操作系统去写盘。</li>
+</ul>
+<h2 id="二、磁盘"><a href="#二、磁盘" class="headerlink" title="二、磁盘"></a>二、磁盘</h2><h3 id="2-1抛出问题"><a href="#2-1抛出问题" class="headerlink" title="2.1抛出问题"></a>2.1抛出问题</h3><ol>
+<li>磁盘结构、常用术语</li>
+<li>向磁盘读/写数据的过程</li>
+<li>磁盘调度算法有哪些，什么场景下用哪个会更好，调度算法是在哪个过程用的</li>
+</ol>
+<h3 id="2-2阅读文章"><a href="#2-2阅读文章" class="headerlink" title="2.2阅读文章"></a>2.2阅读文章</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/iwehdio/p/13681037.html">IO控制、IO缓冲、磁盘调度</a></p>
+<h3 id="2-3总结"><a href="#2-3总结" class="headerlink" title="2.3总结"></a>2.3总结</h3><h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><p><strong>柱面、盘面、磁臂、磁头、磁道、扇区、转速</strong></p>
+<h4 id="读写过程"><a href="#读写过程" class="headerlink" title="读写过程"></a>读写过程</h4><ul>
+<li><p><strong>寻道</strong></p>
+<ul>
+<li><code>描述</code>：磁头找到对应的柱面（C、D、E盘等等），然后在盘面上找到对应的磁道</li>
+<li><code>时间计算</code>：$T_{寻道}=T_{磁头启动}+m*n(跨越n个磁道，每个磁道耗时m)$</li>
+<li><code>优化思路</code>：减少跨越磁道的个数，即<strong>磁盘调度算法</strong></li>
+</ul>
+</li>
+<li><p><strong>旋转延迟</strong></p>
+<ul>
+<li><code>描述</code>：磁盘要旋转一段距离，好让磁头定位到目标扇区</li>
+<li><code>时间计算</code>：$T_{旋转}=\frac{1}{2r}，假设平均需要转半圈$</li>
+</ul>
+</li>
+<li><p><strong>传输</strong></p>
+<ul>
+<li><code>描述</code>：接下来磁盘继续旋转，这次是进行读写了。</li>
+<li><code>时间计算</code>：$T_{传输}=\frac{b}{rN}，表示读写b个字节，磁道总字节为N$</li>
+<li><code>优化思路</code>：数据放一块，可以顺序读写，避免再次寻道（随机IO）</li>
+</ul>
+</li>
+</ul>
+<p><strong>所以在磁盘上的耗费时间也可以计算：寻道时间、旋转延迟、传输时间</strong></p>
+<h4 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h4><p><strong>使用场景</strong></p>
+<p>每个IO设备应该都有一个队列，如果磁盘正在处理某次IO，那么其他IO请求就会在队列中等待。</p>
+<p>如果按请求进来的顺序执行，就可能存在请求的磁盘位置过于分散，寻道时间大大增加的情况。</p>
+<p><strong>调度算法大致有三种类型：队列式、最短距离、扫描</strong></p>
+<ul>
+<li><strong>FIFO</strong><ul>
+<li><code>描述</code>：按队列顺序来处理IO请求</li>
+<li><code>缺点</code>：大部分情况就是随机IO</li>
+<li><code>应用</code>：访问位置比较密集时，性能还说得上去</li>
+<li><code>变种</code>：<strong>LIFO</strong>后进来的先处理，充分利用了局部性</li>
+</ul>
+</li>
+<li><strong>SSTF</strong><ul>
+<li><code>描述</code>：每次选择与当前磁道最近的请求进行执行</li>
+<li><code>缺点</code>：可能会出现饥饿，距离远的永远达不到；还有就是得计算距离</li>
+<li><code>应用</code>：比FIFO快蛮多的</li>
+</ul>
+</li>
+</ul>
+<p>下面是扫描算法，有好几种变种</p>
+<ul>
+<li><p><strong>SCAN</strong></p>
+<ul>
+<li><code>描述</code>：磁臂沿着一个方向扫描，处理遇到的所有请求，到边界后再调头扫描</li>
+<li><code>缺点</code>：对磁臂周围的局部区域不公平，因为等待时间长；多余扫描</li>
+</ul>
+</li>
+<li><p><strong>C-SCAN</strong></p>
+<ul>
+<li><code>描述</code>：和SCAN类似，但它不调头，而是重复从起点到终点的扫描</li>
+<li><code>应用</code>：这样对局部区域比较公平</li>
+<li><code>缺点</code>：还有个缺点没解决，就是多余扫描</li>
+</ul>
+</li>
+<li><p><strong>C-LOOK</strong></p>
+<ul>
+<li><code>描述</code>：前面没有请求了，就直接回到起点</li>
+</ul>
+</li>
+<li><p>N步SCAN：把请求队列划分成多个长度为N的子队列</p>
+</li>
+<li><p>FSCAN：用两个子队列，新请求全放在另一个队列中</p>
+</li>
+</ul>
+<h4 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h4><p>IO请求多时，一个磁盘处理不过来</p>
+<p>那就用多个磁盘集成在一起，就是RAID了</p>
+<h4 id="磁盘高速缓存"><a href="#磁盘高速缓存" class="headerlink" title="磁盘高速缓存"></a>磁盘高速缓存</h4><p>跟CPU和内存之间建立的高速缓存一样，内存中有一块地方专门做磁盘的缓存。</p>
+<p>IO请求先判断能否命中磁盘高速缓存，再去决定是否进行IO</p>
+<p><strong>命中缓存时，如何把数据交给进程</strong></p>
+<ul>
+<li>就硬传，把数据传到进程的工作空间</li>
+<li>以共享内存的方式，把地址传给进程即可</li>
+</ul>
+<p><strong>新的磁盘IO完成后，高速缓存要存入新的数据，采取怎样的更新策略（页置换）</strong></p>
+<ul>
+<li><strong>LRU</strong><ul>
+<li>最近最少使用</li>
+<li>用栈（双端队列）维护，每次用到一个页，把它放到栈顶。置换时把栈底（最久没用过）的换出去</li>
+<li>缺点：如果大量读入新的页，可能会导致热点页来到栈底，被置换出去</li>
+</ul>
+</li>
+<li><strong>LFU</strong><ul>
+<li>使用频率最低</li>
+<li>对每个页计数</li>
+<li>缺点：可能某个页刚放进来又被置换出去了，对局部性情况不友好。</li>
+</ul>
+</li>
+</ul>
+<h2 id="三、Linux中的IO"><a href="#三、Linux中的IO" class="headerlink" title="三、Linux中的IO"></a>三、Linux中的IO</h2><h3 id="3-1抛出问题"><a href="#3-1抛出问题" class="headerlink" title="3.1抛出问题"></a>3.1抛出问题</h3><ol>
+<li>IO的读写过程，缓冲区？</li>
+<li>执行IO的方式有哪些，系统调用和stdio库函数的区别？</li>
+<li>关于磁盘的一些常用指令</li>
+</ol>
+<h3 id="3-2阅读文章"><a href="#3-2阅读文章" class="headerlink" title="3.2阅读文章"></a>3.2阅读文章</h3><p><a target="_blank" rel="noopener" href="https://www.litreily.top/2018/10/25/io-cache/">Linux中的文件I/O缓冲</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018499770">一文掌握 Linux 性能分析之 I/O 篇</a></p>
+<h3 id="3-3理解"><a href="#3-3理解" class="headerlink" title="3.3理解"></a>3.3理解</h3><h4 id="执行IO的过程"><a href="#执行IO的过程" class="headerlink" title="执行IO的过程"></a>执行IO的过程</h4><p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210818012302.jpg"></p>
+<p>可以看到其实有两层IO</p>
+<ol>
+<li><p>首先是在用户空间中，如果调用的是封装的<strong>stdio</strong>库函数的话，它会先处理库提供的缓冲</p>
+</li>
+<li><p>然后<strong>stdio</strong>库底层实际上也是read、write等系统调用，因此还有内核空间的文件IO缓冲<code>和磁盘高速缓存有什么区别？</code></p>
+</li>
+</ol>
+<h4 id="磁盘IO相关指令"><a href="#磁盘IO相关指令" class="headerlink" title="磁盘IO相关指令"></a>磁盘IO相关指令</h4><p><strong>磁盘基本信息</strong></p>
+<ul>
+<li>fdisk -l<ul>
+<li>磁盘大小、扇区个数和大小。</li>
+</ul>
+</li>
+<li>df<ul>
+<li>各个磁盘的使用情况，如剩余空间、利用率等等。</li>
+</ul>
+</li>
+</ul>
+<p><strong>磁盘性能分析</strong></p>
+<ul>
+<li>vmstat<ul>
+<li>正在等待的IO任务数、每秒读写磁盘块数</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210830123620.png" alt="image-20210830123620336"></p>
+<ul>
+<li>iostat <code>专业分析IO性能的工具</code><ul>
+<li>安装：sudo yum install sysstat</li>
+<li>使用：iostat（-c，-d）</li>
+</ul>
+</li>
+<li>iotop<ul>
+<li>进程维度的IO情况分析</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/" class="post-title-link" itemprop="url">操作系统——内存管理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 10:13:54" itemprop="dateModified" datetime="2021-12-17T10:13:54+08:00">2021-12-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%93%E4%B8%9A%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">专业基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%89%E3%80%81%E5%86%85%E5%AD%98/" class="post-meta-item leancloud_visitors" data-flag-title="操作系统——内存管理" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><h2 id="一、内存基础"><a href="#一、内存基础" class="headerlink" title="一、内存基础"></a>一、内存基础</h2><h3 id="1-1问题"><a href="#1-1问题" class="headerlink" title="1.1问题"></a>1.1问题</h3><ol>
+<li>什么是内存，它在计算机中的作用</li>
+<li>内存的结构是怎样的，它是如何分区的</li>
+<li>分区之后，应采取怎样的策略来给进程分配内存空间（放置算法或者说分配策略）</li>
+</ol>
+<h3 id="1-2解答"><a href="#1-2解答" class="headerlink" title="1.2解答"></a>1.2解答</h3><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><ul>
+<li><strong>重定位</strong>：进程被换出后再次换进到内存中，会分配到一个不同的内存区域上，因此原先的指令就要做一个映射</li>
+<li><strong>保护</strong>：每个进程的内存区域不应该被其他进程所干扰，处理器的硬件层面上应该提供这个判断</li>
+<li><strong>共享</strong>：多个程序执行时，可能会有共享一些数据的需求，操作系统需要管理这块共享内存</li>
+<li><strong>逻辑组织与物理组织</strong>：逻辑地址连续，物理地址不连续</li>
+</ul>
+<h4 id="分区的方式"><a href="#分区的方式" class="headerlink" title="分区的方式"></a>分区的方式</h4><p>简单来看，有两种分区的方式，即<strong>固定分区</strong>和<strong>动态分区</strong>。</p>
+<p><strong>固定分区</strong></p>
+<ul>
+<li>定义：内存分为固定大小的块，每块可以相同，也可以不同</li>
+<li>缺点<ul>
+<li>会有大量的内部碎片产生</li>
+<li>限制了活动进程的最大数量</li>
+</ul>
+</li>
+<li>优点：分配简单</li>
+</ul>
+<p><strong>动态分区</strong></p>
+<ul>
+<li>定义：根据进程大小来按需分配</li>
+<li>缺点：随着进程的换进换出，会产生外部碎片</li>
+<li>特点：需要考虑内存的<strong>分配策略</strong>，下面介绍</li>
+</ul>
+<p><strong>内存分配策略</strong></p>
+<ul>
+<li>首次适配：从头开始，匹配满足条件的第一块内存</li>
+<li>下次适配：从上次分配的地方开始，匹配满足条件的第一块内存</li>
+<li>最佳适配：全量扫描，找到最佳的内存块进行分配</li>
+</ul>
+<h4 id="一种特殊的分区方式：伙伴系统"><a href="#一种特殊的分区方式：伙伴系统" class="headerlink" title="一种特殊的分区方式：伙伴系统"></a>一种特殊的分区方式：伙伴系统</h4><p><strong>描述</strong></p>
+<ol>
+<li>最开始将内存看成一块整体</li>
+<li>当请求内存大小为<code>x</code>时，将一块内存分成等大的两块，即$2^n=2^{n-1} + 2^{n-1}$</li>
+<li>直到满足$2^{k-1}&lt;x&lt;=2^k$时，把大小为$2^k$的内存块分配出去。</li>
+</ol>
+<p><strong>思路：把大于所需内存的第一个2的整数次幂大小的内存块分配出去。</strong></p>
+<h4 id="分页、分段"><a href="#分页、分段" class="headerlink" title="分页、分段"></a>分页、分段</h4><p>不管是分页还是分段，都需要将<code>逻辑地址</code>转化为<code>物理地址</code></p>
+<p><strong>逻辑地址</strong>：包含了页号和页偏移</p>
+<p><strong>物理地址</strong>：物理页的起始地址+页内偏移量</p>
+<p>借助<code>页表</code>或<code>段表</code>，通过映射得到物理页的位置，然后再加上页内偏移量就得到最终的物理地址。</p>
+<h4 id="置换策略"><a href="#置换策略" class="headerlink" title="置换策略"></a>置换策略</h4><p><strong>OPT</strong></p>
+<ul>
+<li>描述：最优策略，置换下次使用距离当前最久的那一页</li>
+<li>特点：理想的算法，一般作为参考</li>
+</ul>
+<p><strong>FIFO</strong></p>
+<ul>
+<li>描述：先来的页先置换，其实就是把驻留在内存中最久的页置换出去</li>
+<li>缺点：对于间隔一段时间后重复使用的页，不太友好</li>
+</ul>
+<p><strong>LRU</strong></p>
+<ul>
+<li>描述：把最久未使用的页置换出去</li>
+<li>缺点：实现复杂，维护困难（需要维护一个栈）</li>
+</ul>
+<p><strong>LFU</strong></p>
+<ul>
+<li>描述：把使用频率最低的页置换出去</li>
+<li>缺点：对局部性原理不友好，刚置换进来的页可能又被置换出去了</li>
+</ul>
+<p><strong>时钟</strong></p>
+<ul>
+<li>描述：对FIFO的一种优化，同时又希望性能可以逼近LRU</li>
+<li>特点：实现相对简单一些</li>
+<li>算法<ul>
+<li>每页加入内存时，<code>使用位</code>置1</li>
+<li>用到某页时：<code>使用位</code>置1</li>
+<li>缺页时：从指针开始遍历，遇1置0，遇0则直接置换；然后指针指向下一页，作为下次缺页时的起点</li>
+</ul>
+</li>
+</ul>
+<h2 id="二、虚拟内存"><a href="#二、虚拟内存" class="headerlink" title="二、虚拟内存"></a>二、虚拟内存</h2><h3 id="2-1问题"><a href="#2-1问题" class="headerlink" title="2.1问题"></a>2.1问题</h3><ol>
+<li>对虚拟内存的简单理解，为什么会有虚拟内存</li>
+<li>虚拟内存如何实现虚拟地址到物理地址的转换，转换的过程是怎样的</li>
+</ol>
+<h3 id="2-2解答"><a href="#2-2解答" class="headerlink" title="2.2解答"></a>2.2解答</h3><h4 id="虚拟内存的由来"><a href="#虚拟内存的由来" class="headerlink" title="虚拟内存的由来"></a>虚拟内存的由来</h4><p>上面提到的分页分段以及内存分配是最简单粗暴的方式，即把整个进程加入到内存中。</p>
+<p>事实上，我们只需把进程中<strong>要执行的部分</strong>添加到内存中即可，剩余的可以留在磁盘等辅存中。</p>
+<p>通过这种方式，我们可以给进程和用户一种<strong>错觉</strong>，让它们觉得每个人都有4GB的内存空间，而实际上在进程执行时，<strong>内存中只保留了正在执行和将要执行的部分页</strong>，其余页都在磁盘中，等待置换。这就是<strong>虚拟内存</strong>的思想</p>
+<h3 id="虚拟地址转化为物理地址"><a href="#虚拟地址转化为物理地址" class="headerlink" title="虚拟地址转化为物理地址"></a>虚拟地址转化为物理地址</h3><p><strong>普通页表、多级页表</strong></p>
+<ul>
+<li>描述：页表项和虚拟地址一一对应</li>
+<li>理解：假设页号为5，那么在页表中查找5对应的页框号，因此<strong>虚拟地址越大，页表就会越大。</strong></li>
+</ul>
+<p><strong>倒排页表</strong></p>
+<ul>
+<li>描述：维护哈希表和倒排表。</li>
+<li>理解：以页号为键，在哈希表中得到一个指针，指向倒排表；而倒排表中每项与物理页框一一对应，因此<strong>物理内存越大，页表越大</strong></li>
+</ul>
+<h3 id="转化过程"><a href="#转化过程" class="headerlink" title="转化过程"></a>转化过程</h3><p>省略了TLB缓冲区和内存高速缓存……</p>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210831205328.png" alt="image-20210831205328599"></p>
+<h2 id="三、Linux内存管理"><a href="#三、Linux内存管理" class="headerlink" title="三、Linux内存管理"></a>三、Linux内存管理</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/149581303">linux内存管理</a></p>
+<h4 id="地址映射"><a href="#地址映射" class="headerlink" title="地址映射"></a>地址映射</h4><p>使用3级页表，分别是全局目录，页中间目录和页表。</p>
+<p>对于某些已有两级分页的硬件，页中间目录大小会设置为1</p>
+<h4 id="页面分配"><a href="#页面分配" class="headerlink" title="页面分配"></a>页面分配</h4><p>分配内存采用<code>伙伴算法</code>，维护多种不同大小的页框组</p>
+<p><strong>内核内存分配</strong></p>
+<ul>
+<li>描述：伙伴算法分配的最小空间就是一页，但是内核所需的空间可能经常小于1页。因此在分配小块内存时，使用了<code>slab</code>分配方案。</li>
+<li>大致介绍：<ul>
+<li>slab是对伙伴算法的补充，维护了一个小内存的缓冲区。</li>
+<li>当申请小块内存时，从缓冲区中取</li>
+<li>释放时也回到缓冲区中，而不是交给伙伴算法中的链表。</li>
+</ul>
+</li>
+</ul>
+<h4 id="页置换算法"><a href="#页置换算法" class="headerlink" title="页置换算法"></a>页置换算法</h4><p><strong>1.时钟算法</strong></p>
+<p>Linux2.6.28以前使用的是基于LFU的时钟算法，通过<code>使用位</code>来计数；每次访问某页时，使用位加1。</p>
+<p>此外，Linux会在后台周期性的扫描页池，将扫描到的页<code>使用位减一</code>，这样<code>使用位为0</code>的页就是最适合置换的页。</p>
+<p><strong>缺点：周期性的扫描会占用处理器的时间</strong></p>
+<p><strong>2.两级LRU算法</strong></p>
+<p>从Linux2.6.28开始，使用两级的LRU算法。</p>
+<p>算法：</p>
+<ul>
+<li>维护两个链表，分别代表不活跃和活跃的内存页</li>
+<li>在超时时间内，一个页如果被访问两次，就会从<code>不活跃链表</code>移到<code>活跃链表</code>中</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210906112000.png" alt="image-20210906111953408"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" class="post-title-link" itemprop="url">操作系统——系统调用</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 10:14:44" itemprop="dateModified" datetime="2021-12-17T10:14:44+08:00">2021-12-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%93%E4%B8%9A%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">专业基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" class="post-meta-item leancloud_visitors" data-flag-title="操作系统——系统调用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>887</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="阅读文章"><a href="#阅读文章" class="headerlink" title="阅读文章"></a>阅读文章</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenwb89/p/operating_system_002.html">操作系统篇之一：浅谈实模式与保护模式</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenwb89/p/operating_system_003.html">操作系统篇之二：分段机制与GDT|LDT</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenwb89/p/operating_system_004.html">操作系统篇之三：调用门与特权级（CPL、DPL和RPL)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiading/p/12606978.html">操作系统篇之四：中断和系统调用</a></p>
+<p><strong>「操作系统」</strong>向下管理底层硬件，向上提供计算机的基础服务，如文件管理、内存管理、进程管理等等。</p>
+<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><blockquote>
+<p>系统调用是操作系统提供给上层的功能的接口</p>
+</blockquote>
+<h3 id="为什么会有系统调用？"><a href="#为什么会有系统调用？" class="headerlink" title="为什么会有系统调用？"></a>为什么会有系统调用？</h3><p><strong>思考</strong></p>
+<p>运行时数据都在内存中，用户为什么要通过系统调用，而不是直接去内存中取？</p>
+<p><strong>解答</strong></p>
+<p>是为了数据安全和操作的难易程度考虑。</p>
+<p>如果用户可以直接操作内存，那么对内存地址的改动，就很有可能会造成应用程序的崩溃，早期的操作系统经常蓝屏死机就是这个原因。</p>
+<h3 id="怎样隔离用户直接操作内存的情况"><a href="#怎样隔离用户直接操作内存的情况" class="headerlink" title="怎样隔离用户直接操作内存的情况"></a>怎样隔离用户直接操作内存的情况</h3><p>实模式与保护模式</p>
+<p>系统刚开机或重启那会儿处于实模式，之后便处于保护模式中。</p>
+<p>而在保护模式中，有一个叫做<code>特权级</code>的概念，其中，</p>
+<ul>
+<li>CPL：当前进程的权限级别</li>
+<li>DPL：某个内存段的固定权限级别</li>
+<li>RPL：进程请求某个内存段时的权限</li>
+</ul>
+<p><del>如果进程在内核态，它的CPL就会变成0；当它访问某块DPL为3的内存时，</del></p>
+<h3 id="既然隔离了，怎样进入内核态呢"><a href="#既然隔离了，怎样进入内核态呢" class="headerlink" title="既然隔离了，怎样进入内核态呢"></a>既然隔离了，怎样进入内核态呢</h3><p>对于<code>Intel x86</code>，硬件提供了中断指令<code>int</code></p>
+<p>当发生系统调用时，C语言会把代码解析成汇编指令，然后通过中断指令进入内核态（实际上是修改DPL为3，然后再改回来，从而得到权限）</p>
+<h3 id="系统调用的过程"><a href="#系统调用的过程" class="headerlink" title="系统调用的过程"></a>系统调用的过程</h3><ol>
+<li><p>保存<strong>系统调用号</strong>和<strong>输入参数</strong></p>
+</li>
+<li><p>模式切换，由<strong>用户态</strong>切换到<strong>内核态</strong></p>
+</li>
+<li><p>找到并执行对应服务<strong>例程</strong></p>
+<ul>
+<li><p><code>例程</code>：操作系统封装的各类服务API</p>
+</li>
+<li><p><code>过程</code>：通过<code>system_call</code>内核函数在<code>系统调用表</code>中找到<code>系统调用号</code>对应的服务例程</p>
+</li>
+</ul>
+</li>
+<li><p>处理完毕后返回<strong>用户态</strong></p>
+</li>
+</ol>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><blockquote>
+<p>系统调用其实就是<strong>软中断</strong>的一种具体实现。</p>
+</blockquote>
+<h3 id="中断类型"><a href="#中断类型" class="headerlink" title="中断类型"></a>中断类型</h3><p>中断可以分为同步中断和异步中断。</p>
+<ul>
+<li>异步中断：硬件设备产生的中断</li>
+<li>同步中断（异常）：由CPU控制单元发出的中断，且要在指令执行完毕后才会发出</li>
+</ul>
+<h3 id="硬中断的执行过程"><a href="#硬中断的执行过程" class="headerlink" title="硬中断的执行过程"></a>硬中断的执行过程</h3><p><strong>中断产生：</strong></p>
+<ul>
+<li>情况：IO中断（完成IO）、失效中断（断电）</li>
+<li>传输：上述情况发生时，硬件产生<strong>电信号</strong>，通过中断线到达<strong>中断控制器</strong>中。</li>
+</ul>
+<p><strong>中断处理：</strong></p>
+<ul>
+<li>中断控制器将<strong>中断类型号</strong>发送给CPU，请求执行</li>
+<li>CPU查询<strong>中断向量表</strong>，找到对应的中断服务例程并执行</li>
+<li>例程调用对应的<strong>设备驱动</strong>与外部设备进行通信和处理</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Linux命令学习</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-23 14:55:23" itemprop="dateModified" datetime="2021-12-23T14:55:23+08:00">2021-12-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%93%E4%B8%9A%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">专业基础</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="post-meta-item leancloud_visitors" data-flag-title="Linux命令学习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、基本命令"><a href="#一、基本命令" class="headerlink" title="一、基本命令"></a>一、基本命令</h2><h3 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h3><p><code>cd [path]</code>：前往指定的路径</p>
+<ul>
+<li><code>cd -</code>：返回到上次的路径</li>
+<li><code>cd ~</code>：前往当前用户的用户目录</li>
+<li><code>cd /</code>：前往根目录</li>
+</ul>
+<p><code>pwd</code>：打印当前路径</p>
+<h3 id="目录文件"><a href="#目录文件" class="headerlink" title="目录文件"></a>目录文件</h3><p><code>mkdir [dir_name]</code>：创建一个目录</p>
+<p><code>cp [src] [dst]</code>：复制文件</p>
+<p><code>mv [src] [dst]</code>：移动文件（也可以用来重命名文件）</p>
+<p><code>rm [path]</code>：删除文件</p>
+<ul>
+<li><code>-r</code>：表示递归的删除整个目录或文件</li>
+<li><code>-f</code>：表示不需要确认</li>
+</ul>
+<h3 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h3><p><strong>1. 搜索命令、程序等</strong></p>
+<p><code>which</code>：在<strong>PATH</strong>指定的路径中查找。（一般用于查找命令）</p>
+<p><code>whereis</code>：用于程序名的搜索，如二进制、man说明文件和源代码文件</p>
+<p><strong>2. 常规搜索</strong></p>
+<p><code>find [path] [condition]</code>：在指定目录中根据某些条件进行查询</p>
+<ul>
+<li><code>-name logfile</code>：查询文件名为logfile的文件</li>
+<li><code>-perm 644</code>：查询权限为644的文件</li>
+</ul>
+<p><code>locate</code>：可以等价于<code>find -name</code>方式，但是它是从文件数据库中进行查询，因此速度更快。</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>压缩：<code>gzip [path]</code></p>
+<p>解压缩：<code>gzip -d [path]</code></p>
+<p>此外，使用<code>tar -czvf [dst] [src]</code>和<code>tar -zxf [src]</code>也可以实现压缩和解压。</p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p><code>ln [src] [dst]</code>命令可以与文件建立链接，其中：</p>
+<ul>
+<li><strong>硬链接：</strong>一个文件的所有硬链接使用同一个<code>inode</code>。最开始的源文件可以视为是一个硬链接。</li>
+<li><strong>软链接<code>-s</code>：</strong>类似于快捷方式的存在，它存储的是<code>源文件的地址</code>，因此源文件删除后就无法再通过软链接来读取</li>
+</ul>
+<h3 id="grep与xargs"><a href="#grep与xargs" class="headerlink" title="grep与xargs"></a>grep与xargs</h3><p>在管道用法中，比较常见的两个命令就是<code>grep</code>和<code>xargs</code></p>
+<ul>
+<li><p><code>grep</code>：查询符合条件的字符串</p>
+</li>
+<li><p><code>xargs</code>：将上游的输出作为下游的输入参数</p>
+</li>
+</ul>
+<p><strong>grep用法</strong></p>
+<p><code>tail -f log | grep &quot;error&quot;</code></p>
+<p>监听并输出log日志，并查询其中的error字符串（即高亮显示）</p>
+<p><strong>xargs用法</strong></p>
+<p><code>find . -perm 644 | xargs -I @ mv @ ../newDir</code></p>
+<p>查询当前目录中权限为644的所有文件，并移动到指定目录中</p>
+<p><code>xargs</code>的<code>-I</code>参数可以定义一个指示符，这里定义为**@<strong>。然后在后面的<code>mv</code>命令中就可以使用</strong>@**来表示参数应放的位置。</p>
+<h2 id="二、用户管理"><a href="#二、用户管理" class="headerlink" title="二、用户管理"></a>二、用户管理</h2><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>操作用户</strong></p>
+<p><code>useradd [username]</code></p>
+<p><code>passwd [username]</code></p>
+<p><code>userdel [username]</code></p>
+<p><code>usermod -g [groupname] [username]</code>：修改某个用户所属的组</p>
+<p><strong>操作组</strong></p>
+<p><code>groupadd [groupname]</code></p>
+<p><code>groupmod [groupname]</code></p>
+<p><code>groupdel [groupname]</code></p>
+<h3 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h3><p>有三个和用户信息相关的文件，分别是：</p>
+<p><code>/etc/passwd</code>：</p>
+<p>记录用户基本信息，如用户名、UID、GID等等</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># structure </span></span><br><span class="line"><span class="comment"># name:password:uid:gid:comment:directory:shell</span></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">whz:x:1001:1001::/home/whz:/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><code>/etc/shadow</code>：记录加密形式的用户密码，只有root用户才能够查看</p>
+<p><code>/etc/group</code>：记录组信息</p>
+<h3 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h3><blockquote>
+<p>测试<strong>passwd</strong>命令时发现，普通用户可以修改自己的密码，但是<code>/etc/passwd</code>或<code>/etc/shadow</code>对普通用户来说都是没有权限的，那么它是怎么做到的呢？</p>
+</blockquote>
+<blockquote>
+<p>TIPS</p>
+<p><code>/etc/passwd</code>是文件，存储了用户信息。</p>
+<p><code>/usr/bin/passwd</code>是命令，修改密码时调用的。</p>
+</blockquote>
+<p>答案就在<code>/usr/bin/passwd</code>这个命令自身上。</p>
+<p>查看<code>passwd</code>命令的权限，发现一个特殊的权限<code>s</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-xr-x. 1 root root 33600 4月   6 2020 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p><code>s(Set UID)</code>表示文件在执行时暂时拥有文件所有者的权限（本例即root权限）。正因为有了root权限，普通用户才得以成功修改密码。</p>
+<h2 id="三、Shell脚本"><a href="#三、Shell脚本" class="headerlink" title="三、Shell脚本"></a>三、Shell脚本</h2><p>shell脚本一般以<code>#!/bin/bash</code>作为开头。</p>
+<p>下面是一个kafka集群（部署在单台虚拟机上）的启动和关闭脚本示例</p>
+<ol>
+<li>使用<code>$1</code>来获取执行脚本的第一个参数</li>
+<li>case语法来判断参数是<code>start</code>还是<code>stop</code></li>
+<li>通过循环来执行kafka提供的启动脚本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">case $1 in </span><br><span class="line">&quot;start&quot;)&#123;</span><br><span class="line"></span><br><span class="line">        for i in kafka1 kafka2 kafka3</span><br><span class="line">        do </span><br><span class="line">                echo &quot;------------ start $i ------------&quot;</span><br><span class="line">                /usr/local/service/$i/bin/kafka-server-start.sh -daemon /usr/local/service/$i/config/server.properties</span><br><span class="line">        done</span><br><span class="line"></span><br><span class="line">&#125;;;</span><br><span class="line"></span><br><span class="line">&quot;stop&quot;)&#123;</span><br><span class="line">        echo &quot;------------ stop kafka ------------&quot;</span><br><span class="line">        bash /usr/local/service/kafka1/bin/kafka-server-stop.sh</span><br><span class="line">&#125;;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Systemd"><a href="#四、Systemd" class="headerlink" title="四、Systemd"></a>四、Systemd</h2><h3 id="systemd与systemctl"><a href="#systemd与systemctl" class="headerlink" title="systemd与systemctl"></a>systemd与systemctl</h3><blockquote>
+<p><strong>systemd</strong>是Linux系统的一种启动方式，它代替了原先<strong>init</strong>进程的启动方式。</p>
+<p><strong>systemctl</strong>是一组控制systemd系统和进行服务管理的命令。</p>
+</blockquote>
+<p><strong>init</strong>进程采用串行启动的方式，启动时间较长；而<strong>systemd</strong>引入了并行启动的概念。</p>
+<p>此外，使用<strong>systemd</strong>后也是存在争议的，因为它违背了Unix的哲学<code>keep it simple, stupid</code>。</p>
+<h3 id="systemctl命令"><a href="#systemctl命令" class="headerlink" title="systemctl命令"></a>systemctl命令</h3><ul>
+<li><code>systemctl start [service]</code></li>
+<li><code>systemctl stop [service]</code></li>
+<li><code>systemctl restart [service]</code></li>
+<li><code>systemctl reload [service]</code></li>
+<li><code>systemctl status [service]</code></li>
+</ul>
+<h2 id="五、权限控制"><a href="#五、权限控制" class="headerlink" title="五、权限控制"></a>五、权限控制</h2><h3 id="传统的权限控制"><a href="#传统的权限控制" class="headerlink" title="传统的权限控制"></a>传统的权限控制</h3><p>在Linux系统中，存在一种传统的权限控制方式：<strong>UGO</strong>，即<code>user-group-other</code>。</p>
+<p>ugo把文件的操作者分为三类：<strong>所有者、同组用户和其他用户</strong>。每类用户都按照<code>读、写、执行</code>来分配权限。</p>
+<p>新建的目录权限为<code>775</code>，文件为<code>664</code>，这是由默认的<code>777</code>、<code>666</code>权限减去掩码<code>0002</code>得到的。</p>
+<hr>
+<p>现代的权限控制有两种：<code>ACL</code>和<code>SELinux</code></p>
+<h3 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h3><blockquote>
+<p>Access Control List 是一张表，告知操作系统每个用户对于某个文件来说具备何种权限。</p>
+<p>每个文件都拥有一个属性标志着它的权限控制表，表中的每个条目都对应着一个用户所拥有的权限。</p>
+</blockquote>
+<p><strong>ACL</strong>是对<strong>UGO</strong>的扩展，因为<strong>UGO</strong>进行权限控制的维度是所有者、同组用户和其他用户，无法从更加细化的维度（如每个用户）进行管理。</p>
+<p><strong>相关命令</strong></p>
+<p><code>getfacl [file]</code>：打印某个文件的ACL规则</p>
+<p><code>setfacl -m u:[username]:[rwx] [file]</code>：为某个文件设置一条关于用户的ACL规则，权限为rwx</p>
+<hr>
+<p>上面提到的两种权限控制都属于<strong>自主访问控制</strong>（DAC），权限管理的主体是用户，只要用户拥有相应文件的权限，就可以访问该文件。</p>
+<p>在DAC中，一旦他人非法获得root权限，那么就会对整个操作系统产生无法预料的影响。</p>
+<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><blockquote>
+<p>SELinux是一种强安全性的权限控制策略，它是<strong>强制访问控制</strong>（MAC）的一种典型形式。</p>
+</blockquote>
+<p>在SELinux的操作系统中，决定一个资源是否被访问的因素除了上述的<strong>读写执行权限</strong>外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
+<h2 id="六、进程控制"><a href="#六、进程控制" class="headerlink" title="六、进程控制"></a>六、进程控制</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><blockquote>
+<p>进程是一个正在运行的程序，主要包含PID、PPID、UID、GID和Status等信息。</p>
+</blockquote>
+<p><strong>创建进程</strong></p>
+<p>使用<code>fork</code>系统调用，创建一个子进程。除了PID、PPID和一些特殊资源<code>@锁、异步IO、待处理的信号集等</code>外，子进程共享了父进程的其他所有资源<code>@代码、数据和堆栈信息</code>。</p>
+<p>实际上，fork采用了<code>写时复制</code>的策略来节省内存拷贝的开销。</p>
+<p>在同一段代码中，我们通常利用fork的返回值来区分父子进程：</p>
+<ul>
+<li>大于0：在父进程中返回子进程PID</li>
+<li>等于0：子进程中返回0</li>
+<li>小于0：创建子进程失败</li>
+</ul>
+<h3 id="控制进程"><a href="#控制进程" class="headerlink" title="控制进程"></a>控制进程</h3><p><strong>信号</strong></p>
+<p>信号<code>signals</code>是一种进程级别的中断请求，我们可以用它来控制进程。</p>
+<ul>
+<li>查询所有信号<code>kill -l</code></li>
+<li>为某个进程发送信号<code>kill [signals] [pid]</code></li>
+</ul>
+<p><strong>优先级</strong></p>
+<p>使用<code>nice -n [number] [name]</code>来设置优先级</p>
+<h3 id="监控进程"><a href="#监控进程" class="headerlink" title="监控进程"></a>监控进程</h3><p><strong>ps</strong></p>
+<p>使用<code>ps</code>命令来查看进程信息。</p>
+<ul>
+<li><code>ps -A</code>或<code>ps -e</code>：查看所有进程</li>
+<li><code>ps -aux</code>：所有进程的详细信息</li>
+</ul>
+<p><strong>top</strong></p>
+<p>使用<code>top</code>命令查询进程维度的CPU、内存使用</p>
+<ul>
+<li><p><code>top</code>：查询所有进程的资源使用情况</p>
+</li>
+<li><p><code>top -p [pid]</code>：查询具体某个进程</p>
+</li>
+</ul>
+<p><strong>strace</strong></p>
+<p>跟踪命令或进程的执行情况</p>
+<ul>
+<li><code>strace -p [pid]</code>：跟踪进程</li>
+<li><code>strace [command]</code>：跟踪命令</li>
+</ul>
+<p><strong>lsof</strong></p>
+<p>查看进程打开的文件</p>
+<ul>
+<li><code>lsof -p [pid]</code></li>
+</ul>
+<p><strong>uptime</strong></p>
+<p>查看系统已运行时间和负载情况</p>
+<h3 id="前台与后台进程"><a href="#前台与后台进程" class="headerlink" title="前台与后台进程"></a>前台与后台进程</h3><p>查看后台执行的命令：<code>jobs</code>(可以得到作业号)</p>
+<p>前台/后台执行：<code>fg</code>/<code>bg</code></p>
+<p>切换到后台进程的方式：</p>
+<ol>
+<li>启动进程时，末尾加上<code>&amp;</code></li>
+<li>进程执行时，先<code>ctrl + z</code>然后<code>bg [job_number]</code></li>
+</ol>
+<h2 id="七、文件系统"><a href="#七、文件系统" class="headerlink" title="七、文件系统"></a>七、文件系统</h2><h3 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h3><blockquote>
+<p>挂载可以把设备文件中的文件系统放入到Linux根目录中的某个位置(挂载点)，然后用户访问挂载点就相当于访问设备中的文件系统。</p>
+</blockquote>
+<p><strong>挂载与卸载命令</strong></p>
+<ul>
+<li><p><code>mount [src] [dst]</code></p>
+</li>
+<li><p><code>umount [dst]</code></p>
+</li>
+</ul>
+<p><strong>查看系统当前挂载的文件</strong></p>
+<ul>
+<li><code>mount</code></li>
+<li><code>cat /etc/mtab</code></li>
+</ul>
+<h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><p><strong>文件类型</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-</td>
+<td align="center">普通文件</td>
+</tr>
+<tr>
+<td align="center">d</td>
+<td align="center">目录</td>
+</tr>
+<tr>
+<td align="center">l</td>
+<td align="center">符号链接（软链接）</td>
+</tr>
+<tr>
+<td align="center">s</td>
+<td align="center">套接字</td>
+</tr>
+<tr>
+<td align="center">b</td>
+<td align="center">块设备</td>
+</tr>
+<tr>
+<td align="center">c</td>
+<td align="center">字符设备</td>
+</tr>
+<tr>
+<td align="center">p</td>
+<td align="center">管道</td>
+</tr>
+</tbody></table>
+<p><strong>修改文件权限</strong></p>
+<ul>
+<li>chown<ul>
+<li><code>chown [user] [file]</code>：修改文件所有者、组等</li>
+</ul>
+</li>
+<li>chmod<ul>
+<li><code>chmod 777 [file]</code>：设置数字形式的权限</li>
+<li><code>chmod a=rwx [file]</code>：设置所有用户（拥有者，同组和其他用户）权限等于rwx</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件备份与恢复"><a href="#文件备份与恢复" class="headerlink" title="文件备份与恢复"></a>文件备份与恢复</h3><p><strong>tar</strong></p>
+<ul>
+<li><code>tar -cf [dst] [src]</code>：创建备份文件</li>
+<li><code>tar -xf [src]</code>：恢复文件</li>
+</ul>
+<p><strong>cpio</strong></p>
+<ul>
+<li><code>find [src] -print | cpio -o &gt; [dst]</code>：备份</li>
+<li><code>cpio -im &lt; [src]</code>：恢复</li>
+</ul>
+<h2 id="八、磁盘管理"><a href="#八、磁盘管理" class="headerlink" title="八、磁盘管理"></a>八、磁盘管理</h2><h3 id="磁盘基础"><a href="#磁盘基础" class="headerlink" title="磁盘基础"></a>磁盘基础</h3><p><strong>磁盘接口的类型有：</strong></p>
+<ol>
+<li>IDE</li>
+<li>SCSI</li>
+<li>Removable Disk</li>
+</ol>
+<p><strong>查看磁盘使用情况：</strong></p>
+<ul>
+<li><code>df</code>：列出所有文件系统的磁盘使用率</li>
+<li><code>du</code>：列出目录的磁盘使用率</li>
+<li><code>fdisk [device]</code>：对磁盘进行分区管理（创建、删除、列出分区等等）<ul>
+<li>n：新建</li>
+<li>q：不保存并退出</li>
+<li>w：保存并退出</li>
+<li>t：修改分区类型</li>
+</ul>
+</li>
+</ul>
+<h3 id="磁盘限额"><a href="#磁盘限额" class="headerlink" title="磁盘限额"></a>磁盘限额</h3><blockquote>
+<p>磁盘限额（Disk Quota）是一种系统管理员用来限制文件系统各方面使用率的限制集合。磁盘限额以一种合理的方式来分配有限的磁盘空间。</p>
+</blockquote>
+<p><strong>使用磁盘限额</strong></p>
+<ol>
+<li>重新挂载分区<ul>
+<li><code>mount -o remount,usrquota,grpquota [device]</code></li>
+</ul>
+</li>
+<li>生成quota配置文件<ul>
+<li><code>quotacheck -ugc [device]</code></li>
+</ul>
+</li>
+<li>启动quota<ul>
+<li><code>quota on [device]</code></li>
+</ul>
+</li>
+<li>修改配置项<ul>
+<li><code>edquota [-u|g] [user|group]</code></li>
+</ul>
+</li>
+</ol>
+<h3 id="LVM"><a href="#LVM" class="headerlink" title="LVM"></a>LVM</h3><blockquote>
+<p><strong>LVM（Logical volume Manager）</strong>是Linux环境下对磁盘分区进行管理的一种机制。它提供了一种比常规的分区模式更加灵活分配空间的方法。</p>
+</blockquote>
+<p><strong>特征</strong>：不需要卸载卷就能修改逻辑卷的大小；支持卷快照</p>
+<p><strong>结构</strong></p>
+<p>LVM大致分为三层：物理卷、逻辑卷组和逻辑卷。</p>
+<ul>
+<li>物理卷（PV）：对应一个个硬盘</li>
+<li>逻辑卷组（VG）：由多个物理卷组成的空间，可以任用户分配</li>
+<li>逻辑卷（LV）：从卷组中划分出来的分区，在逻辑卷之上可以建立文件系统</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202112211729497.png" alt="image-20211221172919314"></p>
+<h2 id="九、调度任务"><a href="#九、调度任务" class="headerlink" title="九、调度任务"></a>九、调度任务</h2><blockquote>
+<p>Linux提供了一种叫做<strong>任务调度</strong>（scheduled tasks）的机制，可以自动的执行一些任务。</p>
+</blockquote>
+<h3 id="at"><a href="#at" class="headerlink" title="at"></a>at</h3><p><strong>使用</strong></p>
+<p>安装并启动服务：<code>yum install at</code>、<code>systemctl start atd</code>。atd表示at的守护进程</p>
+<p>然后完成定时任务的创建：<code>at [time]</code> $\longrightarrow$ <code>input task</code> $\longrightarrow$ <code>ctrl + D</code></p>
+<p>如果不想执行则删除任务：<code>atrm [job]</code></p>
+<p><strong>其他</strong></p>
+<p>查看并修改时区为东八区：<code>timedatectl</code>和<code>timedatectl set-timezone Asia/Shanghai</code></p>
+<h3 id="cron"><a href="#cron" class="headerlink" title="cron"></a>cron</h3><p>和<code>at</code>相比，cron提供了<code>分时天月</code>等时间维度的周期性执行任务的方法。</p>
+<p><code>crontab -e -u [user] </code>：编辑某个用户的任务表</p>
+<p><code>crontab -l</code>：列出当前用户的定时任务</p>
+<p><strong>任务语法</strong></p>
+<p>例如：<code>1 * * * * ls /home</code>表示每分钟执行一次ls命令。</p>
+<table>
+<thead>
+<tr>
+<th align="center">分钟</th>
+<th align="center">小时</th>
+<th align="center">天</th>
+<th align="center">月</th>
+<th align="center">星期</th>
+<th align="center">任务指令</th>
+</tr>
+</thead>
+</table>
+<h3 id="anacron"><a href="#anacron" class="headerlink" title="anacron"></a>anacron</h3><p><code>anacron</code>是对cron的扩展，它对那些非24小时执行的定时任务提供了支持。</p>
+<p>可以查看并编辑<code>/etc/anacrontab</code>文件中的内容。</p>
+<h2 id="十、网络管理"><a href="#十、网络管理" class="headerlink" title="十、网络管理"></a>十、网络管理</h2><h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h3><p><code>ifconfig</code>命令用于查看网络接口，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0</span><br></pre></td></tr></table></figure>
+
+<p>此外，它也可以用于修改ip地址和设置别名：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.13.133 <span class="comment"># 临时性的</span></span><br><span class="line">ipconfig eth0:1 192.168.13.133</span><br></pre></td></tr></table></figure>
+
+<p>NIC网卡的配置信息，通常位于<code>/etc/sysconfig/network-scripts</code>中。如果想要持久性的修改配置，就要直接修改相应的配置文件。</p>
+<h3 id="ifup-ifdown"><a href="#ifup-ifdown" class="headerlink" title="ifup/ifdown"></a>ifup/ifdown</h3><p><code>ifup eth0</code>：开启eth0网络接口</p>
+<p><code>ifdown eth0</code>：关闭eth0网络接口</p>
+<h3 id="管理主机名"><a href="#管理主机名" class="headerlink" title="管理主机名"></a>管理主机名</h3><ul>
+<li>查看：<code>hostname</code></li>
+<li>临时修改：<code>hostname [name]</code></li>
+<li>永久修改：<code>/etc/sysconfig/network</code>文件中<code>HOSTNAME=xxx</code></li>
+</ul>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><blockquote>
+<p>ssh是一种登录远程机器并执行命令的程序。</p>
+</blockquote>
+<ul>
+<li>远程登录：<code>ssh -p [password] root@192.168.13.133</code></li>
+<li>执行命令：<code>ssh root@192.168.13.133 [command]</code></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-title-link" itemprop="url">待评论</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-19 14:20:33" itemprop="dateModified" datetime="2021-12-19T14:20:33+08:00">2021-12-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" class="post-meta-item leancloud_visitors" data-flag-title="待评论" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>201</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>发现下载的资料里很多都是ziw文件，需要手动改成zip后才能进行解压。这里提供下批量改成zip后缀的代码。[呲牙]</p>
+<pre><code>public static void renameZip()  &#123;
+    String rootPath = &quot;E:\BaiduNetdiskDownload\在线教育--谷粒学院&quot;;
+    File root = new File(rootPath);
+    renameZip(root);
+&#125;
+</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">renameZip</span><span class="params">(File root)</span> </span>&#123;</span><br><span class="line">    File[] currentFiles = root.listFiles();</span><br><span class="line">	String fileName; <span class="comment">// 当前文件名</span></span><br><span class="line">	File dstFile;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span>(File file : currentFiles) &#123;</span><br><span class="line">    	<span class="comment">// 是目录则继续往下递归</span></span><br><span class="line">        <span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">            renameZip(file); </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((fileName = file.getName()).length() &gt;= <span class="number">3</span> &amp;&amp;</span><br><span class="line">                <span class="string">&quot;ziw&quot;</span>.equals(fileName.substring(fileName.length() - <span class="number">3</span>))) &#123;</span><br><span class="line">            <span class="comment">// 修改后缀 ziw -&gt; zip</span></span><br><span class="line">            String absolutePath = file.getAbsolutePath();</span><br><span class="line">            dstFile = <span class="keyword">new</span> File(absolutePath.substring(<span class="number">0</span>, absolutePath.length() - <span class="number">3</span>) + <span class="string">&quot;zip&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!dstFile.exists()) &#123;</span><br><span class="line">                <span class="keyword">boolean</span> successToRename = file.renameTo(dstFile);</span><br><span class="line">                <span class="keyword">if</span> (!successToRename) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;fail to rename file: &quot;</span> + file.getName());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -217,10 +1396,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/TODO/tmp/" class="post-title-link" itemprop="url">记录</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -228,10 +1407,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:11:04" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-17 10:16:05" itemprop="dateModified" datetime="2021-12-17T10:16:05+08:00">2021-12-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -249,6 +1434,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>390</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -325,6 +1524,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -341,10 +1542,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/TODO/IO%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">I/O模型</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -360,7 +1561,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-17 00:31:03" itemprop="dateModified" datetime="2021-08-17T00:31:03+08:00">2021-08-17</time>
+                <time title="修改时间：2021-12-17 10:16:00" itemprop="dateModified" datetime="2021-12-17T10:16:00+08:00">2021-12-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -368,7 +1569,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/todolist/" itemprop="url" rel="index"><span itemprop="name">todolist</span></a>
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
                 </span>
             </span>
 
@@ -379,6 +1580,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>571</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -431,6 +1646,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -447,10 +1664,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/Test/%E9%A1%B9%E7%9B%AE%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">思考</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -458,17 +1675,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:10:26" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-19 14:20:01" itemprop="dateModified" datetime="2021-12-19T14:20:01+08:00">2021-12-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Test/" itemprop="url" rel="index"><span itemprop="name">Test</span></a>
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
                 </span>
             </span>
 
@@ -479,6 +1702,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>189</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -527,6 +1764,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -543,10 +1782,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/Test/%E6%88%91%E6%9C%89%E4%B8%80%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%A2%A6/" class="post-title-link" itemprop="url">markdown内嵌html</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -554,17 +1793,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:15:22" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-12 13:19:59" itemprop="dateModified" datetime="2022-02-12T13:19:59+08:00">2022-02-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Test/" itemprop="url" rel="index"><span itemprop="name">Test</span></a>
+                  <a href="/categories/TODO/" itemprop="url" rel="index"><span itemprop="name">TODO</span></a>
                 </span>
             </span>
 
@@ -575,6 +1820,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>78</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -632,6 +1891,8 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -648,10 +1909,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">PART1——数据系统的基石</a>
-        </h2>
+            <a href="/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">数据密集型系统设计</a>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -667,7 +1928,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-15 22:56:05" itemprop="dateModified" datetime="2021-09-15T22:56:05+08:00">2021-09-15</time>
+                <time title="修改时间：2021-12-23 18:30:50" itemprop="dateModified" datetime="2021-12-23T18:30:50+08:00">2021-12-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -675,17 +1936,31 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">数据密集型应用系统设计</span></a>
+                  <a href="/categories/%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">阅读</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="post-meta-item leancloud_visitors" data-flag-title="PART1——数据系统的基石" title="阅读次数">
+            <span id="/2021/12/13/Reading/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="post-meta-item leancloud_visitors" data-flag-title="数据密集型系统设计" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>678</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -770,924 +2045,7 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/" class="post-title-link" itemprop="url">索引及优化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-16 23:15:27" itemprop="dateModified" datetime="2021-08-16T23:15:27+08:00">2021-08-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E7%90%86%E8%AE%BA/" class="post-meta-item leancloud_visitors" data-flag-title="索引及优化" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="一、索引数据结构类型"><a href="#一、索引数据结构类型" class="headerlink" title="一、索引数据结构类型"></a>一、索引数据结构类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>这是一类由<code>B-Tree</code>、<code>B+Tree</code>或<code>B*Tree</code>的数据结构来进行表数据存储的索引结构。</p>
-<p>至于这三者的区别，因为与索引优化无关，就不再这里介绍。</p>
-<p><strong>B+Tree结构</strong></p>
-<p>每个节点都可以看作是逻辑页，中间节点存储了指向下层逻辑页的指针，然后叶子节点存储了指向其他叶子节点的指针。</p>
-<p><strong>即中上部分是树，且最底层的叶子用双向链表相接</strong></p>
-<p>一般来说，B-Tree作为索引，可以支持多种方式的查询（这里指能用到索引的查询方式）</p>
-<ul>
-<li>全值匹配<ul>
-<li>查询条件和索引的所有列匹配</li>
-<li>例如以姓名和年龄建了索引，那么执行<code>SELECT * FRPM user WHERE name = &quot;zhangsan&quot; AND age = 18</code>就用到了全值匹配</li>
-</ul>
-</li>
-<li>最左前缀匹配<ul>
-<li>用索引的第一列查询</li>
-<li>例如只用<code>name</code>来查询，但是如果只用<code>age</code>查询，无法走索引查询，因为索引树在构建时，是先按name再按age的顺序来排的。</li>
-</ul>
-</li>
-<li>范围匹配<ul>
-<li>匹配索引第一列的某个范围</li>
-</ul>
-</li>
-</ul>
-<p><strong>使用B-Tree这类索引的限制</strong></p>
-<p>最左前缀原则，查找时必须匹配索引的第一列才行，不能跳过。</p>
-<h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>哈希索引是通过计算索引列的值得到哈希码，然后去哈希表中拿到对应数据的地址，最后获取数据的。</p>
-<p>例如<code>name</code>字段建立了哈希索引，那么在查询<code>name = &quot;zhangsan&quot;</code>时，会计算得到某个key，然后去哈希表中得到value。value表示的就是数据存放的地址。</p>
-<p>因此它不支持范围查找、部分索引列查找、排序等等。</p>
-<p>但是它也有优点，相对来说查询速度会更快。。</p>
-<blockquote>
-<p>这里提一句，InnoDB引擎实现了自适应哈希索引，即在B+Tree基础上，对于一些频繁使用的索引值，系统会对它们创建一个哈希索引。</p>
-<p>只能说InnoDB牛批！</p>
-</blockquote>
-<h3 id="空间索引R-Tree"><a href="#空间索引R-Tree" class="headerlink" title="空间索引R-Tree"></a>空间索引R-Tree</h3><p>MyISAM支持空间索引，它不需要前缀匹配，因为它会从所有维度来索引数据？？？</p>
-<p>但是MySQL的GIS支持不完善，不推荐使用…</p>
-<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>这是一种特殊的索引，它查找的是文本中的关键词，而不是直接比较索引值。    </p>
-<h2 id="二、索引优点"><a href="#二、索引优点" class="headerlink" title="二、索引优点"></a>二、索引优点</h2><ul>
-<li>减少服务器需要扫描的数据量</li>
-<li>避免排序和临时表</li>
-<li>将随机IO变为顺序IO</li>
-</ul>
-<h2 id="三、索引优化"><a href="#三、索引优化" class="headerlink" title="三、索引优化"></a>三、索引优化</h2><h3 id="使用独立的列"><a href="#使用独立的列" class="headerlink" title="使用独立的列"></a>使用独立的列</h3><p>假如age建立了索引，那么查询时要使用<code>age = 18</code>而不是<code>age + 1 = 19</code>这种形式。</p>
-<h3 id="模拟哈希索引"><a href="#模拟哈希索引" class="headerlink" title="模拟哈希索引"></a>模拟哈希索引</h3><p>假设表采用InnoDB引擎，如果查询条件包含url字符串，如</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> url <span class="keyword">WHERE</span> url <span class="operator">=</span> &quot;www.baidu.com&quot;;</span><br></pre></td></tr></table></figure>
-
-<p>对<code>url</code>字段直接建索引，会使得索引的体积非常大，因为url本身是有一定长度的。</p>
-<p>这时我们可以采取伪哈希索引，即在表中新增一列<code>url_crc</code>，然后该列的值为对url字段进行哈希后的整型，对整型建索引和查找是比较高效的。</p>
-<p>这里有个注意点，因为哈希值可能会发生冲突（即重复），所以查询时还是要带上原url，如下所示</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> url <span class="keyword">WHERE</span> url <span class="operator">=</span> &quot;www.baidu.com&quot; <span class="keyword">AND</span> url_crc <span class="operator">=</span> CRC32(&quot;www.baidu.com&quot;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h3><p>另一种解决查询条件的字符串过长的方法，是建立前缀索引</p>
-<p>在前缀的长度和区分度上寻求一个平衡，使得既能提高查询效率，又不至于出现太多重复的索引值。</p>
-<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p>如之前提过的<code>name</code>和<code>age</code>，两者查询是交集的话，就可以建立以name和age共同构建的联合索引，而不是两个单列索引。</p>
-<p>如果两者查询是并集，如</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> &quot;zhangsan&quot; <span class="keyword">OR</span> age <span class="operator">=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这样可以建立两个单列索引，但是查询写法要改一下，用<code>union</code>使两个查询都能用到索引（虽然MySQL现在也会优化成联合的方式）</p>
-<p><strong>正确做法</strong></p>
-<ul>
-<li>建两个单列索引</li>
-<li>使用联合</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> &quot;zhangsan&quot;</span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">!=</span> &quot;zhangsan&quot; <span class="keyword">AND</span> age <span class="operator">=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h3><p>这是由存储引擎实现的，这里讨论的是InnoDB。</p>
-<p>聚簇索引就是在索引中把数据和索引值都放在一起，可以说，<strong>聚簇索引就是一张表</strong>，默认用主键来构建聚簇索引。</p>
-<p>在InnoDB的实现中，B+Tree的叶子节点存放了索引列的值和其他列的值（即所有数据），中间节点只存放了索引列的值</p>
-<p><strong>好处</strong></p>
-<p>查询和非聚簇索引相比更快，因为可以直接拿到数据，不用再去其他地方读</p>
-<p>聚簇索引中获取一个页中的相关数据会非常快，比如用户的所有邮箱数据都聚集在一个页中，那么可以快速获得</p>
-<p><strong>坏处</strong></p>
-<p>插入时：按照主键递增的顺序插入效率最高，如果主键不递增，那么插入到索引的中间位置，开销就会变大</p>
-<p>更新时：在聚簇索引中，想要在修改索引列的值，代价会非常高</p>
-<p><strong>二级索引</strong></p>
-<p>主键构成的索引就是聚簇索引，那么其他列构成的索引就是二级索引了。</p>
-<p>二级索引的叶子存储了对应记录的主键，思考一哈，为啥不存指向那行数据的指针呢？</p>
-<blockquote>
-<p>原因就是降低维护成本。如果二级索引的叶子节点存储数据的行指针，那么数据的位置发生变化（行移动或页分裂）时，就要增加二级索引的维护工作。</p>
-</blockquote>
-<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>查询时如果当前索引就包含了要查询的内容，不必再拿着主键去聚簇索引中查找，这种情况就被称为<code>覆盖索引</code></p>
-<p>使用覆盖索引查询，就减少了回表的次数，提高查询效率</p>
-<h3 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序"></a>索引排序</h3><p>两种方式可以得到有序的数据：排序和索引顺序扫描。</p>
-<p><strong>索引顺序扫描</strong></p>
-<p>在索引按顺序扫描时，如果每条记录都不能覆盖所需字段，它就得回表查询对应的数据行</p>
-<p>这样产生的IO开销，会导致索引顺序扫描的速度比顺序全表扫描还来的慢。</p>
-<h3 id="冗余和重复索引"><a href="#冗余和重复索引" class="headerlink" title="冗余和重复索引"></a>冗余和重复索引</h3><p><code>重复索引</code>是指索引列及其顺序都一致，这种重复情况应该避免。</p>
-<p>而<code>索引冗余</code>是指，某个索引包含了原有的索引，是其超集。</p>
-<p>例如现在已经建立<code>name</code>字段的索引，现在又新建了一个<code>name</code>和<code>age</code>字段的联合索引，这种情况就是冗余索引。</p>
-<p><strong>那我们可不可以扩展原先的<code>name</code>索引呢，这样不就可以避免索引冗余了</strong></p>
-<p>但是扩展<code>name</code>索引，给它加上age字段，会使原来的索引变大，从而影响其他使用原索引的查询速度</p>
-<p>索引冗余有个致命的缺陷，就是索引越多，增删改的性能就会越低。所以要根据具体情况来决定是否冗余索引。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%AE%9E%E8%B7%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-13 22:08:24" itemprop="dateModified" datetime="2021-10-13T22:08:24+08:00">2021-10-13</time>
-              </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%AE%9E%E8%B7%B5/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-08 20:38:04" itemprop="dateModified" datetime="2021-11-08T20:38:04+08:00">2021-11-08</time>
-              </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E7%90%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-转账"><a href="#1-转账" class="headerlink" title="1.转账"></a>1.转账</h2><p><strong>场景：</strong>事务一般使用MVCC机制来避免并发执行时的数据问题。如果A读自己余额，为100；B向A转账100；A继续读余额，还是100。这样出现了钱少的问题，如何解决？</p>
-<p><strong>思路：</strong>读写都加共享锁？</p>
-<h2 id="2-幻读"><a href="#2-幻读" class="headerlink" title="2.幻读"></a>2.幻读</h2><h4 id="什么是幻读？"><a href="#什么是幻读？" class="headerlink" title="什么是幻读？"></a>什么是幻读？</h4><p>事务A读两次，在第二次读之前另一个事务插入数据并提交，导致A两次读的结果不一样。</p>
-<h4 id="RR下的mvcc是否解决了幻读？"><a href="#RR下的mvcc是否解决了幻读？" class="headerlink" title="RR下的mvcc是否解决了幻读？"></a>RR下的mvcc是否解决了幻读？</h4><p>这个要看情况讨论。</p>
-<ol>
-<li>如果一个事务中全部都是快照读，那么幻读是不会产生的。<code>@快照读的实现保证了这一点</code></li>
-<li>如果一个事务中全部使用当前读，那么也不会产生幻读。<code>@通过间隙锁解决</code></li>
-<li>如果两者都用到，则有可能产生幻读。<code>@如示例</code></li>
-</ol>
-<p><strong>幻读示例</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">事务A 读id范围<span class="number">5</span><span class="operator">~</span><span class="number">10</span>的记录   ## 只有记录<span class="number">7</span></span><br><span class="line"></span><br><span class="line">事务B 修改id7为<span class="number">8</span> 提交</span><br><span class="line"></span><br><span class="line">事务A 修改id为<span class="number">8</span>的记录      ## 触发当前读</span><br><span class="line">事务A 读id范围<span class="number">5</span><span class="operator">~</span><span class="number">10</span>的记录   ## 多了一条记录<span class="number">8</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">事务详解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-17 10:47:36" itemprop="dateModified" datetime="2021-10-17T10:47:36+08:00">2021-10-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80/" class="post-meta-item leancloud_visitors" data-flag-title="事务详解" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一、什么是事务"><a href="#一、什么是事务" class="headerlink" title="一、什么是事务"></a>一、什么是事务</h1><h3 id="事务定义如下："><a href="#事务定义如下：" class="headerlink" title="事务定义如下："></a>事务定义如下：</h3><blockquote>
-<p>访问并可能更新数据库中各项数据的一个<strong>程序执行单元</strong></p>
-</blockquote>
-<h3 id="事务特性："><a href="#事务特性：" class="headerlink" title="事务特性："></a>事务特性：</h3><table>
-<thead>
-<tr>
-<th>特性（ACID）</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>原子性</td>
-<td>事务内的操作要么全部完成，要么全部失败回滚</td>
-</tr>
-<tr>
-<td>一致性</td>
-<td>依赖于开发者，来保证数据库在一个事务执行前后都处于正确状态</td>
-</tr>
-<tr>
-<td>隔离性</td>
-<td>并发事务之间相互隔离，察觉不到有其他事务在执行</td>
-</tr>
-<tr>
-<td>持久性</td>
-<td>事务一旦被提交，对数据的改变就是永久性的，即使故障也不会丢失改变的提交。</td>
-</tr>
-</tbody></table>
-<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
-<thead>
-<tr>
-<th align="center">级别\问题（是否存在）</th>
-<th align="center">脏读</th>
-<th align="center">不可重复读</th>
-<th align="center">幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">读未提交</td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">读已提交</td>
-<td align="center">否</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">可重复读</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">是（MVCC时无）</td>
-</tr>
-<tr>
-<td align="center">串行化</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-</tbody></table>
-<h1 id="二、事务实现"><a href="#二、事务实现" class="headerlink" title="二、事务实现"></a>二、事务实现</h1><p>上面介绍的四个特性中，隔离性由锁和MVCC来实现；此外，原子性、一致性和持久性通过数据库的<code>redo log</code>和<code>undo log</code>来完成。</p>
-<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><p><code>redo log</code>是一种<code>物理格式</code>日志，记录了对页的修改；它实现了事务的持久性，由两部分组成：</p>
-<ul>
-<li>内存中的<code>重做日志缓冲</code>(redo log buffer)</li>
-<li>操作系统缓存中的<code>重做日志文件</code>(redo log file)</li>
-</ul>
-<p><strong>注意，这里为什么是在操作系统中呢？因为打开日志文件时没有使用<code>O_DIRECT</code>标志位，所以不能绕过操作系统直接添加到磁盘中。</strong></p>
-<p>所以从内存中更新数据到磁盘，经历了以下过程：</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502235152.png" alt="img"></p>
-<p>可以看到，从操作系统缓冲写入到磁盘，需要进行<code>fsync()</code>操作；多久执行一次该操作，可以通过参数<code>innodb_flush_log_at_trx_commit</code>来决定。该参数有三个取值，分别是0，1，2。</p>
-<table>
-<thead>
-<tr>
-<th align="center">参数</th>
-<th align="center">描述</th>
-<th align="center">特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">0</td>
-<td align="center">表示主线程每隔一秒执行一次<strong>fsync()</strong></td>
-<td align="center">数据库或计算机宕机时，都会丢失一部分数据</td>
-</tr>
-<tr>
-<td align="center">1</td>
-<td align="center">表示事务每提交一次，就执行一次<strong>fsync()</strong></td>
-<td align="center">并发场景下性能较差</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">表示事务提交时，把<strong>重做日志缓冲</strong>写入到<strong>重做日志文件</strong>中</td>
-<td align="center">数据库宕机不会影响，因为日志已经在操作系统缓冲区了；系统宕机时，会丢失一部分数据</td>
-</tr>
-</tbody></table>
-<h2 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p><code>undo log</code>记录的是逻辑操作，具体地说，应该是事务中每步操作的<code>逆向操作</code></p>
-<p>例如，事务中执行了一条插入语句，那么<code>undo log</code>就会记录一次删除。</p>
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
-<li><p>回滚</p>
-<p>在事务失败时，可以根据它回滚到事务开始前的状态。</p>
-</li>
-<li><p>多版本控制</p>
-<p>在MVCC中，如果数据被其它事务占用，就可以根据<code>undo log</code>来获取之前版本的数据，避免阻塞地获取锁。</p>
-</li>
-</ul>
-<h3 id="3种操作的undo-log"><a href="#3种操作的undo-log" class="headerlink" title="3种操作的undo log"></a>3种操作的undo log</h3><h4 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h4><p>因为事务隔离性的要求，插入数据只对当前事务可见，其他事务不应该发现。</p>
-<p>所以它产生的undo log可以在事务提交后直接删除</p>
-<h4 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h4><p>先执行逻辑删除，把标志位设置成删除，然后等待purge线程进行物理删除</p>
-<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><p>这里分两类讨论</p>
-<ul>
-<li><p>不更新主键</p>
-<p>直接更新即可，并生成undo log</p>
-</li>
-<li><p>更新主键</p>
-<p>先标记删除原有主键的记录，再执行插入。</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" class="post-title-link" itemprop="url">事务并发解决方案</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-17 12:02:20" itemprop="dateModified" datetime="2021-10-17T12:02:20+08:00">2021-10-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/MySQL/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91/" class="post-meta-item leancloud_visitors" data-flag-title="事务并发解决方案" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一、事务"><a href="#一、事务" class="headerlink" title="一、事务"></a>一、事务</h1><p>关于事务的介绍，请看另一篇博客。</p>
-<p><strong>解决并发事务访问，主要有两种方式：</strong></p>
-<ul>
-<li><strong>LBCC</strong>（Lock Based Concurrent Control）</li>
-</ul>
-<ul>
-<li><strong>MVCC</strong>（Multi-Version Concurrent Control）</li>
-</ul>
-<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><ul>
-<li>脏读，读到其他事务修改后未提交的数据</li>
-<li>不可重复读，多次读数据，得到的不一致</li>
-<li>幻读，多次读的结果不同（多了数据或少了数据）</li>
-</ul>
-<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
-<thead>
-<tr>
-<th align="center">级别\问题（是否存在）</th>
-<th align="center">脏读</th>
-<th align="center">不可重复读</th>
-<th align="center">幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">读未提交</td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">读已提交</td>
-<td align="center">否</td>
-<td align="center">是</td>
-<td align="center">是</td>
-</tr>
-<tr>
-<td align="center">可重复读</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">是（MVCC时有）</td>
-</tr>
-<tr>
-<td align="center">串行化</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-</tbody></table>
-<h1 id="二、LBCC"><a href="#二、LBCC" class="headerlink" title="二、LBCC"></a>二、LBCC</h1><h2 id="2-1锁的类型"><a href="#2-1锁的类型" class="headerlink" title="2.1锁的类型"></a>2.1锁的类型</h2><p>官网链接：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html">MySQL :: MySQL 8.0 Reference Manual :: 15.7.1 InnoDB Locking</a></p>
-<p>查阅MySQL官网，得知InnoDB存储引擎提到了以下几种锁方案</p>
-<ol>
-<li><p>共享锁与排他锁 （行级别）</p>
-</li>
-<li><p>意向锁 （表级别）</p>
-</li>
-<li><p>记录锁</p>
-</li>
-<li><p>间隙锁</p>
-</li>
-<li><p>Next-Key 锁</p>
-</li>
-</ol>
-<p>还有另外三种不做详细介绍，就简单说明一下概念</p>
-<ol>
-<li>插入意向锁</li>
-<li>自增锁</li>
-<li>预测锁</li>
-</ol>
-<p>下面我们将依次介绍上述5种锁的概念</p>
-<h2 id="2-2共享锁与排他锁"><a href="#2-2共享锁与排他锁" class="headerlink" title="2.2共享锁与排他锁"></a>2.2共享锁与排他锁</h2><p>共享锁和排他锁是InnoDB实现的行级别的锁。</p>
-<p><code>共享锁</code>又叫读锁，用来读取数据。多个共享锁可以同时存在。</p>
-<p><code>排他锁</code>又叫写锁，用来更新或删除数据（插入呢？），不能与其他锁并存</p>
-<p>举个简单的例子</p>
-<p>如果事务<code>T1</code>在读表中的记录<code>r</code>，那它就对记录<code>r</code>加了读锁</p>
-<p>这时候事务<code>T2</code>想要对记录<code>r</code>进行一些操作</p>
-<ul>
-<li>如果是读操作，<code>T2</code>可以直接对记录<code>r</code>加读锁</li>
-<li>如果是写操作，<code>T2</code>必须等待<code>T1</code>释放锁之后，才能对记录<code>r</code>加写锁</li>
-</ul>
-<h2 id="2-3意向锁"><a href="#2-3意向锁" class="headerlink" title="2.3意向锁"></a>2.3意向锁</h2><h3 id="2-3-1为什么要有意向锁呢？"><a href="#2-3-1为什么要有意向锁呢？" class="headerlink" title="2.3.1为什么要有意向锁呢？"></a>2.3.1为什么要有意向锁呢？</h3><p>针对一个场景：</p>
-<p>如果要对一张表加<strong>表锁</strong>，就要先确保表中的<strong>任意一行数据</strong>都没有<strong>被锁定</strong></p>
-<p>那么就需要进行全表扫描来判断，效率十分低下</p>
-<p><strong>而上述问题的本质，就是锁过于单一，只有读锁、写锁这些行级别锁的话，粒度较少，不具备灵活性。</strong></p>
-<p>所以提出了意向锁的思想 。</p>
-<h3 id="2-3-2意向锁"><a href="#2-3-2意向锁" class="headerlink" title="2.3.2意向锁"></a>2.3.2意向锁</h3><blockquote>
-<p>意向读锁：表明一个事务<strong>想要</strong>对某行数据设置读锁。</p>
-<p>意向写锁：表明一个事务<strong>想要</strong>对某行数据设置写锁。</p>
-</blockquote>
-<p>光说这个概念可能不太好理解，我们结合官网上的描述，来分析下它的主要目的、协议吧。</p>
-<h3 id="2-3-3官方解释"><a href="#2-3-3官方解释" class="headerlink" title="2.3.3官方解释"></a>2.3.3官方解释</h3><p><strong>关于意向锁的解释</strong></p>
-<blockquote>
-<p><code>InnoDB</code> supports <em>multiple granularity locking</em> which permits coexistence of row locks and table locks.</p>
-<p><code>InnoDB</code>支持多粒度的锁来保证行锁和表锁的共存。</p>
-<p>Intention locks are <code>table-level</code> locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. </p>
-<p>意向锁是表级别的锁，它代表一个事务之后想要获取的是什么类型（读锁或写锁）的锁。</p>
-<p>PS：实现了多粒度的锁。</p>
-</blockquote>
-<p><strong>意向锁的主要目的</strong></p>
-<blockquote>
-<p>Intention locks do not block anything except full table requests (for example, <code>LOCK TABLES ... WRITE</code>). The main purpose of intention locks is to show that someone is locking a row, or going to lock a row in the table.</p>
-<p>意向锁不会阻塞除<code>全表扫描</code>外的任何请求，它的主要目的就是表明其他事务正在锁，或者说将要锁某些记录。</p>
-<p>PS：结合上面的例子，有了意向锁之后，就不用靠全表扫描来判断当前事务是否可以加表锁</p>
-</blockquote>
-<p><strong>意向锁的协议</strong></p>
-<blockquote>
-<p>Before a transaction can acquire a shared lock on a row in a table, it must first acquire an <code>IS</code> lock or stronger on the table.</p>
-<p>一个事务获取某行的读锁之前，必须先获取表的意向读锁。</p>
-<p>Before a transaction can acquire an exclusive lock on a row in a table, it must first acquire an <code>IX</code> lock on the table.</p>
-<p>一个事务获取某行的写锁之前，必须先获取表的意向写锁。</p>
-</blockquote>
-<h3 id="2-3-4锁的具体使用"><a href="#2-3-4锁的具体使用" class="headerlink" title="2.3.4锁的具体使用"></a>2.3.4锁的具体使用</h3><p>首先，我们要了解意向锁和读写锁的共存关系（是否兼容）</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">IS</th>
-<th align="center">IX</th>
-<th align="center">S</th>
-<th align="center">X</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><strong>IS</strong></td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">否</td>
-</tr>
-<tr>
-<td align="center"><strong>IX</strong></td>
-<td align="center">是</td>
-<td align="center">是</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-<tr>
-<td align="center"><strong>S</strong></td>
-<td align="center">是</td>
-<td align="center">否</td>
-<td align="center">是</td>
-<td align="center">否</td>
-</tr>
-<tr>
-<td align="center"><strong>X</strong></td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-<td align="center">否</td>
-</tr>
-</tbody></table>
-<p><strong>分析：</strong></p>
-<p>意向锁之间：仅仅代表一个加锁的意向，所以意向锁之间不冲突</p>
-<p>读写锁之间：读锁与读锁不冲突，写锁与其他锁（这里只讨论读写锁）都冲突</p>
-<p>混合：要注意有读锁的情况下，意向写锁会冲突，即不能有写的念头。</p>
-<p><strong>用法：</strong></p>
-<p>从官网摘录一段select的语句结构</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	...</span><br><span class="line">	[FOR &#123;UPDATE | SHARE&#125;</span><br><span class="line">        [<span class="keyword">OF</span> tbl_name [, tbl_name] ...]</span><br><span class="line">        [NOWAIT <span class="operator">|</span> <span class="keyword">SKIP</span> LOCKED]</span><br><span class="line">      <span class="operator">|</span> LOCK <span class="keyword">IN</span> SHARE MODE]</span><br></pre></td></tr></table></figure>
-
-<p><strong>使用意向读锁：</strong></p>
-<p><code>select ... for share</code>或<code>select ... lock in share mode</code></p>
-<p>两种方式来获取IS锁和对应记录的S锁，基本上是等价的</p>
-<p>区别的话</p>
-<ol>
-<li><p>看上面select语句的格式，可以发现<code>for share</code>可以添加一些参数，参数在后面介绍</p>
-</li>
-<li><p><code>lock in share mode</code>提供向后兼容性。</p>
-</li>
-</ol>
-<p><strong>使用意向写锁：</strong></p>
-<p><code>select ... for update</code>语句会先尝试获取IX锁，然后再获取目标记录的写锁</p>
-<p>如果获取不到，则会阻塞等待。（如果超时了就报错）</p>
-<p><strong>参数说明：</strong></p>
-<ul>
-<li>nowait：不等待锁释放，立刻执行，获取不到锁就报错</li>
-<li>skip locked：也是立刻执行，但忽略那些被加锁的数据，只操作不加锁的数据。</li>
-</ul>
-<p>这两个参数在基于语句复制的情况下，是不安全的（官网上提到，但我不懂…猜测一下，可能是在有主从数据库的时候，会不安全吧）</p>
-<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html">如果想看更详细的，请转至官网处</a></p>
-<hr>
-<p>下面开始是一些具体锁的介绍，先贴一张图大致表示一下</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20210502173400.png" alt="lock_concret"></p>
-<h2 id="2-4记录锁（锁定记录）"><a href="#2-4记录锁（锁定记录）" class="headerlink" title="2.4记录锁（锁定记录）"></a>2.4记录锁（锁定记录）</h2><p>在进行等值查询时，锁住<strong>匹配</strong>到的记录。确切地说，应该是锁住记录的主键（或隐式主键）</p>
-<p>例如<code>select * from table1 where id = 4 for update</code>就是锁住了<code>id = 4</code>的记录</p>
-<h2 id="2-5间隙锁（锁定范围）"><a href="#2-5间隙锁（锁定范围）" class="headerlink" title="2.5间隙锁（锁定范围）"></a>2.5间隙锁（锁定范围）</h2><p>在查询时，锁定<strong>区间范围</strong></p>
-<p>①<code>select * from table1 where id = 6 for update</code></p>
-<p>②<code>select * from table1 where id &gt; 20 for update</code></p>
-<p>假设表的记录为<strong>1，4，7，10</strong></p>
-<p>那么语句①锁住区间（4，7）；语句②锁住区间（10，+∞）</p>
-<p><strong>间隙锁之间并不冲突</strong></p>
-<h2 id="2-6临界锁（锁定范围，左开右闭）"><a href="#2-6临界锁（锁定范围，左开右闭）" class="headerlink" title="2.6临界锁（锁定范围，左开右闭）"></a>2.6临界锁（锁定范围，左开右闭）</h2><p>条件：进行范围查询时，包含<strong>区间</strong>和<strong>具体记录</strong></p>
-<p><code>select * from table where id &gt; 5 and id &lt; 9 for update</code></p>
-<p>那么锁定的范围为(4，7] 和 (7，10]，即(4，10]</p>
-<p>我们可以发现，<strong>临界锁 = 间隙锁 + 记录锁</strong></p>
-<p><em><strong>而间隙锁锁住区间，不让其他事务进行插入，目的就在于避免幻读问题的出现</strong></em></p>
-<hr>
-<p>讲完这些锁之后，我们谈谈在<strong>不同隔离级别</strong>下<strong>锁</strong>的<strong>实现</strong>：</p>
-<table>
-<thead>
-<tr>
-<th align="center">隔离级别</th>
-<th align="center">机制</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">RU</td>
-<td align="center">不加锁</td>
-</tr>
-<tr>
-<td align="center">Serializable</td>
-<td align="center">所有select语句隐式地转化成共享锁，会与update、delete互斥</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th align="center">隔离级别</th>
-<th align="center">普通select语句</th>
-<th align="center">加锁的select和更新语句</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">RC</td>
-<td align="center">MVCC</td>
-<td align="center">记录锁</td>
-</tr>
-<tr>
-<td align="center">RR</td>
-<td align="center">MVCC</td>
-<td align="center">记录锁、间隙锁、临界锁</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>①普通查询时，为什么RR可以解决不可重复读，而RC不可以</p>
-<p>两者都采用MVCC，而因为RR的快照读readview使用的是同一个（第一次读时生成），而RC是每次查询生成一次新的readview</p>
-</blockquote>
-<h2 id="加锁过程"><a href="#加锁过程" class="headerlink" title="加锁过程"></a>加锁过程</h2><p>加锁最小单位：临界锁</p>
-<p>临界锁的变化：</p>
-<ul>
-<li><p>未命中时变为间隙锁</p>
-</li>
-<li><p>命中时</p>
-<ul>
-<li>如果是<strong>单列唯一索引</strong>，则降级为行锁</li>
-<li>如果是<strong>非唯一的索引或多列索引</strong>，则锁住左右两个区间及命中的索引值</li>
-</ul>
-</li>
-</ul>
-<h1 id="三、MVCC"><a href="#三、MVCC" class="headerlink" title="三、MVCC"></a>三、MVCC</h1><h2 id="3-1定义"><a href="#3-1定义" class="headerlink" title="3.1定义"></a>3.1定义</h2><p>用于实现数据库的并发访问的一种方法，全称为多版本并发控制。</p>
-<h2 id="3-2前置概念"><a href="#3-2前置概念" class="headerlink" title="3.2前置概念"></a>3.2前置概念</h2><p>在学习MVCC前，需要先知道两个概念</p>
-<p><strong>当前读</strong></p>
-<ul>
-<li>数据：读取的是数据的最新版本。</li>
-<li>特点：读取时还要加锁，保证其他并发事务不能修改当前记录</li>
-<li>示例：共享锁、排他锁</li>
-</ul>
-<p><strong>快照读</strong></p>
-<ul>
-<li>数据：读取的是数据库某一时刻的快照的数据。</li>
-<li>特点：不加锁的、非阻塞的读；读到的数据不一定是最新数据，可能是历史版本。</li>
-<li>示例：MVCC普通读</li>
-</ul>
-<h2 id="3-3思想"><a href="#3-3思想" class="headerlink" title="3.3思想"></a>3.3思想</h2><blockquote>
-<p> 维持一个数据的多个版本，使得读写操作没有冲突</p>
-</blockquote>
-<h2 id="3-4实现"><a href="#3-4实现" class="headerlink" title="3.4实现"></a>3.4实现</h2><p>隐式字段 + undo回滚日志 + 快照</p>
-<p><strong>隐式字段</strong></p>
-<blockquote>
-<p>每行记录除了有用户定义的字段外，还有隐式字段，如行创建id、行删除id、回滚指针、自增ID</p>
-</blockquote>
-<ul>
-<li><p>行创建id：指插入或修改本条记录的事务id</p>
-</li>
-<li><p>行删除id：指删除本条记录的事务id</p>
-</li>
-<li><p>回滚指针：指向回滚日志中的关于<strong>这条记录</strong>的<strong>上一个版本</strong></p>
-</li>
-</ul>
-<ul>
-<li>自增ID：当表没有设定主键且不存在非空唯一的字段时，会采用自增ID来作为主键，构建主键索引</li>
-</ul>
-<p><strong>undo回滚日志</strong></p>
-<p>记录每次修改的操作，可从前往后遍历来进行数据回滚</p>
-<p>在进行<strong>修改（更新、插入、删除）</strong>操作时，mysql会生成一条日志（主键+当前事务id+回滚指针，指向前一条记录）</p>
-<p>删除只是把标志位改为true，即逻辑删除</p>
-<p><strong>ReadView</strong></p>
-<blockquote>
-<p>ReadView是事务进行快照读时产生的读视图，记录并维护了系统中当前较为活跃的事务id</p>
-</blockquote>
-<h2 id="3-5例子"><a href="#3-5例子" class="headerlink" title="3.5例子"></a>3.5例子</h2><p>在某次事务查询时，得到readview 为 <strong>[100,200,300]</strong></p>
-<p> 可以看出活跃事务中最小id为100，最大id为300</p>
-<p>从回滚日志中依次向后遍历，假设每次遍历到的事务id为x</p>
-<p>则有以下三种情况：</p>
-<ol>
-<li><p>x &lt; 100 表示此事务已提交，数据可见</p>
-</li>
-<li><p>x &gt; 300 表示此事务是在生成readview之后开启的事务，数据不可见</p>
-</li>
-<li><p>在100和300中间，此时就要查看x是否在活跃事务id中，如果是，则它仍未提交，数据不可见。</p>
-</li>
-</ol>
-<h2 id="3-6RR和RC隔离级别下"><a href="#3-6RR和RC隔离级别下" class="headerlink" title="3.6RR和RC隔离级别下"></a>3.6RR和RC隔离级别下</h2><p>针对同一个事务来说，</p>
-<ul>
-<li><p>读已提交：每次查询都会生成新的read-view</p>
-</li>
-<li><p>可重复读：只用第一次查询时生成的read-view（解决了不可重复读）</p>
-</li>
-</ul>
-<h1 id="四、补充问题"><a href="#四、补充问题" class="headerlink" title="四、补充问题"></a>四、补充问题</h1><h2 id="4-1死锁"><a href="#4-1死锁" class="headerlink" title="4.1死锁"></a>4.1死锁</h2><p><strong>定义</strong></p>
-<p>这里的死锁可以理解成两个及以上的事务在共同竞争锁资源，而产生的等待现象。</p>
-<p><strong>解决方案一</strong></p>
-<p>设置一个超时等待时间，超时后对某个事务进行回滚，然后其他事务就可以执行下去</p>
-<p>但是光靠超时来解决的话，可能会有大量事务要进行回滚，会非常耗时</p>
-<p><strong>解决方案二</strong></p>
-<p>等待图，这可以算是一种死锁检测算法。</p>
-<p>画出各个事务之间的依赖关系，如果形成环路，说明存在死锁。</p>
-<h2 id="4-2锁升级"><a href="#4-2锁升级" class="headerlink" title="4.2锁升级"></a>4.2锁升级</h2><p><del>知识盲区…</del></p>
-<p>InnoDB存储引擎并不存在锁升级的情况，因为它并不是根据每个记录来产生行锁的。</p>
-<p>它是根据每个事务访问的每个页对锁进行管理的，采用的是位图的方式</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+  </div>
 
   
   <nav class="pagination">
@@ -1759,20 +2117,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1813,17 +2171,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -1921,6 +2286,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

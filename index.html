@@ -47,15 +47,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -201,6 +192,7 @@
 
           <div class="content index posts-expand">
             
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -217,174 +209,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/HelloWorld/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:03:50" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-
-          
-            <span id="/2021/12/13/HelloWorld/" class="post-meta-item leancloud_visitors" data-flag-title="Hello World" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="记录博客用法"><a href="#记录博客用法" class="headerlink" title="记录博客用法"></a>记录博客用法</h1><h2 id="一、按钮"><a href="#一、按钮" class="headerlink" title="一、按钮"></a>一、按钮</h2><h3 id="1-描述"><a href="#1-描述" class="headerlink" title="1.描述"></a>1.描述</h3><blockquote>
-<p>点击按钮后，显示隐藏的内容</p>
-</blockquote>
-<h3 id="2-用法"><a href="#2-用法" class="headerlink" title="2.用法"></a>2.用法</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% hideInline content,display,bg,color %&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-示例"><a href="#3-示例" class="headerlink" title="3.示例"></a>3.示例</h3><p>哪个英文字母最酷？</p>
-<h2 id="二、文章front-matter"><a href="#二、文章front-matter" class="headerlink" title="二、文章front-matter"></a>二、文章front-matter</h2><h3 id="1-描述-1"><a href="#1-描述-1" class="headerlink" title="1.描述"></a>1.描述</h3><p>用来表示文章的一些信息，如标题、类别、tag和封面等</p>
-<h3 id="2-用法-1"><a href="#2-用法-1" class="headerlink" title="2.用法"></a>2.用法</h3><table>
-<thead>
-<tr>
-<th align="center">键</th>
-<th align="center">值（例子）</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">title</td>
-<td align="center">Hello World</td>
-<td align="center">文章标题</td>
-</tr>
-<tr>
-<td align="center">categories</td>
-<td align="center">线程池</td>
-<td align="center">文章类别所属</td>
-</tr>
-<tr>
-<td align="center">tags</td>
-<td align="center">-tag: 源码</td>
-<td align="center">文章标签，可包含多个</td>
-</tr>
-<tr>
-<td align="center">cover</td>
-<td align="center"><a target="_blank" rel="noopener" href="https://gitee.com/aurora1004/pictures/raw/master/wps.jpg">https://gitee.com/aurora1004/pictures/raw/master/wps.jpg</a></td>
-<td align="center">文章外封面</td>
-</tr>
-<tr>
-<td align="center">top_img</td>
-<td align="center"><a target="_blank" rel="noopener" href="https://gitee.com/aurora1004/pictures/raw/master/wps.jpg">https://gitee.com/aurora1004/pictures/raw/master/wps.jpg</a></td>
-<td align="center">文章内部，顶部图片</td>
-</tr>
-<tr>
-<td align="center">top</td>
-<td align="center">100</td>
-<td align="center">权重值，越大越容易置顶</td>
-</tr>
-</tbody></table>
-<h2 id="三、代码配色修改"><a href="#三、代码配色修改" class="headerlink" title="三、代码配色修改"></a>三、代码配色修改</h2><h3 id="1-描述-2"><a href="#1-描述-2" class="headerlink" title="1.描述"></a>1.描述</h3><p>通过引入外部css文件来修改代码配色</p>
-<h3 id="2-用法-2"><a href="#2-用法-2" class="headerlink" title="2.用法"></a>2.用法</h3><p>1.选择一个想要的样式文件，网址：<a target="_blank" rel="noopener" href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">代码配色相关css</a></p>
-<p>2.在<code>\butterfly\source\self</code>路径下新建一个<code>css</code>文件（如<code>code1.css</code>），复制第一步中选择的<code>css代码</code></p>
-<p>3.<code>code1.css</code>文件中添加以下代码</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 颜色可自己设置 */</span></span><br><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  --hl-<span class="attribute">color</span>: <span class="number">#d3af86</span>;</span><br><span class="line">  --hl-bg: <span class="number">#221a0f</span>;</span><br><span class="line">  --hltools-bg: <span class="number">#321a0f</span>;</span><br><span class="line">  --hltools-<span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">  --hlnumber-bg: <span class="number">#221a0f</span>;</span><br><span class="line">  --hlnumber-<span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">  --hlscrollbar-bg: <span class="number">#d3af86</span>;</span><br><span class="line">  --hlexpand-bg: <span class="number">#d3af86</span>;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">/* 更改的內容 把.hljs改為 #article-container figure.highlight .hljs */</span></span><br><span class="line">进行更改！！！！！</span><br></pre></td></tr></table></figure>
-
-<p>4.在butterfly主题的配置文件中引入该css文件</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="attr">inject:</span></span><br><span class="line">  <span class="attr">head:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&lt;link</span> <span class="string">rel=&quot;stylesheet&quot;</span> <span class="string">href=&quot;/self/code1.css&quot;&gt;</span>    </span><br></pre></td></tr></table></figure>
-
-<h2 id="四、hexo相关命令"><a href="#四、hexo相关命令" class="headerlink" title="四、hexo相关命令"></a>四、hexo相关命令</h2><h3 id="1-本地启动博客"><a href="#1-本地启动博客" class="headerlink" title="1.本地启动博客"></a>1.本地启动博客</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-上传GitHub"><a href="#2-上传GitHub" class="headerlink" title="2.上传GitHub"></a>2.上传GitHub</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<h3 id="错误1"><a href="#错误1" class="headerlink" title="错误1"></a>错误1</h3><p>如果遇到如下报错</p>
-<blockquote>
-<p>OpenSSL SSL_read: Connection was reset, errno 10054</p>
-</blockquote>
-<p>则在bash中输入以下代码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.sslVerify <span class="string">&quot;false&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>然后重新来一遍即可。</p>
-<h3 id="错误2"><a href="#错误2" class="headerlink" title="错误2"></a>错误2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/Aurora-Ze/Aurora-Ze.github.io.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br><span class="line"></span><br><span class="line">err: Error: Spawn failed</span><br></pre></td></tr></table></figure>
-
-<p><strong>解决方法：</strong></p>
-<ol>
-<li>删除<code>.deploy_git</code>文件夹</li>
-<li>执行命令<code>git config --global core.autocrlf false</code></li>
-<li>重新来一套部署命令</li>
-</ol>
-<h3 id="最终解决方案"><a href="#最终解决方案" class="headerlink" title="最终解决方案"></a>最终解决方案</h3><p>如果用了梯子，把代理的端口号设置上去</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy http://127.0.0.1:4780 // 我的梯子用了4780的端口</span><br><span class="line">git config --global https.proxy http://127.0.0.1:4780</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="五、常用latex符号"><a href="#五、常用latex符号" class="headerlink" title="五、常用latex符号"></a>五、常用latex符号</h2><h3 id="1-上标下标"><a href="#1-上标下标" class="headerlink" title="1.上标下标"></a>1.上标下标</h3><p>上标用<code>^</code>表示，下标用<code>_</code>表示；例如，$2^3_3$</p>
-<h3 id="2-大于等于……"><a href="#2-大于等于……" class="headerlink" title="2.大于等于……"></a>2.大于等于……</h3><p>大于等于用<code>\geq\</code>；例如$4 \geq\ 3$</p>
-<h3 id="3-处理多个变量"><a href="#3-处理多个变量" class="headerlink" title="3.处理多个变量"></a>3.处理多个变量</h3><p>表示2的n-1次方时，n-1用<code>&#123;&#125;</code>包裹，如$2^{n-1}$</p>
-<h3 id="4-波浪号"><a href="#4-波浪号" class="headerlink" title="4.波浪号"></a>4.波浪号</h3><p>波浪号用<code>\sim</code>来表示，如$\sim$</p>
-<h2 id="六、Typora实用快捷键"><a href="#六、Typora实用快捷键" class="headerlink" title="六、Typora实用快捷键"></a>六、Typora实用快捷键</h2><h3 id="1-文本增加-减少缩进"><a href="#1-文本增加-减少缩进" class="headerlink" title="1.文本增加/减少缩进"></a>1.文本增加/减少缩进</h3><p>有时从编辑器里拷贝过来的代码，在代码块中总是会有四格的缩进，没有贴靠左侧。</p>
-<p>因此可以选中想要缩进的内容后，使用<code>ctrl + [</code>来减小缩进。</p>
-<p><strong>原来效果</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">batchSelectUsersById</span><span class="params">(List&lt;Long&gt; ids)</span> </span>&#123;</span><br><span class="line">    List&lt;User&gt; userList = userMapper.selectBatchIds(ids);</span><br><span class="line">    <span class="keyword">return</span> userList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>缩进后效果</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">batchSelectUsersById</span><span class="params">(List&lt;Long&gt; ids)</span> </span>&#123;</span><br><span class="line">    List&lt;User&gt; userList = userMapper.selectBatchIds(ids);</span><br><span class="line">    <span class="keyword">return</span> userList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="七、IDEA快捷键"><a href="#七、IDEA快捷键" class="headerlink" title="七、IDEA快捷键"></a>七、IDEA快捷键</h2><h3 id="Code-Glance插件开启-关闭"><a href="#Code-Glance插件开启-关闭" class="headerlink" title="Code Glance插件开启/关闭"></a>Code Glance插件开启/关闭</h3><p><code>ctrl shift g</code></p>
-<h2 id="八、VSCode快捷键"><a href="#八、VSCode快捷键" class="headerlink" title="八、VSCode快捷键"></a>八、VSCode快捷键</h2><p>最近在写前端，发现vscode的快捷键不好设置，于是记录一下常用的</p>
-<ol>
-<li>光标跳转到下一行：<code>ctrl + enter</code></li>
-<li>代码整理：<code>shift + alt + f</code></li>
-<li>打开/关闭终端：<code>ctrl + ·(esc下面那个)</code></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="post-title-link" itemprop="url">(三).Executor框架介绍</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -400,25 +228,30 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-16 19:23:18" itemprop="dateModified" datetime="2021-12-16T19:23:18+08:00">2021-12-16</time>
+                <time title="修改时间：2022-02-12 13:55:51" itemprop="dateModified" datetime="2022-02-12T13:55:51+08:00">2022-02-12</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">线程和线程池</span></a>
-                </span>
-            </span>
 
           
-            <span id="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="post-meta-item leancloud_visitors" data-flag-title="(三).Executor框架介绍" title="阅读次数">
+            <span id="/2021/12/13/HelloWorld/" class="post-meta-item leancloud_visitors" data-flag-title="Hello World" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -430,10 +263,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>介绍了Java的线程池框架</p>
+          <!-- modified: 文章描述-->
+            <p style="font-size: 20px;">记录hexo命令以及写博客常用语法、快捷键等。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/12/13/Java/%E7%BA%BF%E7%A8%8B%E6%B1%A0/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+              <a class="btn" href="/2021/12/13/HelloWorld/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -453,6 +287,922 @@
   
   
 
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" class="post-title-link" itemprop="url">HTTP</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-08 11:07:43" itemprop="dateCreated datePublished" datetime="2022-02-08T11:07:43+08:00">2022-02-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-12 15:49:34" itemprop="dateModified" datetime="2022-02-12T15:49:34+08:00">2022-02-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" class="post-meta-item leancloud_visitors" data-flag-title="HTTP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <!-- modified: 文章描述-->
+            <p style="font-size: 20px;">从http的基础知识开始，分析各个http版本的特点，最后再简单介绍了https的握手过程。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" class="post-title-link" itemprop="url">Kafka——生产者与消费者理论</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-12 15:59:12" itemprop="dateModified" datetime="2022-02-12T15:59:12+08:00">2022-02-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" class="post-meta-item leancloud_visitors" data-flag-title="Kafka——生产者与消费者理论" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <!-- modified: 文章描述-->
+            <p style="font-size: 20px;">本文介绍了Kafka生产者与消费者的基础概念，如消息分区、位移提交等。通过这篇文章，我们可以更好的了解到从生产者发出消息，再到消费者消费消息这一过程消息的流动。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">JVM中的对象</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-12 16:03:53" itemprop="dateModified" datetime="2022-02-12T16:03:53+08:00">2022-02-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/" class="post-meta-item leancloud_visitors" data-flag-title="JVM中的对象" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <!-- modified: 文章描述-->
+            <p style="font-size: 20px;">本文简单介绍了对象在java虚拟机中的存在形式以及回收对象时的一些问题。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/13/Java/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/3.1%E5%AF%B9%E8%B1%A1/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2022/01/17/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringCloud/Nacos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/17/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringCloud/Nacos/" class="post-title-link" itemprop="url">Nacos使用</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-17 14:50:55 / 修改时间：15:39:21" itemprop="dateCreated datePublished" datetime="2022-01-17T14:50:55+08:00">2022-01-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/01/17/%E9%A1%B9%E7%9B%AE/%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/SpringCloud/Nacos/" class="post-meta-item leancloud_visitors" data-flag-title="Nacos使用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>308</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a>Nacos</h3><p>Nacos作用：</p>
+<ol>
+<li><strong>服务注册与发现</strong></li>
+<li><strong>服务管理</strong></li>
+<li>服务健康监测</li>
+<li>动态配置</li>
+</ol>
+<p>将服务注册于nacos中，可以实现服务信息的统一管理。同时也为服务间的调用提供了渠道。</p>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><ol>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases">下载并解压Nacos</a></p>
+</li>
+<li><p>启动Nacos服务</p>
+<ul>
+<li>在/bin目录中输入<code>startup.cmd -m standalone</code>，表示以单机方式启动</li>
+</ul>
+</li>
+<li><p>进入控制台</p>
+<ul>
+<li>路径为：<code>http://127.0.0.1:8848/nacos/index.html</code></li>
+<li>路径可能与上述不一致，关注命令行输出的内容即可</li>
+</ul>
+</li>
+</ol>
+<h3 id="Java客户端使用"><a href="#Java客户端使用" class="headerlink" title="Java客户端使用"></a>Java客户端使用</h3><p><strong>引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--服务注册--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>添加配置和注解</strong></p>
+<p>启动类上添加<code>@EnableDiscoveryClient</code></p>
+<p>配置文件中添加：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:8848</span> </span><br></pre></td></tr></table></figure>
+
+<p>完成上述步骤并启动微服务后，就可以在Nacos控制台看到相应微服务的注册信息了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/24/TODO/record/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/24/TODO/record/" class="post-title-link" itemprop="url">未命名</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-24 15:47:01" itemprop="dateCreated datePublished" datetime="2021-12-24T15:47:01+08:00">2021-12-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-25 21:52:01" itemprop="dateModified" datetime="2021-12-25T21:52:01+08:00">2021-12-25</time>
+              </span>
+
+          
+            <span id="/2021/12/24/TODO/record/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="文章结构"><a href="#文章结构" class="headerlink" title="文章结构"></a>文章结构</h2><ol>
+<li>什么是预训练，预训练的由来</li>
+<li>预训练模型的架构</li>
+<li>预训练模型存在的缺点（如GPT、BERT）</li>
+<li>改进，介绍基于提示的预训练模型</li>
+<li>实验过程展示</li>
+<li>结果分析</li>
+<li>未来展望</li>
+</ol>
+<h2 id="什么是预训练，预训练的发展"><a href="#什么是预训练，预训练的发展" class="headerlink" title="什么是预训练，预训练的发展"></a>什么是预训练，预训练的发展</h2><h3 id="出现背景"><a href="#出现背景" class="headerlink" title="出现背景"></a>出现背景</h3><p>​        从非神经网络到神经网络，再到预训练模型的提出，这期间经历了一段较长的发展阶段。非神经模型常依赖于手工制作的特征和统计方法，但随着深度神经网络（如CNN、RNN和GNN等）的广泛应用，它能够自动学习低维连续向量，将数据作为特定任务的特征这一优势，帮助人们摆脱复杂的特征工程。</p>
+<p>​        但是因为深度神经网络通常需要非常多的参数，所以在没有足够的数据集时它们往往会有过拟合和泛化能力差的表现。因此长期以来，如何从有限的人工标注数据中训练出高效的深度神经网络模型成为了一个重要的研究课题。而这也正是预训练模型的主要目的。</p>
+<h3 id="提出及发展"><a href="#提出及发展" class="headerlink" title="提出及发展"></a>提出及发展</h3><p>​        预训练的主要思想是从大量原始数据中训练得到一些共性，并将这些共性用于特定任务的学习。早期的预训练模型主要涉及迁移学习和监督学习这两方面。人们对迁移学习的研究很大程度上是基于人类可以依靠以前学过的知识来解决新的问题这一事实。但是在训练一个深度网络时发现，随着模型深度的增加，会不可避免地产生梯度消失、性能达到瓶颈等问题。</p>
+<p>针对这些问题，分别从两个方面进行了优化。一是模型层面，对初始参数进行归一化、添加隐藏状态和引入残留层的短连接。二是数据集层面，建立了大规模的监督数据集，如ImageNet等。</p>
+<p>然后是自监督学习的发展。它是一种通过监督输入数据本身，来从大规模的未标记数据中提取知识的方法。它的出现使得利用大量原始数据进行预训练成为可能。</p>
+<h2 id="预训练模型架构分析"><a href="#预训练模型架构分析" class="headerlink" title="预训练模型架构分析"></a>预训练模型架构分析</h2><h3 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h3><p>Transformer是一个在神经网络中占据重要地位的模型。预训练模型的成功也离不开它。</p>
+<p>Transformer是一种非循环的SeqToSeq结构，由一个编码器和一个解码器组成。它的每个编码器由一个多头注意层和位置前馈层组成，解码器还有一个额外的交叉注意层用于处理编码器的输出。它其实是对上述预训练模型优化的具体实现。例如，Transformer的神经层之间就用到了残余连接和层归一化。</p>
+<p><img data-src="C:\Users\和泽\AppData\Roaming\Typora\typora-user-images\image-20211225155242901.png" alt="image-20211225155242901"></p>
+<h3 id="GPT与BERT"><a href="#GPT与BERT" class="headerlink" title="GPT与BERT"></a>GPT与BERT</h3><p>基于Transformer模型，又演化出了两个较为出色的模型，那就是GPT和BERT。</p>
+<p>GPT是一个优化后的自回归语言模型。它通过将每个单词的前一个单词作为上下文来尽可能使所有单词的条件概率最大化。</p>
+<p>与GPT相比，BERT采用双向Transformer作为主体结构，并在预训练阶段使用了自编码语言模型。具体而言，就是将分词随机的用Mask标记遮罩，这样做的目的是通过上下文来预测遮罩位置的单词。</p>
+<p><img data-src="C:\Users\和泽\AppData\Roaming\Typora\typora-user-images\image-20211225202938748.png" alt="image-20211225202938748"></p>
+<h2 id="预训练模型的优化方向"><a href="#预训练模型的优化方向" class="headerlink" title="预训练模型的优化方向"></a>预训练模型的优化方向</h2><p>自从BERT模型诞生后，许多模型都在此之上进行了优化。下面我们分析它们优化的共同方向。</p>
+<p>1.统一序列建模</p>
+<p>NLP的下游任务主要有两大类：理解任务和生成任务。它们之间的差异并不显著，因此可以尝试将这两者结合起来，让模型同时具备理解和生成的能力，即结合自回归和自编码建模。</p>
+<p>2.认知-灵感架构</p>
+<p>Transformer的注意力机制是由人类认知系统的微观与原子操作的灵感所得。而人类认知中的宏观层面，如决策、逻辑推理和工作记忆等则没有很好的体现。</p>
+<p>以工作记忆为例，Transformer模型存在的固定窗口大小和n方空间复杂度的问题，严重阻碍了它对长文本的理解和生成。因此可以通过维护工作记忆的方式来解决这一问题。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/23/Reading/%E5%9F%BA%E4%BA%8E%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E8%83%BD%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/23/Reading/%E5%9F%BA%E4%BA%8E%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E8%83%BD%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">基于容器集群的能源管理系统</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-23 18:28:59" itemprop="dateCreated datePublished" datetime="2021-12-23T18:28:59+08:00">2021-12-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-27 15:59:28" itemprop="dateModified" datetime="2021-12-27T15:59:28+08:00">2021-12-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">阅读</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/23/Reading/%E5%9F%BA%E4%BA%8E%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E8%83%BD%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="post-meta-item leancloud_visitors" data-flag-title="基于容器集群的能源管理系统" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>80</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9433536">原文链接：Kubernetes-Container-Cluster-Based Architecture for an Energy Management System</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/19/Java/JUC/LockSupport/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/19/Java/JUC/LockSupport/" class="post-title-link" itemprop="url">JUC——LockSupport</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-19 17:01:43 / 修改时间：21:15:15" itemprop="dateCreated datePublished" datetime="2021-12-19T17:01:43+08:00">2021-12-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/19/Java/JUC/LockSupport/" class="post-meta-item leancloud_visitors" data-flag-title="JUC——LockSupport" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>544</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="什么是LockSupport？"><a href="#什么是LockSupport？" class="headerlink" title="什么是LockSupport？"></a>什么是LockSupport？</h3><blockquote>
+<p>LockSupport是一个用于线程阻塞原语的基本工具类，经常用于实现锁和其他同步器的类中。</p>
+</blockquote>
+<p>说人话，就是<strong>用来阻塞和唤醒线程的工具类</strong>。</p>
+<h3 id="内部方法"><a href="#内部方法" class="headerlink" title="内部方法"></a>内部方法</h3><p><code>LockSupport</code>中提供了用于阻塞线程和唤醒线程的方法，以<code>park</code>和<code>unpark</code>为例：</p>
+<p><code>park()</code>传入一个blocker对象并让当前线程阻塞</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">park</span><span class="params">(Object blocker)</span> </span>&#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    setBlocker(t, blocker);</span><br><span class="line">    UNSAFE.park(<span class="keyword">false</span>, <span class="number">0L</span>); <span class="comment">// 这里线程已阻塞</span></span><br><span class="line">    setBlocker(t, <span class="keyword">null</span>);    <span class="comment">// 唤醒后清除blocker</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>unpark()</code>传入某个线程，表示要唤醒该线程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">unpark</span><span class="params">(Thread thread)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (thread != <span class="keyword">null</span>)</span><br><span class="line">        UNSAFE.unpark(thread);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>从上面的方法中我们可以发现LockSupport调用的都是<code>UNSAFE</code>对象提供的本地方法，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">unpark</span><span class="params">(Object var1)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">park</span><span class="params">(<span class="keyword">boolean</span> var1, <span class="keyword">long</span> var2)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>UNSAFE</code>对象是来自<code>sun.misc.Unsafe</code>包，并通过静态代码块进行初始化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> sun.misc.Unsafe UNSAFE;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> parkBlockerOffset;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> SEED;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> PROBE;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> SECONDARY;</span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        UNSAFE = sun.misc.Unsafe.getUnsafe();</span><br><span class="line">        Class&lt;?&gt; tk = Thread.class;</span><br><span class="line">        parkBlockerOffset = UNSAFE.objectFieldOffset</span><br><span class="line">            (tk.getDeclaredField(<span class="string">&quot;parkBlocker&quot;</span>));</span><br><span class="line">        SEED = UNSAFE.objectFieldOffset</span><br><span class="line">            (tk.getDeclaredField(<span class="string">&quot;threadLocalRandomSeed&quot;</span>));</span><br><span class="line">        PROBE = UNSAFE.objectFieldOffset</span><br><span class="line">            (tk.getDeclaredField(<span class="string">&quot;threadLocalRandomProbe&quot;</span>));</span><br><span class="line">        SECONDARY = UNSAFE.objectFieldOffset</span><br><span class="line">            (tk.getDeclaredField(<span class="string">&quot;threadLocalRandomSecondarySeed&quot;</span>));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ex) &#123; <span class="keyword">throw</span> <span class="keyword">new</span> Error(ex); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="LockSupport示例"><a href="#LockSupport示例" class="headerlink" title="LockSupport示例"></a>LockSupport示例</h2><p>LockSupport可以起到与wait/notify类似的作用，但不同之处在于，LockSupport的<code>pack</code>和<code>unpack</code>调用顺序错误时不会阻塞线程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TaskThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    Thread target;</span><br><span class="line"></span><br><span class="line">    TaskThread(Thread target) &#123;</span><br><span class="line">        <span class="keyword">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;before unpack&quot;</span>);</span><br><span class="line">        LockSupport.unpark(target);</span><br><span class="line">        System.out.println(<span class="string">&quot;after unpack&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> TaskThread(Thread.currentThread()).start();</span><br><span class="line">    </span><br><span class="line">    System.out.println(<span class="string">&quot;before pack&quot;</span>);</span><br><span class="line">    LockSupport.park();</span><br><span class="line">    System.out.println(<span class="string">&quot;after pack&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="pack与wait的区别"><a href="#pack与wait的区别" class="headerlink" title="pack与wait的区别"></a>pack与wait的区别</h3><table>
+<thead>
+<tr>
+<th align="center">情况</th>
+<th align="center">wait</th>
+<th align="center">pack</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">执行位置</td>
+<td align="center">必须在同步代码中执行</td>
+<td align="center">任意位置</td>
+</tr>
+<tr>
+<td align="center">是否释放锁（如果有的话）</td>
+<td align="center">释放</td>
+<td align="center">不释放，只负责阻塞线程</td>
+</tr>
+<tr>
+<td align="center">先后顺序影响</td>
+<td align="center">先notify后wait会导致线程阻塞</td>
+<td align="center">先unpack后pack，会跳过unpack执行后面的</td>
+</tr>
+<tr>
+<td align="center">唤醒</td>
+<td align="center">由另一个线程调用notify唤醒，唤醒后不一定继续执行（没抢到锁）</td>
+<td align="center">由另一个线程调用unpack唤醒，唤醒后一定继续执行</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/18/Java/JUC/%E5%8E%9F%E5%AD%90%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
+      <meta itemprop="name" content="aurora">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aurora">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/18/Java/JUC/%E5%8E%9F%E5%AD%90%E7%B1%BB/" class="post-title-link" itemprop="url">JUC——原子类</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-18 11:22:21" itemprop="dateCreated datePublished" datetime="2021-12-18T11:22:21+08:00">2021-12-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-19 17:00:45" itemprop="dateModified" datetime="2021-12-19T17:00:45+08:00">2021-12-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/12/18/Java/JUC/%E5%8E%9F%E5%AD%90%E7%B1%BB/" class="post-meta-item leancloud_visitors" data-flag-title="JUC——原子类" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>644</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="前置概念"><a href="#前置概念" class="headerlink" title="前置概念"></a>前置概念</h3><p><strong>原子类</strong></p>
+<blockquote>
+<p>java juc包下提供的一种用于原子操作的类。</p>
+</blockquote>
+<p><strong>CAS</strong></p>
+<blockquote>
+<p>CAS全称为Compare and Swap，即比较并交换。它是一种基于硬件平台的汇编指令，能够实现原子地更新数据。</p>
+</blockquote>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在没有原子类以及CAS操作之前，我们往往需要通过<code>加锁</code>的方式来保证变量的原子性，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> sendSuccess = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">success</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sendSuccess ++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加锁是一种重量级的解决方案，会造成进程（线程）阻塞以及频繁的上下文切换的开销。但是随着硬件及汇编指令的发展，我们可以使用<code>CAS</code>操作来取代重量级的锁。</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS主要用到了两个参数：期望值<code>expect</code>和更新值<code>update</code>。</p>
+<p>它的作用便是比较某个变量的值是否与期望值相等，如果相等则进行更新。</p>
+<h2 id="原子类"><a href="#原子类" class="headerlink" title="原子类"></a>原子类</h2><h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> AtomicInteger sendSuccess = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">success</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sendSuccess.incrementAndGet();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>原子类的底层实现便用到了CAS。它体现在<code>unsafe</code>包中的<code>getAndAddInt</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">incrementAndGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddInt(<span class="keyword">this</span>, valueOffset, <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 这个方法主要做了一件事：</p>
+<p>读取某个变量的值<code>var5</code>，然后在循环中不断尝试CAS操作。如果<code>var5</code>和<code>this</code>对象中记录的值一样，那么就加上<code>var4</code>（这里的加操作可以视实际情况而变化），代表CAS操作进行成功。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndAddInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var5;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        var5 = <span class="keyword">this</span>.getIntVolatile(var1, var2);</span><br><span class="line">    &#125; <span class="keyword">while</span>(!<span class="keyword">this</span>.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> var5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p><code>CAS</code>能够避免加锁，但是它也存在一定的缺陷。</p>
+<p><strong>1. ABA问题</strong></p>
+<p>如果一个值最开始为A，中间变为B之后又变回了A，那么CAS是无法检测到这个变化的，即<strong>CAS无法确认变量是否被修改过</strong>。</p>
+<p>解决：使用版本号或标志位。参照<code>AtomicStampedReference</code></p>
+<p><strong>2. CPU开销</strong></p>
+<p>通过上面的代码实现，我们看到CAS操作是在循环中不断进行的。如果CAS操作一直失败，就会<strong>占用大量的处理器时间</strong>。</p>
+<p><strong>3. 单变量CAS</strong></p>
+<p>上述的实现只能对一个变量实现原子修改。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+  <div style="margin-bottom: 30px; padding: 15px;border:2px solid #745fb5;">
       
   
   
@@ -469,10 +1219,10 @@
       <meta itemprop="name" content="Aurora">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
             <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E9%9B%86%E7%BE%A4/" class="post-title-link" itemprop="url">Redis集群</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -501,6 +1251,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>131</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -531,1098 +1295,7 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="post-title-link" itemprop="url">Redis主从复制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:59" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%A4%9A%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="post-meta-item leancloud_visitors" data-flag-title="Redis主从复制" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><blockquote>
-<p><strong>主从复制</strong>是指将一个redis服务器中的数据复制到另一个服务器上，前者称为主服务器，后者则是从服务器。</p>
-<p>主从复制一般用于<strong>读写分离</strong>的场景，即主服务器执行读写请求，其他从服务器执行读请求。这样可以缓解主服务器的读写压力。</p>
-</blockquote>
-<h3 id="一、类型"><a href="#一、类型" class="headerlink" title="一、类型"></a>一、类型</h3><p><strong>全量复制：</strong>复制主服务器的所有数据；一般用于建立主从关系时。</p>
-<p><strong>增量复制：</strong>复制后来变化的部分数据；一般用于断开连接后重连时</p>
-<p>注意，增量复制是redis2.8以后才有的功能，在此之前只能进行全量复制。</p>
-<h3 id="二、主从复制的过程"><a href="#二、主从复制的过程" class="headerlink" title="二、主从复制的过程"></a>二、主从复制的过程</h3><p>全量复制的过程示意：</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211028204216.png" alt="image-20211028204216102"></p>
-<h5 id="1-发起主从复制的请求"><a href="#1-发起主从复制的请求" class="headerlink" title="1.发起主从复制的请求"></a>1.发起主从复制的请求</h5><p>客户端输入<code>salveof [ip] [port]</code>命令，表示希望当前redis服务器成为目标服务器的从节点。</p>
-<h5 id="2-向目标服务器发送同步请求"><a href="#2-向目标服务器发送同步请求" class="headerlink" title="2.向目标服务器发送同步请求"></a>2.向目标服务器发送同步请求</h5><p>服务器收到客户端的<code>salveof</code>命令后，向目标服务器发送<code>psync</code>命令。</p>
-<p>格式为<code>psync [runid] [offset]</code></p>
-<ul>
-<li>因为是首次连接，则发送<code>psync ? -1</code></li>
-<li>如果本地存有运行id和偏移量，则发送这些数据，用来表示重连。</li>
-</ul>
-<h5 id="3-响应请求"><a href="#3-响应请求" class="headerlink" title="3.响应请求"></a>3.响应请求</h5><p>主节点判断为全量复制，因此返回<code>fullresync [runid] [offset]</code>。</p>
-<p><strong>runid</strong></p>
-<p>每个服务器启动时会生成一个随机数runid。主从复制时，从节点会记录下主节点传过来的runid，作用有二：</p>
-<ol>
-<li>标志主节点的身份</li>
-<li>可以根据runid是否为空来判断是初次连接还是断线重连的主从复制。</li>
-</ol>
-<p><strong>offset</strong></p>
-<p>用来同步主从服务器之间接收的数据。</p>
-<p>主节点和从节点都持有<code>offset</code>，分别表示发送数据量和接收数据量。</p>
-<ul>
-<li>正常情况下，两者的偏移应该是相同的。</li>
-<li>断线重连时，从节点丢失一部分数据，因此它发送的psync请求携带的偏移量参数小于主节点，主节点可以判断并给出缺失的部分数据。</li>
-</ul>
-<h5 id="4-发送rdb快照"><a href="#4-发送rdb快照" class="headerlink" title="4.发送rdb快照"></a>4.发送rdb快照</h5><h5 id="5-发送写命令"><a href="#5-发送写命令" class="headerlink" title="5.发送写命令"></a>5.发送写命令</h5><p>在主从复制建立之后，主节点会把所有的写命令发送给从节点，<strong>来保证主从数据的一致</strong>。</p>
-<p>此外，为了应对<strong>增量复制</strong>的场景，主节点还将写命令放入了一个固定的缓冲区中，当从节点因为断线缺失一部分写命令后，主节点会从缓冲区中拿出来给它。</p>
-<h3 id="三、主从复制的一些问题"><a href="#三、主从复制的一些问题" class="headerlink" title="三、主从复制的一些问题"></a>三、主从复制的一些问题</h3><h5 id="3-1主从节点数据的延迟如何优化？"><a href="#3-1主从节点数据的延迟如何优化？" class="headerlink" title="3.1主从节点数据的延迟如何优化？"></a>3.1主从节点数据的延迟如何优化？</h5><h5 id="3-2从节点中数据的过期如何处理？"><a href="#3-2从节点中数据的过期如何处理？" class="headerlink" title="3.2从节点中数据的过期如何处理？"></a>3.2从节点中数据的过期如何处理？</h5><h5 id="3-3为什么主从复制不用AOF文件"><a href="#3-3为什么主从复制不用AOF文件" class="headerlink" title="3.3为什么主从复制不用AOF文件"></a>3.3为什么主从复制不用AOF文件</h5>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">Redis数据结构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:13" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-meta-item leancloud_visitors" data-flag-title="Redis数据结构" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、简单动态字符串"><a href="#一、简单动态字符串" class="headerlink" title="一、简单动态字符串"></a>一、简单动态字符串</h2><h3 id="1-结构"><a href="#1-结构" class="headerlink" title="1.结构"></a>1.结构</h3><p>redis中字符串对应的结构体定义为<code>sdshdr</code>，包含三个属性：</p>
-<p>已用长度、可用长度和字节数组。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type <span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> len;</span><br><span class="line">	<span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">	<span class="keyword">char</span>[] buf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>字符串示例：sds {len: 2, free: 2, buf: [‘h’, ‘a’, ‘\0’, ‘’, ‘’]}</strong></p>
-<h3 id="2-修改字符串"><a href="#2-修改字符串" class="headerlink" title="2.修改字符串"></a>2.修改字符串</h3><p><strong>扩容策略</strong></p>
-<p>字符串增长时，如果可用空间足够，就直接分配；如果可用空间不足，则进行扩容。</p>
-<p>计算分配后的长度得到新的<code>len</code>，判断：</p>
-<ul>
-<li>如果<code>len</code>小于等于1MB（$2^{20}$），则分配len可用空间</li>
-<li>如果<code>len</code>大于1MB，则分配1MB可用空间</li>
-</ul>
-<p><strong>删除策略</strong></p>
-<p>删除字符串中的某些字符时，不会立刻释放那些空间，而是把它们作为free的空间</p>
-<p><strong>特点总结</strong></p>
-<ol>
-<li>减少内存重分配次数（由n次到至多为n）</li>
-<li>惰性回收</li>
-</ol>
-<h3 id="3-SDS与C字符串的区别"><a href="#3-SDS与C字符串的区别" class="headerlink" title="3.SDS与C字符串的区别"></a>3.SDS与C字符串的区别</h3><table>
-<thead>
-<tr>
-<th align="center">区别（SDS的特点）</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">O(1)时间复杂度获取字符串长度</td>
-<td align="center">通过<code>len</code>属性来获取已用长度</td>
-</tr>
-<tr>
-<td align="center">直接避免缓冲区溢出</td>
-<td align="center">追加字符串时，自动判断并进行扩容，防止忘记分配空间时<code>buf</code>溢出影响到其他内存区域</td>
-</tr>
-<tr>
-<td align="center">减少内存重分配次数</td>
-<td align="center">修改n次字符串，最多会产生n次内存重分配</td>
-</tr>
-<tr>
-<td align="center">二进制安全</td>
-<td align="center">支持任意的数据，如图片、序列化对象等</td>
-</tr>
-</tbody></table>
-<h2 id="二、链表"><a href="#二、链表" class="headerlink" title="二、链表"></a>二、链表</h2><p>链表的实现为常见的双向链表结构，表现在：</p>
-<ol>
-<li>当前节点拥有前后两个节点的指针</li>
-<li>定义链表结构体，方便操作</li>
-</ol>
-<h2 id="三、压缩列表（ziplist）"><a href="#三、压缩列表（ziplist）" class="headerlink" title="三、压缩列表（ziplist）"></a>三、压缩列表（ziplist）</h2><p>压缩列表是<strong>列表键</strong>和<strong>哈希键</strong>的底层实现之一，当列表元素数量较少且每个元素比较小时，会采用压缩列表进行实现。</p>
-<h3 id="1-结构-1"><a href="#1-结构-1" class="headerlink" title="1.结构"></a>1.结构</h3><p><strong>整体结构</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">zlbytes</th>
-<th align="center">zltail</th>
-<th align="center">zllen</th>
-<th align="center">entry1</th>
-<th align="center">entryN</th>
-<th align="center">zlend</th>
-</tr>
-</thead>
-</table>
-<p>属性说明：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性</th>
-<th align="center">描述</th>
-<th align="center">长度（字节）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">zlbytes</td>
-<td align="center">记录压缩列表占用内存的字节数；用于确定zlend地址</td>
-<td align="center">4</td>
-</tr>
-<tr>
-<td align="left">zltail</td>
-<td align="center">记录从列表初始地址到表尾节点的偏移量；用于确定表尾地址</td>
-<td align="center">4</td>
-</tr>
-<tr>
-<td align="left">zllen</td>
-<td align="center">记录节点个数；如果是$2^{16}-1$，则需要遍历列表才行</td>
-<td align="center">2</td>
-</tr>
-<tr>
-<td align="left">entryX</td>
-<td align="center">每个节点</td>
-<td align="center">不定</td>
-</tr>
-<tr>
-<td align="left">zlend</td>
-<td align="center">标记压缩列表的末端</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p><strong>节点结构</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">previous_entry_length</th>
-<th align="center">encoding</th>
-<th align="center">content</th>
-</tr>
-</thead>
-</table>
-<p>节点属性说明：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">previous_entry_length</td>
-<td align="center">记录前一个节点的长度，占用1字节或5字节</td>
-</tr>
-<tr>
-<td align="left">encoding</td>
-<td align="center">记录数据的类型和长度</td>
-</tr>
-<tr>
-<td align="left">content</td>
-<td align="center">记录节点的值</td>
-</tr>
-</tbody></table>
-<p>其中，<code>previous_entry_length</code>属性最为重要，借助它我们可以从表尾节点向前遍历。</p>
-<p><strong>previous_entry_length的长度变化也是引起连锁更新的主要原因。</strong></p>
-<ol>
-<li>长度小于254时<ul>
-<li><code>previous_entry_length</code>占一字节</li>
-</ul>
-</li>
-<li>大于等于254时<ul>
-<li><code>previous_entry_length</code>占5字节，第一个字节作为标志取<code>0xFE</code>，剩余4个字节表示真正长度</li>
-</ul>
-</li>
-</ol>
-<h3 id="2-连锁更新"><a href="#2-连锁更新" class="headerlink" title="2.连锁更新"></a>2.连锁更新</h3><p>假设列表为：node(N) - node(N-1) - node(…) - node(1)</p>
-<p>在极端情况下，在节点N前插入一个大于等于254字节的新节点，会引起从节点N到节点1的一轮更新。</p>
-<p>而在一轮更新时，修改每个节点的<code>previous_entry_length</code>属性时，最坏情况时也会引发后面所有节点的修改。</p>
-<p>因此最坏的时间复杂度为$O(n * n) = O(n^2)$。</p>
-<h3 id="3-应用"><a href="#3-应用" class="headerlink" title="3.应用"></a>3.应用</h3><p>压缩列表适合列表元素较少的场景，因为较少时读连续的内存会比较快。</p>
-<p>元素较多时会使用双向链表进行存储。（涉及对象与编码）</p>
-<h2 id="四、字典"><a href="#四、字典" class="headerlink" title="四、字典"></a>四、字典</h2><p>字典即哈希表，实现和Java的HashMap类似，内部结构是一个Entry数组</p>
-<p>哈希表涉及：</p>
-<ol>
-<li>计算哈希和下标：哈希值和掩码进行与操作</li>
-<li>解决哈希冲突：头插法</li>
-<li>扩容</li>
-<li>rehash</li>
-</ol>
-<h2 id="五、整数集合"><a href="#五、整数集合" class="headerlink" title="五、整数集合"></a>五、整数集合</h2><h3 id="1-结构-2"><a href="#1-结构-2" class="headerlink" title="1.结构"></a>1.结构</h3><p>集合内部使用数组来存放元素，和Java的HashSet不太一样。</p>
-<p>因此，我不得不抛出一些疑惑：contents数组有什么特点？它是如何实现去重的？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">intset</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> encoding; <span class="comment">// 编码方式，和数组升级有关</span></span><br><span class="line">    <span class="keyword">uint32_t</span> length;   <span class="comment">// 元素数量</span></span><br><span class="line">    <span class="keyword">int8_t</span> contents[]; <span class="comment">// 数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-特点"><a href="#2-特点" class="headerlink" title="2.特点"></a>2.特点</h3><p><strong>1.数组有序</strong></p>
-<p><strong>2.数组升级</strong></p>
-<ul>
-<li><p>何时升级：数组可以存放不同位数的整数，当插入一个更长位的整数后，数组格子就会扩大，但元素位数仍然不变</p>
-</li>
-<li><p>示例：原数组存有3个16位的整数1，2，3，共占48位。插入32位的65535后，数组扩容为128位，但是原来的3个元素仍占48位</p>
-</li>
-<li><p>优点</p>
-<ul>
-<li>灵活，数组可以存放不同位数的整型</li>
-<li>节约内存</li>
-</ul>
-</li>
-</ul>
-<p><strong>3.适用于较少元素的场景</strong></p>
-<h3 id="3-如何保证去重"><a href="#3-如何保证去重" class="headerlink" title="3.如何保证去重"></a>3.如何保证去重</h3><p>插入元素的时间复杂度为$O(n)$，那么在寻找指定位置时判断是否重复即可。</p>
-<h2 id="六、跳表（skiplist）"><a href="#六、跳表（skiplist）" class="headerlink" title="六、跳表（skiplist）"></a>六、跳表（skiplist）</h2><h3 id="1-基本介绍"><a href="#1-基本介绍" class="headerlink" title="1.基本介绍"></a>1.基本介绍</h3><p>跳表是一种有序的数据结构。</p>
-<p><strong>思想</strong></p>
-<p>普通链表查找的时间复杂度为$O(n)$，跳表通过存储<strong>额外的节点信息</strong>来达到减少查询元素的目的。</p>
-<p>那么额外的节点信息究竟是什么？答案就是<strong>层和回退指针</strong>。</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211023114232.png" alt="image-20211023114232297"></p>
-<p><strong>层</strong></p>
-<p><code>节点维度</code>：每个节点包含多个层和一个回退指针。</p>
-<p><code>跳表维度</code>：观察整个跳表，可以发现它是一个多层结构。第一层就是一条横向的，包含所有元素的链表。</p>
-<p>然后往上，每一层都是前一层的子集，这样就能做到查询时<strong>跳过一部分元素</strong></p>
-<p><strong>回退指针</strong></p>
-<p>通过回退指针可以实现从表尾向表头进行遍历</p>
-<p>注意：前进时，可以跳多个节点，但回退时是一个一个回退的</p>
-<p><strong>总结</strong></p>
-<p>跳表的节点定义如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> &#123;</span></span><br><span class="line">    <span class="comment">// 多层</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">zskiplistLevel</span> &#123;</span></span><br><span class="line">    	<span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">forward</span>;</span> <span class="comment">// 前进指针</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> span;             <span class="comment">// 两个节点之间的跨度</span></span><br><span class="line">    &#125; level[];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 回退指针</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">backward</span>;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 键值</span></span><br><span class="line">    <span class="keyword">double</span> score;</span><br><span class="line">    robj *obj;</span><br><span class="line">&#125; zskiplistNode;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-分析"><a href="#2-分析" class="headerlink" title="2.分析"></a>2.分析</h3><p><strong>查询</strong></p>
-<p>从某个节点的最上层链表开始查询，比较前进节点与目标值：</p>
-<ol>
-<li>如果下一跳的值大于目标，则判断下一层（仍在当前节点）</li>
-<li>如果下一跳的值小于等于目标值，则前进到下一跳（跳过了若干个节点）</li>
-</ol>
-<p><strong>排位</strong></p>
-<p>查询该节点，然后累加经过的每一层的跨度（即跳过了多少个节点），就可以知道节点的排名。</p>
-<h3 id="3-应用-1"><a href="#3-应用-1" class="headerlink" title="3.应用"></a>3.应用</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BC%96%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BC%96%E7%A0%81/" class="post-title-link" itemprop="url">Redis对象与编码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:22" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BC%96%E7%A0%81/" class="post-meta-item leancloud_visitors" data-flag-title="Redis对象与编码" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、对象"><a href="#一、对象" class="headerlink" title="一、对象"></a>一、对象</h2><p>Redis存储键值对时，把键和值都当作<code>redisObject</code>来实现</p>
-<p>redisObject包含三个属性：</p>
-<ul>
-<li>对象类型</li>
-<li>编码</li>
-<li>指向底层数据结构的指针</li>
-</ul>
-<h3 id="对象类型"><a href="#对象类型" class="headerlink" title="对象类型"></a>对象类型</h3><p>对象类型总共有五种：<strong>String、List、Hash、Set和ZSet</strong>。</p>
-<p>键值对中的键通常总是字符串对象，而值可以是不同的对象类型。</p>
-<p><strong>这五种对象就是Redis对外的5种数据类型。</strong></p>
-<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>编码表示一个<strong>redisObject</strong>对象底层实现的数据类型。</p>
-<p>例如，一个字符串对象底层可以由<strong>int、raw或embstr</strong>实现（根据具体存储的值和大小来变化）</p>
-<h2 id="二、各种对象介绍"><a href="#二、各种对象介绍" class="headerlink" title="二、各种对象介绍"></a>二、各种对象介绍</h2><h3 id="字符串对象"><a href="#字符串对象" class="headerlink" title="字符串对象"></a>字符串对象</h3><h5 id="1-底层数据结构"><a href="#1-底层数据结构" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：int、raw和embstr</strong></p>
-<p><strong>使用情况：</strong></p>
-<ul>
-<li><strong>int</strong>：值为整数时，会使用int编码</li>
-<li><strong>embstr</strong>：字符串小于等于32字节时，使用短SDS。（只读）</li>
-<li><strong>raw</strong>：大于32字节，使用SDS。（简单动态字符串）</li>
-</ul>
-<h5 id="2-特点"><a href="#2-特点" class="headerlink" title="2.特点"></a>2.特点</h5><p>使用<code>embstr</code>可以减少内存分配次数。</p>
-<p>解释：用raw需要分配两次内存，一次为redisObject，另一次为sds；而embstr只进行一次分配</p>
-<h5 id="3-状态变化"><a href="#3-状态变化" class="headerlink" title="3.状态变化"></a>3.状态变化</h5><p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211022162851.png" alt="image-20211022162850653"></p>
-<h5 id="4-语法"><a href="#4-语法" class="headerlink" title="4.语法"></a>4.语法</h5><p>插入字符串键：<code>SET [key] [value]</code></p>
-<p>获取字符串键：<code>GET [key]</code></p>
-<hr>
-<h3 id="列表对象"><a href="#列表对象" class="headerlink" title="列表对象"></a>列表对象</h3><h5 id="1-底层数据结构-1"><a href="#1-底层数据结构-1" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：ziplist和linkedlist</strong></p>
-<p>使用情况：满足以下两个条件时，使用压缩列表；反之，则用双向链表。</p>
-<ol>
-<li>列表中的每个字符串对象都小于64字节</li>
-<li>列表总元素小于512个</li>
-</ol>
-<h5 id="2-变化"><a href="#2-变化" class="headerlink" title="2.变化"></a>2.变化</h5><blockquote>
-<p>linkedlist：next和prev指针浪费空间，且容易造成内存碎片化</p>
-<p>ziplist：适用于数据量较小的场景</p>
-<p>redis3.2之后，使用quicklist代替前两者，整体结构是链表，内部使用压缩列表分块</p>
-</blockquote>
-<h5 id="3-语法"><a href="#3-语法" class="headerlink" title="3.语法"></a>3.语法</h5><p>插入多个元素：<code>LRANGE [key] [value1] [value2]...</code></p>
-<p>获取整个列表：<code>LRANGE [key] 0 -1</code></p>
-<hr>
-<h3 id="哈希对象"><a href="#哈希对象" class="headerlink" title="哈希对象"></a>哈希对象</h3><h5 id="1-底层数据结构-2"><a href="#1-底层数据结构-2" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：ziplist和hashtable</strong></p>
-<p>哈希对象底层结构的变化情况基本和列表对象一致，即同样是满足两个条件时，使用压缩列表：</p>
-<ol>
-<li>每个键值对中的键和值都小于64字节</li>
-<li>总元素小于512个</li>
-</ol>
-<p>当用来实现<code>ziplist</code>哈希对象时，键值对是按<code>key1, value1, key2, value2</code>的顺序存储在<code>ziplist</code>中。</p>
-<h5 id="2-语法"><a href="#2-语法" class="headerlink" title="2.语法"></a>2.语法</h5><p>插入元素：<code>HSET [key] [k] [v]</code></p>
-<p>获取某个元素：<code>HGET [key] [k]</code></p>
-<p>判断是否存在某个键：<code>HEXISTS [key] [k]</code></p>
-<hr>
-<h3 id="集合对象"><a href="#集合对象" class="headerlink" title="集合对象"></a>集合对象</h3><h5 id="1-底层数据结构-3"><a href="#1-底层数据结构-3" class="headerlink" title="1.底层数据结构"></a>1.底层数据结构</h5><p><strong>底层实现：intset和hashtable</strong></p>
-<p>使用情况：集合元素全是整数且个数小于512时，使用<code>intset</code>来存储。</p>
-<h5 id="2-语法-1"><a href="#2-语法-1" class="headerlink" title="2.语法"></a>2.语法</h5><p>插入多个元素：<code>SADD [key] [v1] [v2]...</code></p>
-<hr>
-<h3 id="有序集合对象"><a href="#有序集合对象" class="headerlink" title="有序集合对象"></a>有序集合对象</h3><p><strong>底层实现：ziplist和skiplist</strong></p>
-<p><strong>使用情况：</strong>满足两个条件时，使用ziplist；否则就用跳表实现</p>
-<ul>
-<li>元素个数小于128</li>
-<li>每个元素小于64字节</li>
-</ul>
-<p>使用跳表实现时，额外使用了一个map存储键值的映射关系，从而实现O(1)时间复杂度获取某个元素。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">Redis命令记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:09:27" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/" class="post-meta-item leancloud_visitors" data-flag-title="Redis命令记录" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>查看某个键的底层实现</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">object</span> encoding <span class="selector-attr">[key]</span></span><br></pre></td></tr></table></figure>
-
-<p>查看某个键的引用计数</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">object</span> refcount <span class="selector-attr">[key]</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="post-title-link" itemprop="url">Redis过期与淘汰策略</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:41" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="post-meta-item leancloud_visitors" data-flag-title="Redis过期与淘汰策略" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="过期"><a href="#过期" class="headerlink" title="过期"></a>过期</h2><p>redis的数据库通过<code>字典</code>保存所有的键值对，键是一个字符串对象，值可以是之前介绍的多种对象之一。</p>
-<p>但是随着键值对的不断增加，它占用的内存空间会越来越大，因此redis提供了设置过期的方法来减少内存的使用。</p>
-<h3 id="一、过期相关的命令"><a href="#一、过期相关的命令" class="headerlink" title="一、过期相关的命令"></a>一、过期相关的命令</h3><p><strong>设置过期时间</strong></p>
-<ul>
-<li><p>EXPIRE：秒级</p>
-</li>
-<li><p>PEXPIRE：毫秒级</p>
-</li>
-<li><p>EXPIREAT</p>
-</li>
-<li><p>PEXPIREAT</p>
-</li>
-<li><p>示例：<code>EXPIRE [key] [time]</code></p>
-</li>
-</ul>
-<p>另外，对于字符串对象可以在设置时直接附带过期时间。</p>
-<p>示例：<code>SETEX [key] [value] [time]</code></p>
-<p><strong>查看剩余过期时间</strong></p>
-<ul>
-<li>TTL：秒级</li>
-<li>PTTL：毫秒级</li>
-<li>示例：<code>TTL [key]</code></li>
-</ul>
-<h3 id="二、如何实现过期"><a href="#二、如何实现过期" class="headerlink" title="二、如何实现过期"></a>二、如何实现过期</h3><p>首先，我们需要知道：</p>
-<ol>
-<li>redis使用一个字典来存储所有键值对，该字典叫做<code>键空间</code></li>
-<li>键值对中的键和值都是一个<code>redisObject</code>对象</li>
-</ol>
-<p>知道上面两个概念后，redis实现过期的方式就很容易理解了：即<strong>使用一个<code>过期字典</code>记录键的过期时间</strong></p>
-<p>其中，过期字典的键值如下：</p>
-<ul>
-<li><p>过期字典的键与键空间的键相同，都是指向键的指针。</p>
-</li>
-<li><p>过期字典的值就是过期时间的毫秒时间戳，通过与当前时间戳进行比较来判断是否过期。</p>
-</li>
-</ul>
-<h3 id="三、过期策略介绍"><a href="#三、过期策略介绍" class="headerlink" title="三、过期策略介绍"></a>三、过期策略介绍</h3><p>常见的过期策略有3种，分别是定时删除、惰性删除和定期删除。</p>
-<p><strong>定时删除</strong></p>
-<ul>
-<li>描述：为每个键设置一个定时器，时间到就删除</li>
-<li>特点：及时删除对内存友好；但计时器过多时占用CPU资源</li>
-</ul>
-<p><strong>惰性删除</strong></p>
-<ul>
-<li>描述：取出键的时候才进行过期检查</li>
-<li>特点：占用CPU资源较少，但是过期键容易堆积，浪费内存</li>
-</ul>
-<p>基于上述两种删除策略，我们又有一种折中的方案，即：</p>
-<p><strong>定期删除</strong></p>
-<ul>
-<li>描述：分多次遍历各个数据库，随机抽一部分键值对进行过期检查</li>
-</ul>
-<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>redis使用<code>惰性删除</code>和<code>定期删除</code>两种方式作为键值对的过期策略。</p>
-<p>但是仍然存在一些问题：</p>
-<ol>
-<li>定期删除的随机性可能会留下一些很久未使用的key</li>
-<li>大量加入键值对会造成内存溢出</li>
-</ol>
-<p>因此redis还采用了<code>内存淘汰策略</code>来应对内存耗尽的场景。</p>
-<h2 id="内存淘汰"><a href="#内存淘汰" class="headerlink" title="内存淘汰"></a>内存淘汰</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/newCheng/article/details/100700101">https://blog.csdn.net/newCheng/article/details/100700101</a></p>
-<h3 id="内存淘汰策略介绍（8种）"><a href="#内存淘汰策略介绍（8种）" class="headerlink" title="内存淘汰策略介绍（8种）"></a>内存淘汰策略介绍（8种）</h3><p><strong>无淘汰策略：noeviction，内存溢出时拒绝插入</strong></p>
-<p><strong>针对所有的键值对</strong></p>
-<ul>
-<li>allkeys-lru</li>
-<li>allkeys-random</li>
-<li>allkeys-lfu</li>
-</ul>
-<p><strong>针对设置过期时间的键值对</strong></p>
-<ul>
-<li>volatile-lru</li>
-<li>volatile-random</li>
-<li>volatile-lfu</li>
-<li>volatile-ttl：优先淘汰过期时间更早的键值对</li>
-</ul>
-<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p><strong>查看当前的最大内存设置和内存淘汰策略</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG GET maxmemory</span><br><span class="line">CONFIG GET maxmemory-policy</span><br></pre></td></tr></table></figure>
-
-<p><strong>修改内存淘汰策略</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET maxmemory-policy allkeys-lru</span><br><span class="line">CONFIG REWRITE <span class="comment"># 服务启动时带上配置文件才能执行此命令，否则报错</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-title-link" itemprop="url">Redis持久化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:50" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-meta-item leancloud_visitors" data-flag-title="Redis持久化" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p><code>Redis</code>是一种内存型的数据库，它的键值对数据全部存在内存中。如果不加以预防，就会面临断电丢失的情况。</p>
-<p>因此<code>Redis</code>用到了两种持久化策略，分别是<code>RDB</code>和<code>AOF</code></p>
-</blockquote>
-<h2 id="RDB-快照"><a href="#RDB-快照" class="headerlink" title="RDB(快照)"></a>RDB(快照)</h2><p>对于一种持久化方式，我们可能会有以下一些疑惑：</p>
-<ol>
-<li>它持久化了什么</li>
-<li>持久化是怎样进行的</li>
-<li>如何恢复数据</li>
-<li>特点</li>
-</ol>
-<p>下面我们会围绕这些问题进行介绍。</p>
-<h3 id="一、RDB介绍"><a href="#一、RDB介绍" class="headerlink" title="一、RDB介绍"></a>一、RDB介绍</h3><p>RDB文件是一种经过压缩的二进制文件，保存了Redis在某一时刻的<strong>所有数据</strong>，即<strong>快照</strong></p>
-<p>它的文件结构大致如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">REDIS</th>
-<th align="center">db_version</th>
-<th align="center">databases</th>
-<th align="center">EOF</th>
-<th align="center">checksum</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">魔数</td>
-<td align="center">rdb版本</td>
-<td align="center">多个数据库数据</td>
-<td align="center">标志结束</td>
-<td align="center">校验和</td>
-</tr>
-</tbody></table>
-<h3 id="二、RDB文件的生成与载入"><a href="#二、RDB文件的生成与载入" class="headerlink" title="二、RDB文件的生成与载入"></a>二、RDB文件的生成与载入</h3><h5 id="2-1RDB相关命令"><a href="#2-1RDB相关命令" class="headerlink" title="2.1RDB相关命令"></a>2.1RDB相关命令</h5><p>生成RDB文件的相关命令有两个，分别是<code>save</code>和<code>bgsave</code></p>
-<ul>
-<li><code>save</code>：会阻塞服务器进程</li>
-<li><code>bgsave</code>：创建子进程进行持久化，不阻塞</li>
-</ul>
-<h5 id="2-2生成情况：手动or自动"><a href="#2-2生成情况：手动or自动" class="headerlink" title="2.2生成情况：手动or自动"></a>2.2生成情况：手动or自动</h5><p>Redis客户端可以通过上述的<code>save</code>或<code>bgsave</code>命令手动进行持久化。</p>
-<p>此外，服务端也支持配置，在满足配置条件时自动执行RDB持久。</p>
-<p>例如<code>save 900 1</code>配置表示在900秒内修改1次，就会启动RDB。</p>
-<h5 id="2-3加载RDB文件"><a href="#2-3加载RDB文件" class="headerlink" title="2.3加载RDB文件"></a>2.3加载RDB文件</h5><p>如果没有开启AOF，服务器会在启动时寻找RDB文件并进行加载。</p>
-<h3 id="三、相关配置"><a href="#三、相关配置" class="headerlink" title="三、相关配置"></a>三、相关配置</h3><p><strong>RDB的默认配置</strong></p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">save</span> <span class="number">900</span> <span class="number">1</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">300</span> <span class="number">10</span></span><br><span class="line"><span class="attribute">save</span> <span class="number">60</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>关闭RDB持久化</strong></p>
-<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">save</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="AOF-追加"><a href="#AOF-追加" class="headerlink" title="AOF(追加)"></a>AOF(追加)</h2><h3 id="一、AOF介绍"><a href="#一、AOF介绍" class="headerlink" title="一、AOF介绍"></a>一、AOF介绍</h3><p>AOF持久化通过记录Redis服务器的<strong>写操作</strong>来实现持久化。</p>
-<h3 id="二、AOF文件的生成与载入"><a href="#二、AOF文件的生成与载入" class="headerlink" title="二、AOF文件的生成与载入"></a>二、AOF文件的生成与载入</h3><h5 id="2-1实现AOF文件"><a href="#2-1实现AOF文件" class="headerlink" title="2.1实现AOF文件"></a>2.1实现AOF文件</h5><p>实现AOF持久化的过程可以分为3步：<strong>命令追加</strong>、<strong>文件写入</strong>和<strong>文件同步</strong>。</p>
-<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/20211025123206.png" alt="image-20211025123206155"></p>
-<ul>
-<li>命令追加<ul>
-<li>redis在处理命令请求时，用AOF缓冲区记录执行过的一些写操作</li>
-</ul>
-</li>
-<li>文件写入<ul>
-<li>redis处理完请求后，会将AOF缓冲区的内容写入到AOF文件中</li>
-</ul>
-</li>
-<li>文件同步<ul>
-<li>由于操作系统缓冲的存在，就会产生怎样写的情况</li>
-<li>文件同步通过一个<code>appendfsync</code>参数来配置。</li>
-</ul>
-</li>
-</ul>
-<p><strong>appendfsync参数配置</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">取值</th>
-<th align="center">对应策略</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">always</td>
-<td align="center">每次文件写入时都进行同步</td>
-</tr>
-<tr>
-<td align="center">everysec（默认）</td>
-<td align="center">正常写（会经过OS缓冲），后台线程判断超过一秒钟时进行同步操作</td>
-</tr>
-<tr>
-<td align="center">no</td>
-<td align="center">正常写，由操作系统决定啥时候同步</td>
-</tr>
-</tbody></table>
-<p><strong>代码示例</strong></p>
-<p>写入文件时直接刷新到磁盘上，有两种方式可以做到。</p>
-<p>第一种：打开文件时使用<code>O_SYNC</code>标志位</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 同步打开</span></span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR|O_SYNC);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        </span><br><span class="line">    	close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种，写完文件后调用<code>fsync</code>、<code>fdatasync</code>等系统调用进行同步</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> s[] = <span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line">        <span class="keyword">int</span> fd = open(<span class="string">&quot;/root/file.txt&quot;</span>, O_RDWR);</span><br><span class="line">        write(fd, s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">        fsync(fd);</span><br><span class="line">    </span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="2-2加载AOF文件"><a href="#2-2加载AOF文件" class="headerlink" title="2.2加载AOF文件"></a>2.2加载AOF文件</h5><p>服务器启动时，如果开启了AOF持久化，则redis会开启一个伪客户端，把分析得到的命令交给伪客户端执行。</p>
-<h3 id="三、AOF重写"><a href="#三、AOF重写" class="headerlink" title="三、AOF重写"></a>三、AOF重写</h3><h5 id="3-1为什么要重写AOF文件？"><a href="#3-1为什么要重写AOF文件？" class="headerlink" title="3.1为什么要重写AOF文件？"></a>3.1为什么要重写AOF文件？</h5><p>AOF文件记录的是写操作，容易发生文件体积膨胀的问题。</p>
-<p>此外加载AOF文件时，执行效率也会降低。</p>
-<h5 id="3-2怎样重写AOF文件"><a href="#3-2怎样重写AOF文件" class="headerlink" title="3.2怎样重写AOF文件"></a>3.2怎样重写AOF文件</h5><p>redis开启子进程，在后台利用当前数据库的数据来重新生成AOF文件并覆盖原文件。</p>
-<p>使用<code>BGREWRITEAOF</code>命令可以手动开启重写。</p>
-<p><strong>特点：</strong></p>
-<ol>
-<li>使用子进程而不是当前进程：防止服务器阻塞</li>
-<li>没有使用原AOF文件的方式：</li>
-</ol>
-<p><strong>问题：子进程在后台生成AOF文件时，当前数据库的数据可能会发生变化，导致持久化的数据与实际数据不一致的情况</strong></p>
-<p>解决：重写AOF时，服务器把写操作记录到AOF缓冲和AOF重写缓冲中。</p>
-<p>解释：前者是为了AOF持久化的正常工作，后者是将AOF重写过程中的数据变化记录下来，等子进程重写完毕后把这一部分发送给它。</p>
-<h3 id="四、相关配置"><a href="#四、相关配置" class="headerlink" title="四、相关配置"></a>四、相关配置</h3><p><strong>AOF默认为关闭，如果要开启，改为yes</strong></p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">appendonly</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>文件同步策略</strong></p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta"># appendfsync no</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>自动重写AOF</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AOF文件大小为上次重写后AOF文件大小时，开始重写</span></span><br><span class="line">auto-aof-rewrite-percentage 100 </span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动进行AOF文件重写的最小大小</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结一下RDB与AOF的特点，从持久化速度、加载速度、文件大小、数据安全性等多个维度进行讨论。</p>
-<table>
-<thead>
-<tr>
-<th align="center">场景</th>
-<th align="center">RDB</th>
-<th align="center">AOF</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">持久化速度</td>
-<td align="center">不支持秒级，慢</td>
-<td align="center">支持秒级</td>
-</tr>
-<tr>
-<td align="center">加载速度</td>
-<td align="center">很快</td>
-<td align="center">执行写操作，慢</td>
-</tr>
-<tr>
-<td align="center">文件大小</td>
-<td align="center">压缩后小</td>
-<td align="center">文件较大</td>
-</tr>
-<tr>
-<td align="center">数据安全性</td>
-<td align="center">距离上次持久化后的数据都可能会丢</td>
-<td align="center">默认配置下最多丢1秒的数据</td>
-</tr>
-<tr>
-<td align="center">开销</td>
-<td align="center">每次持久化都会fork一个子进程</td>
-<td align="center">处理事件后需要写缓冲</td>
-</tr>
-</tbody></table>
-<h2 id="RDB与AOF的混合使用"><a href="#RDB与AOF的混合使用" class="headerlink" title="RDB与AOF的混合使用"></a>RDB与AOF的混合使用</h2><p>redis4.0提出了两种持久化方式混合使用的方案：</p>
-<p>RDB以一定的频率运行，然后在两次RDB间使用AOF记录写操作。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/aurora1004/pictures/raw/master/sky-5375005_1920.jpg">
-      <meta itemprop="name" content="aurora">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aurora">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Redis客户端与服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:08:32" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Redis客户端与服务器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><h3 id="一、客户端属性"><a href="#一、客户端属性" class="headerlink" title="一、客户端属性"></a>一、客户端属性</h3><p>服务器通过一个<code>clients</code>链表维护连接的客户端</p>
-<p>涉及的客户端信息有：描述符、名称、输入输出缓冲区、状态等等。</p>
-<h3 id="二、客户端类型"><a href="#二、客户端类型" class="headerlink" title="二、客户端类型"></a>二、客户端类型</h3><p>客户端的类型有：通过网络连接的客户端、加载AOF文件的伪客户端以及执行Lua脚本的伪客户端。</p>
-<p>不同的类型创建和关闭的方式不太一样。</p>
-<ol>
-<li>网络连接的客户端<ul>
-<li>创建：用<code>clients</code>链表相连</li>
-<li>关闭：正常关闭，或空转时间、缓冲区溢出等原因造成关闭</li>
-</ul>
-</li>
-<li>加载AOF文件的伪客户端<ul>
-<li>创建：单独创建</li>
-<li>关闭：加载完毕后关闭</li>
-</ul>
-</li>
-<li>执行Lua脚本的伪客户端<ul>
-<li>创建：用<code>lua_client</code>记录</li>
-<li>关闭：随服务器运行</li>
-</ul>
-</li>
-</ol>
-<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><h3 id="一、命令执行的过程"><a href="#一、命令执行的过程" class="headerlink" title="一、命令执行的过程"></a>一、命令执行的过程</h3><h5 id="1-1简化的过程"><a href="#1-1简化的过程" class="headerlink" title="1.1简化的过程"></a>1.1简化的过程</h5><ol>
-<li>客户端发送命令请求</li>
-<li>服务器接收请求并处理</li>
-<li>服务器返回结果</li>
-</ol>
-<p>其中1、3步其实涉及了Redis使用的<strong>协议格式</strong>，因为在通信时命令请求是被封装成某个协议格式进行发送的。</p>
-<p>第二步涉及Redis如何解析命令请求。</p>
-<h5 id="1-2服务器处理命令请求"><a href="#1-2服务器处理命令请求" class="headerlink" title="1.2服务器处理命令请求"></a>1.2服务器处理命令请求</h5><ol>
-<li>按协议格式解析命令请求</li>
-<li>命令执行器执行命令<ul>
-<li>预处理</li>
-<li>执行</li>
-<li>后续工作</li>
-</ul>
-</li>
-</ol>
-<p>Redis服务器维护了一个<code>命令表</code>的字典，可以根据命令的名称找到具体的执行函数。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+  </div>
 
   
   <nav class="pagination">
@@ -1694,20 +1367,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1748,17 +1421,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -1856,6 +1536,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

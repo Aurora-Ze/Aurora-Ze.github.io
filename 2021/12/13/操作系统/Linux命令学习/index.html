@@ -29,10 +29,14 @@
 <meta property="og:site_name" content="Aurora">
 <meta property="og:description" content="一、基本命令路径cd [path]：前往指定的路径  cd -：返回到上次的路径 cd ~：前往当前用户的用户目录 cd &#x2F;：前往根目录  pwd：打印当前路径 目录文件mkdir [dir_name]：创建一个目录 cp [src] [dst]：复制文件 mv [src] [dst]：移动文件（也可以用来重命名文件） rm [path]：删除文件  -r：表示递归的删除整个目录或文件 -f：表示">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202112211729497.png">
 <meta property="article:published_time" content="2021-12-13T12:06:09.651Z">
-<meta property="article:modified_time" content="2021-12-15T12:33:44.584Z">
+<meta property="article:modified_time" content="2021-12-23T06:55:23.934Z">
 <meta property="article:author" content="aurora">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202112211729497.png">
 
 <link rel="canonical" href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/">
 
@@ -51,15 +55,6 @@
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -240,7 +235,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-15 20:33:44" itemprop="dateModified" datetime="2021-12-15T20:33:44+08:00">2021-12-15</time>
+                <time title="修改时间：2021-12-23 14:55:23" itemprop="dateModified" datetime="2021-12-23T14:55:23+08:00">2021-12-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +243,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                  <a href="/categories/%E4%B8%93%E4%B8%9A%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">专业基础</span></a>
                 </span>
             </span>
 
@@ -259,6 +254,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -383,36 +392,252 @@
 <p><code>setfacl -m u:[username]:[rwx] [file]</code>：为某个文件设置一条关于用户的ACL规则，权限为rwx</p>
 <hr>
 <p>上面提到的两种权限控制都属于<strong>自主访问控制</strong>（DAC），权限管理的主体是用户，只要用户拥有相应文件的权限，就可以访问该文件。</p>
-<p>在DAC中，他人一旦非法获得root权限，那么整个操作系统就可能会受到不可预估的后果。</p>
+<p>在DAC中，一旦他人非法获得root权限，那么就会对整个操作系统产生无法预料的影响。</p>
 <h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><blockquote>
 <p>SELinux是一种强安全性的权限控制策略，它是<strong>强制访问控制</strong>（MAC）的一种典型形式。</p>
 </blockquote>
 <p>在SELinux的操作系统中，决定一个资源是否被访问的因素除了上述的<strong>读写执行权限</strong>外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
+<h2 id="六、进程控制"><a href="#六、进程控制" class="headerlink" title="六、进程控制"></a>六、进程控制</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><blockquote>
+<p>进程是一个正在运行的程序，主要包含PID、PPID、UID、GID和Status等信息。</p>
+</blockquote>
+<p><strong>创建进程</strong></p>
+<p>使用<code>fork</code>系统调用，创建一个子进程。除了PID、PPID和一些特殊资源<code>@锁、异步IO、待处理的信号集等</code>外，子进程共享了父进程的其他所有资源<code>@代码、数据和堆栈信息</code>。</p>
+<p>实际上，fork采用了<code>写时复制</code>的策略来节省内存拷贝的开销。</p>
+<p>在同一段代码中，我们通常利用fork的返回值来区分父子进程：</p>
+<ul>
+<li>大于0：在父进程中返回子进程PID</li>
+<li>等于0：子进程中返回0</li>
+<li>小于0：创建子进程失败</li>
+</ul>
+<h3 id="控制进程"><a href="#控制进程" class="headerlink" title="控制进程"></a>控制进程</h3><p><strong>信号</strong></p>
+<p>信号<code>signals</code>是一种进程级别的中断请求，我们可以用它来控制进程。</p>
+<ul>
+<li>查询所有信号<code>kill -l</code></li>
+<li>为某个进程发送信号<code>kill [signals] [pid]</code></li>
+</ul>
+<p><strong>优先级</strong></p>
+<p>使用<code>nice -n [number] [name]</code>来设置优先级</p>
+<h3 id="监控进程"><a href="#监控进程" class="headerlink" title="监控进程"></a>监控进程</h3><p><strong>ps</strong></p>
+<p>使用<code>ps</code>命令来查看进程信息。</p>
+<ul>
+<li><code>ps -A</code>或<code>ps -e</code>：查看所有进程</li>
+<li><code>ps -aux</code>：所有进程的详细信息</li>
+</ul>
+<p><strong>top</strong></p>
+<p>使用<code>top</code>命令查询进程维度的CPU、内存使用</p>
+<ul>
+<li><p><code>top</code>：查询所有进程的资源使用情况</p>
+</li>
+<li><p><code>top -p [pid]</code>：查询具体某个进程</p>
+</li>
+</ul>
+<p><strong>strace</strong></p>
+<p>跟踪命令或进程的执行情况</p>
+<ul>
+<li><code>strace -p [pid]</code>：跟踪进程</li>
+<li><code>strace [command]</code>：跟踪命令</li>
+</ul>
+<p><strong>lsof</strong></p>
+<p>查看进程打开的文件</p>
+<ul>
+<li><code>lsof -p [pid]</code></li>
+</ul>
+<p><strong>uptime</strong></p>
+<p>查看系统已运行时间和负载情况</p>
+<h3 id="前台与后台进程"><a href="#前台与后台进程" class="headerlink" title="前台与后台进程"></a>前台与后台进程</h3><p>查看后台执行的命令：<code>jobs</code>(可以得到作业号)</p>
+<p>前台/后台执行：<code>fg</code>/<code>bg</code></p>
+<p>切换到后台进程的方式：</p>
+<ol>
+<li>启动进程时，末尾加上<code>&amp;</code></li>
+<li>进程执行时，先<code>ctrl + z</code>然后<code>bg [job_number]</code></li>
+</ol>
+<h2 id="七、文件系统"><a href="#七、文件系统" class="headerlink" title="七、文件系统"></a>七、文件系统</h2><h3 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h3><blockquote>
+<p>挂载可以把设备文件中的文件系统放入到Linux根目录中的某个位置(挂载点)，然后用户访问挂载点就相当于访问设备中的文件系统。</p>
+</blockquote>
+<p><strong>挂载与卸载命令</strong></p>
+<ul>
+<li><p><code>mount [src] [dst]</code></p>
+</li>
+<li><p><code>umount [dst]</code></p>
+</li>
+</ul>
+<p><strong>查看系统当前挂载的文件</strong></p>
+<ul>
+<li><code>mount</code></li>
+<li><code>cat /etc/mtab</code></li>
+</ul>
+<h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><p><strong>文件类型</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-</td>
+<td align="center">普通文件</td>
+</tr>
+<tr>
+<td align="center">d</td>
+<td align="center">目录</td>
+</tr>
+<tr>
+<td align="center">l</td>
+<td align="center">符号链接（软链接）</td>
+</tr>
+<tr>
+<td align="center">s</td>
+<td align="center">套接字</td>
+</tr>
+<tr>
+<td align="center">b</td>
+<td align="center">块设备</td>
+</tr>
+<tr>
+<td align="center">c</td>
+<td align="center">字符设备</td>
+</tr>
+<tr>
+<td align="center">p</td>
+<td align="center">管道</td>
+</tr>
+</tbody></table>
+<p><strong>修改文件权限</strong></p>
+<ul>
+<li>chown<ul>
+<li><code>chown [user] [file]</code>：修改文件所有者、组等</li>
+</ul>
+</li>
+<li>chmod<ul>
+<li><code>chmod 777 [file]</code>：设置数字形式的权限</li>
+<li><code>chmod a=rwx [file]</code>：设置所有用户（拥有者，同组和其他用户）权限等于rwx</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件备份与恢复"><a href="#文件备份与恢复" class="headerlink" title="文件备份与恢复"></a>文件备份与恢复</h3><p><strong>tar</strong></p>
+<ul>
+<li><code>tar -cf [dst] [src]</code>：创建备份文件</li>
+<li><code>tar -xf [src]</code>：恢复文件</li>
+</ul>
+<p><strong>cpio</strong></p>
+<ul>
+<li><code>find [src] -print | cpio -o &gt; [dst]</code>：备份</li>
+<li><code>cpio -im &lt; [src]</code>：恢复</li>
+</ul>
+<h2 id="八、磁盘管理"><a href="#八、磁盘管理" class="headerlink" title="八、磁盘管理"></a>八、磁盘管理</h2><h3 id="磁盘基础"><a href="#磁盘基础" class="headerlink" title="磁盘基础"></a>磁盘基础</h3><p><strong>磁盘接口的类型有：</strong></p>
+<ol>
+<li>IDE</li>
+<li>SCSI</li>
+<li>Removable Disk</li>
+</ol>
+<p><strong>查看磁盘使用情况：</strong></p>
+<ul>
+<li><code>df</code>：列出所有文件系统的磁盘使用率</li>
+<li><code>du</code>：列出目录的磁盘使用率</li>
+<li><code>fdisk [device]</code>：对磁盘进行分区管理（创建、删除、列出分区等等）<ul>
+<li>n：新建</li>
+<li>q：不保存并退出</li>
+<li>w：保存并退出</li>
+<li>t：修改分区类型</li>
+</ul>
+</li>
+</ul>
+<h3 id="磁盘限额"><a href="#磁盘限额" class="headerlink" title="磁盘限额"></a>磁盘限额</h3><blockquote>
+<p>磁盘限额（Disk Quota）是一种系统管理员用来限制文件系统各方面使用率的限制集合。磁盘限额以一种合理的方式来分配有限的磁盘空间。</p>
+</blockquote>
+<p><strong>使用磁盘限额</strong></p>
+<ol>
+<li>重新挂载分区<ul>
+<li><code>mount -o remount,usrquota,grpquota [device]</code></li>
+</ul>
+</li>
+<li>生成quota配置文件<ul>
+<li><code>quotacheck -ugc [device]</code></li>
+</ul>
+</li>
+<li>启动quota<ul>
+<li><code>quota on [device]</code></li>
+</ul>
+</li>
+<li>修改配置项<ul>
+<li><code>edquota [-u|g] [user|group]</code></li>
+</ul>
+</li>
+</ol>
+<h3 id="LVM"><a href="#LVM" class="headerlink" title="LVM"></a>LVM</h3><blockquote>
+<p><strong>LVM（Logical volume Manager）</strong>是Linux环境下对磁盘分区进行管理的一种机制。它提供了一种比常规的分区模式更加灵活分配空间的方法。</p>
+</blockquote>
+<p><strong>特征</strong>：不需要卸载卷就能修改逻辑卷的大小；支持卷快照</p>
+<p><strong>结构</strong></p>
+<p>LVM大致分为三层：物理卷、逻辑卷组和逻辑卷。</p>
+<ul>
+<li>物理卷（PV）：对应一个个硬盘</li>
+<li>逻辑卷组（VG）：由多个物理卷组成的空间，可以任用户分配</li>
+<li>逻辑卷（LV）：从卷组中划分出来的分区，在逻辑卷之上可以建立文件系统</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202112211729497.png" alt="image-20211221172919314"></p>
+<h2 id="九、调度任务"><a href="#九、调度任务" class="headerlink" title="九、调度任务"></a>九、调度任务</h2><blockquote>
+<p>Linux提供了一种叫做<strong>任务调度</strong>（scheduled tasks）的机制，可以自动的执行一些任务。</p>
+</blockquote>
+<h3 id="at"><a href="#at" class="headerlink" title="at"></a>at</h3><p><strong>使用</strong></p>
+<p>安装并启动服务：<code>yum install at</code>、<code>systemctl start atd</code>。atd表示at的守护进程</p>
+<p>然后完成定时任务的创建：<code>at [time]</code> $\longrightarrow$ <code>input task</code> $\longrightarrow$ <code>ctrl + D</code></p>
+<p>如果不想执行则删除任务：<code>atrm [job]</code></p>
+<p><strong>其他</strong></p>
+<p>查看并修改时区为东八区：<code>timedatectl</code>和<code>timedatectl set-timezone Asia/Shanghai</code></p>
+<h3 id="cron"><a href="#cron" class="headerlink" title="cron"></a>cron</h3><p>和<code>at</code>相比，cron提供了<code>分时天月</code>等时间维度的周期性执行任务的方法。</p>
+<p><code>crontab -e -u [user] </code>：编辑某个用户的任务表</p>
+<p><code>crontab -l</code>：列出当前用户的定时任务</p>
+<p><strong>任务语法</strong></p>
+<p>例如：<code>1 * * * * ls /home</code>表示每分钟执行一次ls命令。</p>
+<table>
+<thead>
+<tr>
+<th align="center">分钟</th>
+<th align="center">小时</th>
+<th align="center">天</th>
+<th align="center">月</th>
+<th align="center">星期</th>
+<th align="center">任务指令</th>
+</tr>
+</thead>
+</table>
+<h3 id="anacron"><a href="#anacron" class="headerlink" title="anacron"></a>anacron</h3><p><code>anacron</code>是对cron的扩展，它对那些非24小时执行的定时任务提供了支持。</p>
+<p>可以查看并编辑<code>/etc/anacrontab</code>文件中的内容。</p>
+<h2 id="十、网络管理"><a href="#十、网络管理" class="headerlink" title="十、网络管理"></a>十、网络管理</h2><h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h3><p><code>ifconfig</code>命令用于查看网络接口，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0</span><br></pre></td></tr></table></figure>
+
+<p>此外，它也可以用于修改ip地址和设置别名：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.13.133 <span class="comment"># 临时性的</span></span><br><span class="line">ipconfig eth0:1 192.168.13.133</span><br></pre></td></tr></table></figure>
+
+<p>NIC网卡的配置信息，通常位于<code>/etc/sysconfig/network-scripts</code>中。如果想要持久性的修改配置，就要直接修改相应的配置文件。</p>
+<h3 id="ifup-ifdown"><a href="#ifup-ifdown" class="headerlink" title="ifup/ifdown"></a>ifup/ifdown</h3><p><code>ifup eth0</code>：开启eth0网络接口</p>
+<p><code>ifdown eth0</code>：关闭eth0网络接口</p>
+<h3 id="管理主机名"><a href="#管理主机名" class="headerlink" title="管理主机名"></a>管理主机名</h3><ul>
+<li>查看：<code>hostname</code></li>
+<li>临时修改：<code>hostname [name]</code></li>
+<li>永久修改：<code>/etc/sysconfig/network</code>文件中<code>HOSTNAME=xxx</code></li>
+</ul>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><blockquote>
+<p>ssh是一种登录远程机器并执行命令的程序。</p>
+</blockquote>
+<ul>
+<li>远程登录：<code>ssh -p [password] root@192.168.13.133</code></li>
+<li>执行命令：<code>ssh root@192.168.13.133 [command]</code></li>
+</ul>
 
     </div>
 
     
     
     
-        
-
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者： </strong>aurora
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="https://aurora-ze.github.io.git/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/" title="Linux命令学习">https://aurora-ze.github.io.git/2021/12/13/操作系统/Linux命令学习/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-</div>
-
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
 
         
 
@@ -420,8 +645,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" rel="prev" title="评论">
-      <i class="fa fa-chevron-left"></i> 评论
+    <a href="/2021/12/13/TODO/%E8%AF%84%E8%AE%BAadded/" rel="prev" title="待评论">
+      <i class="fa fa-chevron-left"></i> 待评论
     </a></div>
       <div class="post-nav-item">
     <a href="/2021/12/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="next" title="操作系统——系统调用">
@@ -485,7 +710,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-text">一、基本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84"><span class="nav-text">路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6"><span class="nav-text">目录文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6"><span class="nav-text">查找文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grep%E4%B8%8Exargs"><span class="nav-text">grep与xargs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-text">二、用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-text">相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95"><span class="nav-text">记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E6%83%91"><span class="nav-text">疑惑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Shell%E8%84%9A%E6%9C%AC"><span class="nav-text">三、Shell脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Systemd"><span class="nav-text">四、Systemd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#systemd%E4%B8%8Esystemctl"><span class="nav-text">systemd与systemctl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl%E5%91%BD%E4%BB%A4"><span class="nav-text">systemctl命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-text">五、权限控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-text">传统的权限控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL"><span class="nav-text">ACL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELinux"><span class="nav-text">SELinux</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-text">一、基本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84"><span class="nav-text">路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6"><span class="nav-text">目录文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6"><span class="nav-text">查找文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grep%E4%B8%8Exargs"><span class="nav-text">grep与xargs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-text">二、用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-text">相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95"><span class="nav-text">记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E6%83%91"><span class="nav-text">疑惑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Shell%E8%84%9A%E6%9C%AC"><span class="nav-text">三、Shell脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Systemd"><span class="nav-text">四、Systemd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#systemd%E4%B8%8Esystemctl"><span class="nav-text">systemd与systemctl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl%E5%91%BD%E4%BB%A4"><span class="nav-text">systemctl命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-text">五、权限控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-text">传统的权限控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL"><span class="nav-text">ACL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELinux"><span class="nav-text">SELinux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="nav-text">六、进程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-text">进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E8%BF%9B%E7%A8%8B"><span class="nav-text">控制进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E8%BF%9B%E7%A8%8B"><span class="nav-text">监控进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%8F%B0%E4%B8%8E%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B"><span class="nav-text">前台与后台进程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-text">七、文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD"><span class="nav-text">挂载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-text">文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-text">文件备份与恢复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86"><span class="nav-text">八、磁盘管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%9F%BA%E7%A1%80"><span class="nav-text">磁盘基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E9%99%90%E9%A2%9D"><span class="nav-text">磁盘限额</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LVM"><span class="nav-text">LVM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E8%B0%83%E5%BA%A6%E4%BB%BB%E5%8A%A1"><span class="nav-text">九、调度任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#at"><span class="nav-text">at</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cron"><span class="nav-text">cron</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#anacron"><span class="nav-text">anacron</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86"><span class="nav-text">十、网络管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig"><span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ifup-ifdown"><span class="nav-text">ifup&#x2F;ifdown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="nav-text">管理主机名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-text">ssh</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -501,20 +726,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -555,17 +780,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -663,6 +895,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

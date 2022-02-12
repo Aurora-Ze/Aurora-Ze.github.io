@@ -22,17 +22,18 @@
     var CONFIG = {"hostname":"aurora-ze.github.io.git","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="生产者消息分区策略问题：当生产者向包含多个分区的Topic发送消息时，消息会发往哪个分区呢？ 解释：  发送时指定partition：发送到指定分区 发送时未指定partition：由分区器来决定  在Kafka生产者中分区器主要有两种，默认分区器和轮询分区器。 一、默认分区器默认分区器利用了粘性分区的思想。  粘性分区表示在Kafka一次批量发送消息的过程中，会尽可能的减少分区的分配变动。 因此">
+  <meta name="description" content="本文介绍了Kafka生产者与消费者的基础概念，如消息分区、位移提交等。通过这篇文章，我们可以更好的了解到从生产者发出消息，再到消费者消费消息这一过程消息的流动。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="生产者与消费者理论">
+<meta property="og:title" content="Kafka——生产者与消费者理论">
 <meta property="og:url" content="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/index.html">
 <meta property="og:site_name" content="Aurora">
-<meta property="og:description" content="生产者消息分区策略问题：当生产者向包含多个分区的Topic发送消息时，消息会发往哪个分区呢？ 解释：  发送时指定partition：发送到指定分区 发送时未指定partition：由分区器来决定  在Kafka生产者中分区器主要有两种，默认分区器和轮询分区器。 一、默认分区器默认分区器利用了粘性分区的思想。  粘性分区表示在Kafka一次批量发送消息的过程中，会尽可能的减少分区的分配变动。 因此">
+<meta property="og:description" content="本文介绍了Kafka生产者与消费者的基础概念，如消息分区、位移提交等。通过这篇文章，我们可以更好的了解到从生产者发出消息，再到消费者消费消息这一过程消息的流动。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111211654366.png">
 <meta property="article:published_time" content="2021-12-13T12:06:09.846Z">
-<meta property="article:modified_time" content="2021-12-13T12:00:45.477Z">
+<meta property="article:modified_time" content="2022-02-12T07:59:12.078Z">
 <meta property="article:author" content="aurora">
+<meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/Aurora-Ze/pictures/master/img/202111211654366.png">
 
@@ -49,19 +50,10 @@
   };
 </script>
 
-  <title>生产者与消费者理论 | Aurora</title>
+  <title>Kafka——生产者与消费者理论 | Aurora</title>
   
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dcdb42c8e3ad5d5a7981af32b9693ef3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -225,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          生产者与消费者理论
+          Kafka——生产者与消费者理论
         </h1>
 
         <div class="post-meta">
@@ -234,28 +226,49 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-13 20:06:09 / 修改时间：20:00:45" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 20:06:09" itemprop="dateCreated datePublished" datetime="2021-12-13T20:06:09+08:00">2021-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-12 15:59:12" itemprop="dateModified" datetime="2022-02-12T15:59:12+08:00">2022-02-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a>
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" class="post-meta-item leancloud_visitors" data-flag-title="生产者与消费者理论" title="阅读次数">
+            <span id="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" class="post-meta-item leancloud_visitors" data-flag-title="Kafka——生产者与消费者理论" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
             </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+            <div class="post-description">本文介绍了Kafka生产者与消费者的基础概念，如消息分区、位移提交等。通过这篇文章，我们可以更好的了解到从生产者发出消息，再到消费者消费消息这一过程消息的流动。</div>
 
         </div>
       </header>
@@ -278,14 +291,14 @@
 <p><code>粘性分区</code>表示在Kafka一次批量发送消息的过程中，会尽可能的减少分区的分配变动。</p>
 <p>因此分区就是具备粘性的，在同一次批量发送中消息就会分配到同一个分区。</p>
 </blockquote>
-<h5 id="DefaultPartitioner"><a href="#DefaultPartitioner" class="headerlink" title="DefaultPartitioner"></a>DefaultPartitioner</h5><p><code>partition()</code>计算得到要发送的分区号，源码如下：</p>
+<h4 id="DefaultPartitioner"><a href="#DefaultPartitioner" class="headerlink" title="DefaultPartitioner"></a>DefaultPartitioner</h4><p><code>partition()</code>计算得到要发送的分区号，源码如下：</p>
 <ol>
 <li>未指定key时，用粘性分区缓存来获取分区号</li>
 <li>指定key时，通过计算哈希值并求余的方式得到分区号。</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultPartitioner</span> <span class="keyword">implements</span> <span class="title">Partitioner</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Object key, <span class="keyword">byte</span>[] keyBytes, Object value, <span class="keyword">byte</span>[] valueBytes, Cluster cluster,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">int</span> numPartitions)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (keyBytes == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> stickyPartitionCache.partition(topic, cluster);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// hash the keyBytes to choose a partition</span></span><br><span class="line">        <span class="keyword">return</span> Utils.toPositive(Utils.murmur2(keyBytes)) % numPartitions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="StickyPartitionCache"><a href="#StickyPartitionCache" class="headerlink" title="StickyPartitionCache"></a>StickyPartitionCache</h5><p><code>StickyPartitionCache</code>类主要利用利用map记录主题和消息发往的分区号的映射</p>
+<h4 id="StickyPartitionCache"><a href="#StickyPartitionCache" class="headerlink" title="StickyPartitionCache"></a>StickyPartitionCache</h4><p><code>StickyPartitionCache</code>类主要利用利用map记录主题和消息发往的分区号的映射</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StickyPartitionCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConcurrentMap&lt;String, Integer&gt; indexCache;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StickyPartitionCache</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.indexCache = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * partition()返回分区号</span></span><br><span class="line"><span class="comment">    * </span></span><br><span class="line"><span class="comment">    * 如果在map中找到了上次发往某个主题时分配的分区号，就返回该分区号（粘性分区）</span></span><br><span class="line"><span class="comment">    * 如果map中未找到，则调用nextPartition()执行一次重新分配分区号的动作。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Cluster cluster)</span> </span>&#123;</span><br><span class="line">        Integer part = indexCache.get(topic);</span><br><span class="line">        <span class="keyword">if</span> (part == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> nextPartition(topic, cluster, -<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> part;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="二、轮询分区器"><a href="#二、轮询分区器" class="headerlink" title="二、轮询分区器"></a>二、轮询分区器</h3><p>从<code>RoundRobinPartitioner</code>类的注解可以看到，如果希望消息能够分布式的写到不同的分区上，那么就可以使用轮询分区器。</p>
@@ -296,10 +309,10 @@
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The &quot;Round-Robin&quot; partitioner</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * This partitioning strategy can be used when user wants </span></span><br><span class="line"><span class="comment"> * to distribute the writes to all partitions equally. This</span></span><br><span class="line"><span class="comment"> * is the behaviour regardless of record key hash. </span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RoundRobinPartitioner</span> <span class="keyword">implements</span> <span class="title">Partitioner</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="nextValue"><a href="#nextValue" class="headerlink" title="nextValue()"></a>nextValue()</h5><p>在map寻找topic对应的分区号，未找到则返回0</p>
+<h4 id="nextValue"><a href="#nextValue" class="headerlink" title="nextValue()"></a>nextValue()</h4><p>在map寻找topic对应的分区号，未找到则返回0</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">nextValue</span><span class="params">(String topic)</span> </span>&#123;</span><br><span class="line">    AtomicInteger counter = topicCounterMap.computeIfAbsent(topic, k -&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> counter.getAndIncrement();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="partition"><a href="#partition" class="headerlink" title="partition()"></a>partition()</h5><p>借助<code>nextValue()</code>返回的值来求余计算分区号。</p>
+<h4 id="partition"><a href="#partition" class="headerlink" title="partition()"></a>partition()</h4><p>借助<code>nextValue()</code>返回的值来求余计算分区号。</p>
 <p>此外，这里还有一些额外的逻辑，如判断是否有可用分区和确保nextValue为正。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Object key, <span class="keyword">byte</span>[] keyBytes, Object value, <span class="keyword">byte</span>[] valueBytes, Cluster cluster)</span> </span>&#123;</span><br><span class="line">    List&lt;PartitionInfo&gt; partitions = cluster.partitionsForTopic(topic);</span><br><span class="line">    <span class="keyword">int</span> numPartitions = partitions.size();</span><br><span class="line">    <span class="keyword">int</span> nextValue = nextValue(topic);</span><br><span class="line">    List&lt;PartitionInfo&gt; availablePartitions = cluster.availablePartitionsForTopic(topic);</span><br><span class="line">    <span class="keyword">if</span> (!availablePartitions.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">int</span> part = Utils.toPositive(nextValue) % availablePartitions.size();</span><br><span class="line">        <span class="keyword">return</span> availablePartitions.get(part).partition();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// no partitions are available, give a non-available partition</span></span><br><span class="line">        <span class="keyword">return</span> Utils.toPositive(nextValue) % numPartitions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -316,10 +329,10 @@
 <p>这里对应的就是<code>ProducerBatch</code>类下的tryAppend()方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 检查空间后，调用MemoryRecordsBuilder对象的append方法来向内存中写入新消息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> FutureRecordMetadata <span class="title">tryAppend</span><span class="params">(<span class="keyword">long</span> timestamp, <span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] value, Header[] headers, Callback callback, <span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!recordsBuilder.hasRoomFor(timestamp, key, value, headers)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.recordsBuilder.append(timestamp, key, value, headers); </span><br><span class="line">        <span class="keyword">this</span>.maxRecordSize = Math.max(<span class="keyword">this</span>.maxRecordSize, AbstractRecords.estimateSizeInBytesUpperBound(magic(),</span><br><span class="line">                recordsBuilder.compressionType(), key, value, headers));</span><br><span class="line">        <span class="keyword">this</span>.lastAppendTime = now;</span><br><span class="line">        FutureRecordMetadata future = <span class="keyword">new</span> FutureRecordMetadata(<span class="keyword">this</span>.produceFuture, <span class="keyword">this</span>.recordCount,</span><br><span class="line">                                                               timestamp,</span><br><span class="line">                                                               key == <span class="keyword">null</span> ? -<span class="number">1</span> : key.length,</span><br><span class="line">                                                               value == <span class="keyword">null</span> ? -<span class="number">1</span> : value.length,</span><br><span class="line">                                                               Time.SYSTEM);</span><br><span class="line">        <span class="comment">// we have to keep every future returned to the users in case the batch needs to be</span></span><br><span class="line">        <span class="comment">// split to several new batches and resent.</span></span><br><span class="line">        thunks.add(<span class="keyword">new</span> Thunk(callback, future));</span><br><span class="line">        <span class="keyword">this</span>.recordCount++;</span><br><span class="line">        <span class="keyword">return</span> future;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h1><h2 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h2><h3 id="一、位移提交"><a href="#一、位移提交" class="headerlink" title="一、位移提交"></a>一、位移提交</h3><p><strong>对于Kafka分区而言，它的每条消息都有唯一的offset，用来表示消息在分区中的位置；而消费者也是通过offset来得知上次消费消息的位置。</strong></p>
-<h5 id="那么这个位移存在哪儿？"><a href="#那么这个位移存在哪儿？" class="headerlink" title="那么这个位移存在哪儿？"></a>那么这个位移存在哪儿？</h5><p>旧版存在ZooKeeper中，新版存在Kafka Broker的<code>__consumer_offsets</code>主题中。</p>
-<h5 id="什么是位移提交？为什么要提交位移？"><a href="#什么是位移提交？为什么要提交位移？" class="headerlink" title="什么是位移提交？为什么要提交位移？"></a>什么是位移提交？为什么要提交位移？</h5><p>消费者将消费的位移提交到Kafka Broker的动作，就是<strong>位移提交</strong>。而之所以需要提交，是因为消费者使用拉取消息的方式，Kafka并不知道消费者消费到哪儿了，需要消费者来告诉它。</p>
-<h5 id="怎样进行位移提交"><a href="#怎样进行位移提交" class="headerlink" title="怎样进行位移提交?"></a>怎样进行位移提交?</h5><p>Kafka提供了<strong>自动提交</strong>和<strong>手动提交</strong>两种方式。</p>
+<h1 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h1><h2 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h2><h3 id="位移提交"><a href="#位移提交" class="headerlink" title="位移提交"></a>位移提交</h3><p><strong>对于Kafka分区而言，它的每条消息都有唯一的offset，用来表示消息在分区中的位置；而消费者也是通过offset来得知上次消费消息的位置。</strong></p>
+<h4 id="那么这个位移存在哪儿？"><a href="#那么这个位移存在哪儿？" class="headerlink" title="那么这个位移存在哪儿？"></a>那么这个位移存在哪儿？</h4><p>旧版存在ZooKeeper中，新版存在Kafka Broker的<code>__consumer_offsets</code>主题中。</p>
+<h4 id="什么是位移提交？为什么要提交位移？"><a href="#什么是位移提交？为什么要提交位移？" class="headerlink" title="什么是位移提交？为什么要提交位移？"></a>什么是位移提交？为什么要提交位移？</h4><p>消费者将消费的位移提交到Kafka Broker的动作，就是<strong>位移提交</strong>。而之所以需要提交，是因为消费者使用拉取消息的方式，Kafka并不知道消费者消费到哪儿了，需要消费者来告诉它。</p>
+<h4 id="怎样进行位移提交"><a href="#怎样进行位移提交" class="headerlink" title="怎样进行位移提交?"></a>怎样进行位移提交?</h4><p>Kafka提供了<strong>自动提交</strong>和<strong>手动提交</strong>两种方式。</p>
 <p>首先，确认一点，提交的位移指的是下一次要消费的消息所在的偏移量。</p>
 <p><strong>自动提交</strong></p>
 <p>自动提交指的是Kafka会定期的提交一次位移，定期由两个参数来配置：</p>
@@ -347,13 +360,13 @@
 <li>决定了处于同一消费者组中的消费者该消费哪个分区</li>
 <li>保证一个分区只能被同一个消费者组中的一个消费者消费</li>
 </ol>
-<p>如果要打破<code>2</code>的限制</p>
-<h3 id="一、RangeAssignor"><a href="#一、RangeAssignor" class="headerlink" title="一、RangeAssignor"></a>一、RangeAssignor</h3><h5 id="1-1分配原理"><a href="#1-1分配原理" class="headerlink" title="1.1分配原理"></a>1.1分配原理</h5><p>对<code>单个主题</code>的所有分区进行平均分配。</p>
+<p>如果要打破<code>2</code>的限制，那么自定义一个分配器即可。</p>
+<h3 id="一、RangeAssignor"><a href="#一、RangeAssignor" class="headerlink" title="一、RangeAssignor"></a>一、RangeAssignor</h3><h4 id="1-1分配原理"><a href="#1-1分配原理" class="headerlink" title="1.1分配原理"></a>1.1分配原理</h4><p>对<code>单个主题</code>的所有分区进行平均分配。</p>
 <ul>
 <li>如果分区数与消费者数能够整除，那么每个消费者分配到的分区数量都是一样的。</li>
 <li>如果有余数，那么把余数分区一份份分给靠前（排序后）的消费者</li>
 </ul>
-<h5 id="1-2示例"><a href="#1-2示例" class="headerlink" title="1.2示例"></a>1.2示例</h5><blockquote>
+<h4 id="1-2示例"><a href="#1-2示例" class="headerlink" title="1.2示例"></a>1.2示例</h4><blockquote>
 <p>两个消费者订阅两个主题，每个主题3个分区。</p>
 <p>如主题t0的分区为t0p0、t0p1、t0p2</p>
 </blockquote>
@@ -369,10 +382,10 @@
 <li>消费者C1：t0p2、t1p2</li>
 </ul>
 <p>设想一下，如果新订阅了第三个主题（分区数为3），那么消费者C0所分配到的分区数还会多两个，<strong>不均衡</strong>的情况会更加严重。</p>
-<h5 id="1-3特点"><a href="#1-3特点" class="headerlink" title="1.3特点"></a>1.3特点</h5><p>通过上述例子可以发现，<code>Range</code>策略可以保证<strong>分配一个主题的分区时每个消费者所分配到的分区数之差在一个以内。</strong></p>
+<h4 id="1-3特点"><a href="#1-3特点" class="headerlink" title="1.3特点"></a>1.3特点</h4><p>通过上述例子可以发现，<code>Range</code>策略可以保证<strong>分配一个主题的分区时每个消费者所分配到的分区数之差在一个以内。</strong></p>
 <p>但是，当订阅多个主题时可能会存在某个消费者过载的问题，并且可能会随着订阅主题数的增加而愈发严重。</p>
-<h3 id="二、RoundRobinAssingor"><a href="#二、RoundRobinAssingor" class="headerlink" title="二、RoundRobinAssingor"></a>二、RoundRobinAssingor</h3><h5 id="2-1分配原理"><a href="#2-1分配原理" class="headerlink" title="2.1分配原理"></a>2.1分配原理</h5><p>对消费者组订阅的<code>所有主题及分区</code>进行排序并依次分配。</p>
-<h5 id="2-2示例1-同上述的例子"><a href="#2-2示例1-同上述的例子" class="headerlink" title="2.2示例1@同上述的例子"></a>2.2示例1<code>@同上述的例子</code></h5><blockquote>
+<h3 id="二、RoundRobinAssingor"><a href="#二、RoundRobinAssingor" class="headerlink" title="二、RoundRobinAssingor"></a>二、RoundRobinAssingor</h3><h4 id="2-1分配原理"><a href="#2-1分配原理" class="headerlink" title="2.1分配原理"></a>2.1分配原理</h4><p>对消费者组订阅的<code>所有主题及分区</code>进行排序并依次分配。</p>
+<h4 id="2-2示例1-同上述的例子"><a href="#2-2示例1-同上述的例子" class="headerlink" title="2.2示例1@同上述的例子"></a>2.2示例1<code>@同上述的例子</code></h4><blockquote>
 <p>两个消费者订阅两个主题，每个主题3个分区。</p>
 <p>所有订阅主题的分区排序：t0p0、t0p1、t0p2、t1p0、t1p1、t1p2</p>
 </blockquote>
@@ -382,7 +395,7 @@
 <li>消费者C1：t0p1、t1p0、t1p2</li>
 </ul>
 <p>可以看到，如果每个消费者订阅的主题是相同的，那么可以保证尽可能的均匀分配。</p>
-<h5 id="2-3示例2-订阅不同主题"><a href="#2-3示例2-订阅不同主题" class="headerlink" title="2.3示例2@订阅不同主题"></a>2.3示例2<code>@订阅不同主题</code></h5><p>再看这个订阅不同主题的例子：</p>
+<h4 id="2-3示例2-订阅不同主题"><a href="#2-3示例2-订阅不同主题" class="headerlink" title="2.3示例2@订阅不同主题"></a>2.3示例2<code>@订阅不同主题</code></h4><p>再看这个订阅不同主题的例子：</p>
 <blockquote>
 <p>三个消费者，订阅情况分别是：C0订阅t0，C1订阅t0、t1，C2订阅t0、t1、t2</p>
 <p>主题分别有1，2，3个分区</p>
@@ -395,17 +408,17 @@
 <li>消费者C1：t1p0</li>
 <li>消费者C2：t1p1、t2p0、t2p1、t2p2</li>
 </ul>
-<h5 id="2-4特点"><a href="#2-4特点" class="headerlink" title="2.4特点"></a>2.4特点</h5><p>和<code>RangeAssignor</code>相比，<code>RoundRobinAssignor</code>通过从多主题的角度考虑，保证了当每个消费者订阅相同的主题时的分配均衡（最多差一个）。</p>
+<h4 id="2-4特点"><a href="#2-4特点" class="headerlink" title="2.4特点"></a>2.4特点</h4><p>和<code>RangeAssignor</code>相比，<code>RoundRobinAssignor</code>通过从多主题的角度考虑，保证了当每个消费者订阅相同的主题时的分配均衡（最多差一个）。</p>
 <p>但是订阅的主题不同时，它并没有做到最优分配，例如上述例子中<code>t1p1</code>可以分配给C1</p>
 <h3 id="三、StickyAssingor"><a href="#三、StickyAssingor" class="headerlink" title="三、StickyAssingor"></a>三、StickyAssingor</h3><p>粘性分配的目的：</p>
 <ol>
 <li>与其他分配策略一样，尽量保证分区的分配均衡。</li>
 <li>进行<strong>再分配</strong>时，尽可能的减少分配的变化，即拥有“粘性”</li>
 </ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h3 id="一、消息丢失问题"><a href="#一、消息丢失问题" class="headerlink" title="一、消息丢失问题"></a>一、消息丢失问题</h3><p>Kafka生产者与消费者都有可能存在消息丢失的问题。</p>
-<h5 id="生产者端"><a href="#生产者端" class="headerlink" title="生产者端"></a>生产者端</h5><p>原因在于<code>ack</code>的取值，值为0或1时没有做到所有副本的消息同步，因此副本宕机会造成消息丢失。</p>
+<h2 id="协调器"><a href="#协调器" class="headerlink" title="协调器"></a>协调器</h2><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h3 id="一、消息丢失问题"><a href="#一、消息丢失问题" class="headerlink" title="一、消息丢失问题"></a>一、消息丢失问题</h3><p>Kafka生产者与消费者都有可能存在消息丢失的问题。</p>
+<h4 id="生产者端"><a href="#生产者端" class="headerlink" title="生产者端"></a>生产者端</h4><p>原因在于<code>ack</code>的取值，值为0或1时没有做到所有副本的消息同步，因此副本宕机会造成消息丢失。</p>
 <p><code>ack</code>取-1时所有副本同步后才算消息写入成功，但这样消息吞吐量会有所损失。</p>
-<h5 id="消费者端"><a href="#消费者端" class="headerlink" title="消费者端"></a>消费者端</h5><p>原因可能是开启了自动提交位移，也可能是手动提交位移的情况下先提交再消费。</p>
+<h4 id="消费者端"><a href="#消费者端" class="headerlink" title="消费者端"></a>消费者端</h4><p>原因可能是开启了自动提交位移，也可能是手动提交位移的情况下先提交再消费。</p>
 <p>如何解决可以看上述的<strong>手动提交</strong>部分。</p>
 
     </div>
@@ -413,25 +426,11 @@
     
     
     
-        
-
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者： </strong>aurora
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="https://aurora-ze.github.io.git/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%89%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%90%86%E8%AE%BA/" title="生产者与消费者理论">https://aurora-ze.github.io.git/2021/12/13/中间件/kafka/三、生产者与消费者理论/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-</div>
-
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kafka/" rel="tag"># kafka</a>
+          </div>
 
         
 
@@ -439,12 +438,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/" rel="prev" title="环境搭建">
-      <i class="fa fa-chevron-left"></i> 环境搭建
+    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%B8%80%E3%80%81Kafka%E5%AE%89%E8%A3%85%E4%B8%8E%E5%85%A5%E9%97%A8/" rel="prev" title="Kafka——环境搭建">
+      <i class="fa fa-chevron-left"></i> Kafka——环境搭建
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" rel="next" title="生产者与消费者实践">
-      生产者与消费者实践 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/12/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/%E4%BA%8C%E3%80%81%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E8%B7%B5/" rel="next" title="Kafka——生产者与消费者实践">
+      Kafka——生产者与消费者实践 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -504,7 +503,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85"><span class="nav-text">生产者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%88%86%E5%8C%BA%E7%AD%96%E7%95%A5"><span class="nav-text">消息分区策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%BB%98%E8%AE%A4%E5%88%86%E5%8C%BA%E5%99%A8"><span class="nav-text">一、默认分区器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DefaultPartitioner"><span class="nav-text">DefaultPartitioner</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#StickyPartitionCache"><span class="nav-text">StickyPartitionCache</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BD%AE%E8%AF%A2%E5%88%86%E5%8C%BA%E5%99%A8"><span class="nav-text">二、轮询分区器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#nextValue"><span class="nav-text">nextValue()</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#partition"><span class="nav-text">partition()</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-text">生产者过程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B6%88%E6%81%AF%E7%B4%AF%E5%8A%A0%E5%99%A8"><span class="nav-text">一、消息累加器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85"><span class="nav-text">消费者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF"><span class="nav-text">消费消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BD%8D%E7%A7%BB%E6%8F%90%E4%BA%A4"><span class="nav-text">一、位移提交</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%82%A3%E4%B9%88%E8%BF%99%E4%B8%AA%E4%BD%8D%E7%A7%BB%E5%AD%98%E5%9C%A8%E5%93%AA%E5%84%BF%EF%BC%9F"><span class="nav-text">那么这个位移存在哪儿？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BD%8D%E7%A7%BB%E6%8F%90%E4%BA%A4%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8F%90%E4%BA%A4%E4%BD%8D%E7%A7%BB%EF%BC%9F"><span class="nav-text">什么是位移提交？为什么要提交位移？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%8E%E6%A0%B7%E8%BF%9B%E8%A1%8C%E4%BD%8D%E7%A7%BB%E6%8F%90%E4%BA%A4"><span class="nav-text">怎样进行位移提交?</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%88%86%E9%85%8D"><span class="nav-text">分区分配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81RangeAssignor"><span class="nav-text">一、RangeAssignor</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1%E5%88%86%E9%85%8D%E5%8E%9F%E7%90%86"><span class="nav-text">1.1分配原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2%E7%A4%BA%E4%BE%8B"><span class="nav-text">1.2示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3%E7%89%B9%E7%82%B9"><span class="nav-text">1.3特点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81RoundRobinAssingor"><span class="nav-text">二、RoundRobinAssingor</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1%E5%88%86%E9%85%8D%E5%8E%9F%E7%90%86"><span class="nav-text">2.1分配原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E7%A4%BA%E4%BE%8B1-%E5%90%8C%E4%B8%8A%E8%BF%B0%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-text">2.2示例1@同上述的例子</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3%E7%A4%BA%E4%BE%8B2-%E8%AE%A2%E9%98%85%E4%B8%8D%E5%90%8C%E4%B8%BB%E9%A2%98"><span class="nav-text">2.3示例2@订阅不同主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4%E7%89%B9%E7%82%B9"><span class="nav-text">2.4特点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81StickyAssingor"><span class="nav-text">三、StickyAssingor</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98"><span class="nav-text">一、消息丢失问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%AB%AF"><span class="nav-text">生产者端</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E7%AB%AF"><span class="nav-text">消费者端</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85"><span class="nav-text">生产者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%88%86%E5%8C%BA%E7%AD%96%E7%95%A5"><span class="nav-text">消息分区策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%BB%98%E8%AE%A4%E5%88%86%E5%8C%BA%E5%99%A8"><span class="nav-text">一、默认分区器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DefaultPartitioner"><span class="nav-text">DefaultPartitioner</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#StickyPartitionCache"><span class="nav-text">StickyPartitionCache</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BD%AE%E8%AF%A2%E5%88%86%E5%8C%BA%E5%99%A8"><span class="nav-text">二、轮询分区器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nextValue"><span class="nav-text">nextValue()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#partition"><span class="nav-text">partition()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-text">生产者过程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B6%88%E6%81%AF%E7%B4%AF%E5%8A%A0%E5%99%A8"><span class="nav-text">一、消息累加器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85"><span class="nav-text">消费者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF"><span class="nav-text">消费消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E7%A7%BB%E6%8F%90%E4%BA%A4"><span class="nav-text">位移提交</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%82%A3%E4%B9%88%E8%BF%99%E4%B8%AA%E4%BD%8D%E7%A7%BB%E5%AD%98%E5%9C%A8%E5%93%AA%E5%84%BF%EF%BC%9F"><span class="nav-text">那么这个位移存在哪儿？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BD%8D%E7%A7%BB%E6%8F%90%E4%BA%A4%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8F%90%E4%BA%A4%E4%BD%8D%E7%A7%BB%EF%BC%9F"><span class="nav-text">什么是位移提交？为什么要提交位移？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E6%A0%B7%E8%BF%9B%E8%A1%8C%E4%BD%8D%E7%A7%BB%E6%8F%90%E4%BA%A4"><span class="nav-text">怎样进行位移提交?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%88%86%E9%85%8D"><span class="nav-text">分区分配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81RangeAssignor"><span class="nav-text">一、RangeAssignor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1%E5%88%86%E9%85%8D%E5%8E%9F%E7%90%86"><span class="nav-text">1.1分配原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2%E7%A4%BA%E4%BE%8B"><span class="nav-text">1.2示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3%E7%89%B9%E7%82%B9"><span class="nav-text">1.3特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81RoundRobinAssingor"><span class="nav-text">二、RoundRobinAssingor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1%E5%88%86%E9%85%8D%E5%8E%9F%E7%90%86"><span class="nav-text">2.1分配原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E7%A4%BA%E4%BE%8B1-%E5%90%8C%E4%B8%8A%E8%BF%B0%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-text">2.2示例1@同上述的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3%E7%A4%BA%E4%BE%8B2-%E8%AE%A2%E9%98%85%E4%B8%8D%E5%90%8C%E4%B8%BB%E9%A2%98"><span class="nav-text">2.3示例2@订阅不同主题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4%E7%89%B9%E7%82%B9"><span class="nav-text">2.4特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81StickyAssingor"><span class="nav-text">三、StickyAssingor</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E8%B0%83%E5%99%A8"><span class="nav-text">协调器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98"><span class="nav-text">一、消息丢失问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%AB%AF"><span class="nav-text">生产者端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E7%AB%AF"><span class="nav-text">消费者端</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -520,20 +519,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -574,17 +573,24 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">aurora</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:34</span>
 </div>
 
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-    <span class="post-count">| 博客共95.3k字</span>
-  </div>-->
+<!---->
 
 
 <!-- 网站运行时间的设置 -->
@@ -682,6 +688,61 @@ darkmode.showWidget();
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
